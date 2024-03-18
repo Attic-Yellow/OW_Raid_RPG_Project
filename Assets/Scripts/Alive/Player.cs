@@ -18,7 +18,7 @@ public class Player : Alive
 
     private void Update()
     {
-        if(photonView.IsMine)
+        if(photonView.IsMine) //내 캐릭터 일 경우
         Move();
         else
         {
