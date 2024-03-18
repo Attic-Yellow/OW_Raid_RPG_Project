@@ -7,13 +7,8 @@ using System.Threading.Tasks; // 비동기 작업에 대한 Task를 사용하기 위해 추가
 using TMPro;
 using System.Text.RegularExpressions;
 
-public class SignUpUI : MonoBehaviour
+public class SignUpUI : LogInInfo
 {
-    public TMP_InputField emailInputField;
-    public TMP_InputField passwordInputField;
-    public GameObject logInUI;
-    public GameObject signUpUI;
-
     public void OnSignUpButtonClicked()
     {
         if (!Regex.IsMatch(passwordInputField.text, @"[!@#$%^&*(),.?"":{}|<>]") || passwordInputField.text.Length < 8)

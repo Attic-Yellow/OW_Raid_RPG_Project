@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviour
 
     public FirebaseManager firebaseManager;
     public LanguageManager languageManager;
-    public UIManager uiManager;
     [SerializeField] private LanguageType languageType;
 
     public FirebaseAuth auth { get; private set; }
