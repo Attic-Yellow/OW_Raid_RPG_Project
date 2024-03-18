@@ -3,26 +3,8 @@ using UnityEngine;
 using TMPro;
 using Unity.VisualScripting;
 
-public class LoginUI : MonoBehaviour
+public class LoginUI : LogInInfo
 {
-    public TMP_InputField emailInputField;
-    public TMP_InputField passwordInputField;
-    public GameObject logInUI;
-    public GameObject signUpUI;
-
-    private void Start()
-    {
-        if (logInUI != null)
-        {
-            logInUI.SetActive(true);
-        }
-
-        if (signUpUI != null)
-        {
-            signUpUI.SetActive(false);
-        }
-    }
-
     public void OnLoginButtonClicked()
     {
         GameManager.instance.firebaseManager.auth.SignInWithEmailAndPasswordAsync(emailInputField.text, passwordInputField.text).ContinueWith(task => {
