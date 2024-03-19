@@ -60,11 +60,18 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     }
     public void JoinRoom()
     {
-        PhotonNetwork.JoinOrCreateRoom("RoomName", new RoomOptions { MaxPlayers = 20 }, null); //만들거나 입장
+        PhotonNetwork.JoinOrCreateRoom("RoomName", 
+            new RoomOptions { MaxPlayers = 20,IsOpen = true,IsVisible = true }, null); //만들거나 입장
+    }
+
+    public override void OnJoinRoomFailed(short returnCode, string message) //룸입장이 실패했을 경우
+    {
+        Debug.Log($"JoinRoom Faied { returnCode} : {message}");
     }
     public override void OnJoinedRoom()
     {
-        Debug.Log("방에 입장");
-        PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity);
+        Debug.Log($"방에 입장했는가? {PhotonNetwork.InRoom}");
+        Debug.Log($"방에 몇명이 입장? {PhotonNetwork.CurrentRoom.PlayerCount}");
+        PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity); //Assets/Resources 에 있는 오브젝트만 생성가능
     }
 }
