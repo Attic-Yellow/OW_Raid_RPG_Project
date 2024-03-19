@@ -7,22 +7,29 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:858303589736:android:ba373d3657ded94ea8badd",
+        "mobilesdk_app_id": "1:858303589736:ios:9ff980eb12fccb17a8badd",
         "android_client_info": {
-          "package_name": "com.UnityTechnologies.com.unity.template.urpblank"
+          "package_name": "com.Unity-Technologies.com.unity.template.urp-blank"
         }
       },
-      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBAF_ZaYKDSFFvhkL3elrxrcivArdrguBg"
+          "current_key": "AIzaSyDBnye_Q7Qj39QwqNXji6Ggy8b_tarxGF4"
         }
       ],
       "services": {
+        "analytics_service": {
+          "status": 0
+        },
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "status": 1
         }
-      }
+      },
+      "oauth_client": [
+        {
+          "client_id": "858303589736-p6gkg8grqmdrj69744lmq4rl2pcjb9n7.apps.googleusercontent.com"
+        }
+      ]
     }
   ],
   "configuration_version": "1"
