@@ -7,6 +7,8 @@ using System;
 
 public class CharacterInfoUI : MonoBehaviour
 {
+    
+
     private string[] characterInfo = { "name", "level", "job" };
     private string[] abilityNames = { "maxHp", "str", "int", "dex", "spi", "vit", "luk", "crt", "dh", "det", "def", "mdf", "pap", "map", "sks", "mhp", "sps", "ten", "pie" };
 
@@ -17,6 +19,9 @@ public class CharacterInfoUI : MonoBehaviour
     [Header("Character Info")]
     [SerializeField] private List<TextMeshProUGUI> characterInfoText;
     [SerializeField] private List<TextMeshProUGUI> abilitesText;
+    [SerializeField] private List<CurrentEquippedSlot> currentEquippedSlots;
+
+    [SerializeField] private CurrentEquipped currentEquipped;
 
     private void Awake()
     {
@@ -25,6 +30,8 @@ public class CharacterInfoUI : MonoBehaviour
 
     private void Start()
     {
+        currentEquipped = CurrentEquipped.Instance;
+        currentEquipped.onChangeEquipp += ReadrawSlotUI;
         var characterData = GameManager.Instance.dataManager.characterData.characterData;
 
         if (characterInfoUI != null)
@@ -91,6 +98,24 @@ public class CharacterInfoUI : MonoBehaviour
             if (characterInfoUI.activeSelf)
             {
                 characterInfoUI.transform.SetAsLastSibling();
+            }
+        }
+    }
+
+    public void ReadrawSlotUI()
+    {
+        for (int i = 1; i < currentEquippedSlots.Count; i++)
+        {
+            currentEquippedSlots[i].ClearSlot();
+
+            if (i < currentEquipped.currentEquippeds.Count && currentEquipped.currentEquippeds[i] != null)
+            {
+                currentEquippedSlots[i].equipment = currentEquipped.currentEquippeds[i];
+                currentEquippedSlots[i].UpdateSlotUI();
+            }
+            else
+            {
+                currentEquippedSlots[i].ClearSlot();
             }
         }
     }

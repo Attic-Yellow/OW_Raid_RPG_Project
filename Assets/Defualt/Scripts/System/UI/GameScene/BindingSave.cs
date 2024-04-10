@@ -58,16 +58,16 @@ public class BindingSave : MonoBehaviour
                     {
                         for (int i = 0; i < bindingList.Count && i < action.bindings.Count; i++)
                         {
-                            action.ApplyBindingOverride(i, bindingList[i]);
+                                action.ApplyBindingOverride(bindingList[i]);
                         }
                     }
                 }
             }
-            Debug.Log("로드됨");
+            print("로드됨");
         }
         else
         {
-            Debug.Log("로드 실패");
+            print("로드 실패");
         }
     }
 
