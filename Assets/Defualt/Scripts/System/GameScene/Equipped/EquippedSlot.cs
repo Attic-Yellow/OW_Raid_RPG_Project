@@ -27,7 +27,7 @@ public class EquippedSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandl
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (dragVisual != null)
+        if (dragVisual != null && equipment != null)
         {
             dragVisual.transform.position = Input.mousePosition; // 마우스 위치로 시각적 표현 이동
         }
@@ -48,7 +48,7 @@ public class EquippedSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandl
         {
             // 드랍 위치의 슬롯 처리
             Slot slot = hit.Value.gameObject.GetComponent<Slot>();
-            if (slot != null && equipmentType == slot.equipmentType)
+            if (equipment != null && slot != null && equipmentType == slot.equipmentType)
             {
                 // 드랍 성공: 아이템을 새 슬롯에 할당
                 slot.AssignEquipment(tempEquipment);
@@ -91,44 +91,53 @@ public class EquippedSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandl
 
     public override void AssignEquipment(Equipment newEquipment)
     {
-        this.equipment = newEquipment; // 새로운 장비를 할당
-        UpdateSlotUI(); // 슬롯의 UI를 업데이트
+        equipment = newEquipment; // 새로운 장비를 할당
 
-        switch (newEquipment.equipment)
+        if (equipment != null)
         {
-            case EquipmentType.Weapon:
-                Equipped.Instance.weapon.Add(newEquipment);
-                break;
-            case EquipmentType.Head:
-                Equipped.Instance.head.Add(newEquipment);
-                break;
-            case EquipmentType.Body:
-                Equipped.Instance.body.Add(newEquipment);
-                break;
-            case EquipmentType.Hands:
-                Equipped.Instance.hands.Add(newEquipment);
-                break;
-            case EquipmentType.Legs:
-                Equipped.Instance.legs.Add(newEquipment);
-                break;
-            case EquipmentType.Feet:
-                Equipped.Instance.feet.Add(newEquipment);
-                break;
-            case EquipmentType.Auxiliary:
-                Equipped.Instance.auxiliary.Add(newEquipment);
-                break;
-            case EquipmentType.Earring:
-                Equipped.Instance.earring.Add(newEquipment);
-                break;
-            case EquipmentType.Necklace:
-                Equipped.Instance.necklace.Add(newEquipment);
-                break;
-            case EquipmentType.Bracelet:
-                Equipped.Instance.bracelet.Add(newEquipment);
-                break;
-            case EquipmentType.Ring:
-                Equipped.Instance.ring.Add(newEquipment);
-                break;
+            switch (newEquipment.equipment)
+            {
+                case EquipmentType.Weapon:
+                    Equipped.Instance.weapon.Add(newEquipment);
+                    break;
+                case EquipmentType.Head:
+                    Equipped.Instance.head.Add(newEquipment);
+                    break;
+                case EquipmentType.Body:
+                    Equipped.Instance.body.Add(newEquipment);
+                    break;
+                case EquipmentType.Hands:
+                    Equipped.Instance.hands.Add(newEquipment);
+                    break;
+                case EquipmentType.Legs:
+                    Equipped.Instance.legs.Add(newEquipment);
+                    break;
+                case EquipmentType.Feet:
+                    Equipped.Instance.feet.Add(newEquipment);
+                    break;
+                case EquipmentType.Auxiliary:
+                    Equipped.Instance.auxiliary.Add(newEquipment);
+                    break;
+                case EquipmentType.Earring:
+                    Equipped.Instance.earring.Add(newEquipment);
+                    break;
+                case EquipmentType.Necklace:
+                    Equipped.Instance.necklace.Add(newEquipment);
+                    break;
+                case EquipmentType.Bracelet:
+                    Equipped.Instance.bracelet.Add(newEquipment);
+                    break;
+                case EquipmentType.Ring:
+                    Equipped.Instance.ring.Add(newEquipment);
+                    break;
+                case EquipmentType.None:
+                    ClearSlot();
+                    break;
+            }
+            if (equipment != null)
+            {
+                UpdateSlotUI(); // 슬롯의 UI를 업데이트
+            }
         }
     }
 
@@ -170,5 +179,10 @@ public class EquippedSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandl
                 Equipped.Instance.RemoveRing(newEquipment);
                 break;
         }
+    }
+
+    public override Equipment GetEquipment()
+    {
+        return equipment;
     }
 }

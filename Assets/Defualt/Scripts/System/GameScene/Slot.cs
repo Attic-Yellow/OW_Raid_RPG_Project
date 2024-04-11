@@ -3,9 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum SlotType
+{
+    Item,
+    Equipment,
+    Skill,
+}
+
 public class Slot : MonoBehaviour
 {
     public Image itemIcon;
+    public SlotType slotType;
     public EquipmentType equipmentType;
 
     public virtual void UpdateSlotUI()
@@ -28,4 +36,9 @@ public class Slot : MonoBehaviour
 
     }
 
+
+    public virtual Equipment GetEquipment()
+    {
+        return null;
+    }
 }

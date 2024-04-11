@@ -30,7 +30,7 @@ public class CurrentEquippedSlot : Slot, IDragHandler, IEndDragHandler, IBeginDr
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (dragVisual != null)
+        if (dragVisual != null && equipment != null)
         {
             dragVisual.transform.position = Input.mousePosition; // 마우스 위치로 시각적 표현 이동
         }

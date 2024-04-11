@@ -1,18 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class QuickSlot : MonoBehaviour
+public class QuickSlot : Slot
 {
-    // Start is called before the first frame update
-    void Start()
+    public Slot slot;
+    private GameObject dragVisual;
+
+    public override void UpdateSlotUI()
     {
-        
+        switch (slot.slotType)
+        {
+            case SlotType.Item:
+                break;
+            case SlotType.Equipment:
+                itemIcon.sprite = slot.GetEquipment().itemImage;
+                itemIcon.gameObject.SetActive(true);
+                break;
+            case SlotType.Skill:
+                break;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void ClearSlot()
     {
-        
+        slot = null;
+        itemIcon.sprite = null;
+        itemIcon.gameObject.SetActive(false);
     }
 }

@@ -15,6 +15,7 @@ public class Keybinding : MonoBehaviour
     [SerializeField] private string bindName;
     [SerializeField] private TMP_Text bindingButtonText;
     [SerializeField] private int bindingIndex;
+    [SerializeField] private TextMeshProUGUI quickText;
 
     private bool isComposite = false;
 
@@ -95,10 +96,24 @@ public class Keybinding : MonoBehaviour
             if (action.GetBindingDisplayString(bindingIndex) == action.GetBindingDisplayString(bindingIndex + 1))
             {
                 bindingButtonText.text = action.GetBindingDisplayString(bindingIndex);
+                quickText.text = action.GetBindingDisplayString(bindingIndex);
             }
             else
             {
                 bindingButtonText.text = $"{action.GetBindingDisplayString(bindingIndex)} + {action.GetBindingDisplayString(bindingIndex + 1)}";
+                
+                switch (action.GetBindingDisplayString(bindingIndex))
+                {
+                    case "Control":
+                        quickText.text = $"c{action.GetBindingDisplayString(bindingIndex + 1)}";
+                        break;
+                    case "Shift":
+                        quickText.text = $"s{action.GetBindingDisplayString(bindingIndex + 1)}";
+                        break;
+                    case "Alt":
+                        quickText.text = $"a{action.GetBindingDisplayString(bindingIndex + 1)}";
+                        break;
+                }
             }
         }
         else

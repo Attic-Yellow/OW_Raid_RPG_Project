@@ -246,7 +246,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadingText: {fileID: 8920186394825276640}
-  loadingImages: []
+  loadingImages:
+  - {fileID: 21300000, guid: 532fb62fcf64d674da8020d7f312ce26, type: 3}
+  - {fileID: 21300000, guid: b3491d4c8b22cbb418603f333bcc2551, type: 3}
+  - {fileID: 21300000, guid: 65b9adc22946fcb489faf3f089c986bf, type: 3}
+  - {fileID: 21300000, guid: 628aaf768e1a5e643b8de4853a26c89e, type: 3}
+  - {fileID: 21300000, guid: 9393b05bf81e0de43bd3ae8d58ddc1f2, type: 3}
+  - {fileID: 21300000, guid: cbb1ca8c567a54040b67682bd78e60bc, type: 3}
 --- !u!1 &2622879070134089872
 GameObject:
   m_ObjectHideFlags: 0
