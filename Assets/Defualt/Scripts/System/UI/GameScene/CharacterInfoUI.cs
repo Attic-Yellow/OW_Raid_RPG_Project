@@ -119,4 +119,9 @@ public class CharacterInfoUI : MonoBehaviour
             }
         }
     }
+
+    public string GetJob()
+    {
+        return GameManager.Instance.dataManager.characterData.characterData.ContainsKey(characterInfo[2]) ? GameManager.Instance.dataManager.characterData.characterData[characterInfo[2]].ToString() : "null";
+    }
 }

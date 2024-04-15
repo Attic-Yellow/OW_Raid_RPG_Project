@@ -30,7 +30,7 @@ public class CurrentEquippedSlot : Slot, IDragHandler, IEndDragHandler, IBeginDr
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (dragVisual != null && equipment != null)
+        if (dragVisual != null)
         {
             dragVisual.transform.position = Input.mousePosition; // 마우스 위치로 시각적 표현 이동
         }
@@ -79,16 +79,17 @@ public class CurrentEquippedSlot : Slot, IDragHandler, IEndDragHandler, IBeginDr
         if (equipment != null)
         {
             tempEquipment = equipment;
-            CurrentEquipped.Instance.RemoveEquipped(equipment);
-            ClearSlot(); // 슬롯 클리어
 
             // 시각적 표현 생성
             dragVisual = new GameObject("Drag Visual");
             dragVisual.transform.SetParent(GameObject.FindObjectOfType<Canvas>().transform); // Canvas를 부모로 설정
             Image visualImage = dragVisual.AddComponent<Image>();
             visualImage.sprite = itemIcon.sprite; // 현재 슬롯의 아이템 이미지 사용
-            visualImage.rectTransform.sizeDelta = new Vector2(50, 50); // 크기 조절
+            visualImage.rectTransform.sizeDelta = new Vector2(60, 60); // 크기 조절
             visualImage.raycastTarget = false; // 이벤트 레이캐스트 무시
+
+            CurrentEquipped.Instance.RemoveEquipped(equipment);
+            ClearSlot(); // 슬롯 클리어
         }
     }
 

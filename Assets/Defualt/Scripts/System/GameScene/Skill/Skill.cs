@@ -13,18 +13,23 @@ public enum SkillType
 [Serializable]
 public class Skill
 {
-    public SkillType skillType;
+    public Sprite skillIcon;
+    public bool globalCoolDown;
+    public bool isCombo;
     public string skillName;
     public string description;
-    public Sprite skillIcon;
+    public string addEffects;
     public int useLevel;
     public int useMana;
-    public int Damage;
+    public int defaultdamage;
+    public int comboDamage;
     public int heal;
     public int range;
+    public float globalCoolTime;
     public float coolTime;
     public float duration;
     public float spellTime;
+    public SkillType skillType;
 
 
     public virtual void UseSkill()

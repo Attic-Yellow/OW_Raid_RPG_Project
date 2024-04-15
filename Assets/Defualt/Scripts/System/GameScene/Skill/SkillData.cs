@@ -15,4 +15,8 @@ public class SkillData : MonoBehaviour
     }
 
     public List<WarriorSkill> warriorSkills = new List<WarriorSkill>();
+    public List<DragoonSkill> dragoonSkills = new List<DragoonSkill>();
+    public List<BardSkill> bardSkills = new List<BardSkill>();
+    public List<WhiteMageSkill> whiteMageSkills = new List<WhiteMageSkill>();
+    public List<BlackMageSkill> blackMageSkills = new List<BlackMageSkill>();
 }

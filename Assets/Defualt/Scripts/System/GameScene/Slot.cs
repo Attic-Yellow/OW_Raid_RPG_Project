@@ -8,6 +8,7 @@ public enum SlotType
     Item,
     Equipment,
     Skill,
+    Quick,
 }
 
 public class Slot : MonoBehaviour
@@ -36,8 +37,28 @@ public class Slot : MonoBehaviour
 
     }
 
+    public virtual void AssignSkill(Skill newSkill)
+    {
+
+    }
+
 
     public virtual Equipment GetEquipment()
+    {
+        return null;
+    }
+
+    public virtual Skill GetSkill()
+    {
+        return null;
+    }
+
+    public virtual Item GetItem()
+    {
+        return null;
+    }
+
+    public virtual Slot AssignSlot()
     {
         return null;
     }
