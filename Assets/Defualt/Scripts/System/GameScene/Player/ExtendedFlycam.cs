@@ -81,4 +81,9 @@ public class ExtendedFlycam : MonoBehaviour
     {
         GameManager.Instance.uiManager.gameSceneUI.characterGearUI.GearUIController();
     }
+
+    private void OnSkill(InputValue value)
+    {
+        GameManager.Instance.uiManager.gameSceneUI.skillUI.SkillUIController();
+    }
 }

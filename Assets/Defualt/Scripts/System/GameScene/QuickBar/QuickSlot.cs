@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEditor.Experimental.GraphView;
 
-public class QuickSlot : Slot
+public class QuickSlot : Slot, IDropHandler
 {
     public Slot slot;
     private GameObject dragVisual;
@@ -37,7 +37,7 @@ public class QuickSlot : Slot
                 break;
             case SlotType.Skill:
                 // 스킬 슬롯 참조
-                //Skill skill = slot.GetSkill(); // GetSkill() 메소드가 있다고 가정
+                //Skill skill = slot.GetSkill();
                 //if (skill != null)
                 //{
                 //    itemIcon.sprite = skill.skillIcon;

@@ -6,7 +6,7 @@ using Firebase.Auth;
 using Unity.VisualScripting;
 using System.Threading.Tasks;
 
-enum Job
+public enum Job
 {
     Warrior,
     Dragoon,
