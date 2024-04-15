@@ -14,7 +14,7 @@ public class DraggableUI : MonoBehaviour, IDragHandler, IPointerDownHandler, IEn
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        windowRectTransform.SetAsLastSibling(); // 클릭 시 해당 창을 최상위로 이동
+        SetAsLast();
 
         if (RectTransformUtility.RectangleContainsScreenPoint(dragAreaRectTransform, eventData.position, eventData.pressEventCamera))
         {
@@ -36,5 +36,10 @@ public class DraggableUI : MonoBehaviour, IDragHandler, IPointerDownHandler, IEn
     public void OnEndDrag(PointerEventData eventData)
     {
         isDragging = false;
+    }
+
+    public void SetAsLast()
+    {
+        windowRectTransform.SetAsLastSibling(); // 클릭 시 해당 창을 최상위로 이동
     }
 }

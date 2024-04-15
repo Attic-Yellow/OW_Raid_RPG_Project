@@ -100,11 +100,21 @@ public class Keybinding : MonoBehaviour
             }
             else
             {
-                bindingButtonText.text = $"{action.GetBindingDisplayString(bindingIndex)} + {action.GetBindingDisplayString(bindingIndex + 1)}";
+                if (action.GetBindingDisplayString(bindingIndex) == "Control")
+                {
+                    bindingButtonText.text = $"Ctrl + {action.GetBindingDisplayString(bindingIndex + 1)}";
+                }
+                else
+                {
+                    bindingButtonText.text = $"{action.GetBindingDisplayString(bindingIndex)} + {action.GetBindingDisplayString(bindingIndex + 1)}";
+                }
                 
                 switch (action.GetBindingDisplayString(bindingIndex))
                 {
                     case "Control":
+                        quickText.text = $"c{action.GetBindingDisplayString(bindingIndex + 1)}";
+                        break;
+                    case "Ctrl":
                         quickText.text = $"c{action.GetBindingDisplayString(bindingIndex + 1)}";
                         break;
                     case "Shift":
