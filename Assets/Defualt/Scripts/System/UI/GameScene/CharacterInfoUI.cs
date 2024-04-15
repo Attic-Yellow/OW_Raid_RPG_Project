@@ -89,6 +89,7 @@ public class CharacterInfoUI : MonoBehaviour
         }
     }
 
+    // 캐릭터 창 활성화/비활성화 컨트롤러
     public void CharacterInfoUIController()
     {
         if (characterInfoUI != null)
@@ -102,6 +103,7 @@ public class CharacterInfoUI : MonoBehaviour
         }
     }
 
+    // 현재 장비 UI 최신화 메서드
     public void ReadrawSlotUI()
     {
         for (int i = 1; i < currentEquippedSlots.Count; i++)
@@ -120,6 +122,7 @@ public class CharacterInfoUI : MonoBehaviour
         }
     }
 
+    // 캐릭터 직업 반환
     public string GetJob()
     {
         return GameManager.Instance.dataManager.characterData.characterData.ContainsKey(characterInfo[2]) ? GameManager.Instance.dataManager.characterData.characterData[characterInfo[2]].ToString() : "null";

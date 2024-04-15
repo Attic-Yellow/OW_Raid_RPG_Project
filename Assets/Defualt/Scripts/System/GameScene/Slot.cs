@@ -16,6 +16,7 @@ public class Slot : MonoBehaviour
     public Image itemIcon;
     public SlotType slotType;
     public EquipmentType equipmentType;
+    public int slotIndex;
 
     public virtual void UpdateSlotUI()
     {
@@ -32,7 +33,7 @@ public class Slot : MonoBehaviour
 
     }
 
-    public virtual void AssignEquipment(Equipment newEquipment)
+    public virtual void AssignEquipment(Equipment newEquipment, int index)
     {
 
     }

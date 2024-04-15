@@ -33,13 +33,12 @@ public class AuthManager : MonoBehaviour
             if (task.IsCanceled || task.IsFaulted)
             {
                 print("회원가입 실패: " + task.Exception);
-                // 회원가입 실패, onCompletion의 첫 번째 인자는 회원가입 성공 여부, 두 번째 인자는 이메일 인증 전송 여부
-                onCompletion(false, false);
+                onCompletion(false, false); // 회원가입 실패, onCompletion의 첫 번째 인자는 회원가입 성공 여부, 두 번째 인자는 이메일 인증 전송 여부
             }
             else
             {
                 print("회원가입 성공");
-                // 여기에서 이메일 인증을 요청합니다.
+                // 여기에서 이메일 인증을 요청
                 SendEmailVerification(emailVerificationSent =>
                 {
                     // StartCoroutine(GameManager.Instance.uiManager.ResendEmailCooldown());

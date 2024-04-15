@@ -12,6 +12,7 @@ public class DraggableUI : MonoBehaviour, IDragHandler, IPointerDownHandler, IEn
     private Vector2 offset;
     private bool isDragging = false;
 
+    // 해당 창 클릭 시 호출
     public void OnPointerDown(PointerEventData eventData)
     {
         SetAsLast();
@@ -24,6 +25,7 @@ public class DraggableUI : MonoBehaviour, IDragHandler, IPointerDownHandler, IEn
         }
     }
 
+    // 해당 창 드래그 영역 드래그 시 호출
     public void OnDrag(PointerEventData eventData)
     {
         if (isDragging) 
@@ -33,11 +35,13 @@ public class DraggableUI : MonoBehaviour, IDragHandler, IPointerDownHandler, IEn
         }
     }
 
+    // 드래그 종료 시 호출
     public void OnEndDrag(PointerEventData eventData)
     {
         isDragging = false;
     }
 
+    // 해당 창을 최상위로 이동(하이어라키 상 최하위 자식으로 이동)
     public void SetAsLast()
     {
         windowRectTransform.SetAsLastSibling(); // 클릭 시 해당 창을 최상위로 이동

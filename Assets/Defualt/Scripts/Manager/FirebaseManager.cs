@@ -344,6 +344,7 @@ public class FirebaseManager : MonoBehaviour
         });
     }
 }
+
 public static class AsyncOperationExtensions
 {
     public static Task<AssetBundle> ToTask(this AssetBundleCreateRequest request)

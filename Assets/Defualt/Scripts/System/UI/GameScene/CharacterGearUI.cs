@@ -50,6 +50,7 @@ public class CharacterGearUI : MonoBehaviour
         }
     }
 
+    // 장비함 컨트롤러
     public void GearUIController()
     {
         if (characterGearUI != null)
@@ -63,6 +64,7 @@ public class CharacterGearUI : MonoBehaviour
         }
     }
 
+    // 장비함 장비별 버튼 컨트롤러
     public void GearsController(int index)
     {
         if (characterGears.Count > 0)
@@ -74,6 +76,7 @@ public class CharacterGearUI : MonoBehaviour
         }
     }
 
+    // 장비함 - 무기 칸 UI 최신화 메서드
     public void ReadrawWeaponSlotUI()
     {
         foreach (var slot in weaponSlot)
@@ -88,6 +91,7 @@ public class CharacterGearUI : MonoBehaviour
         }
     }
 
+    // 장비함 - 머리 칸 UI 최신화 메서드
     public void ReadrawHeadSlotUI()
     {
         foreach (var slot in headSlot)
@@ -102,6 +106,7 @@ public class CharacterGearUI : MonoBehaviour
         }
     }
 
+    // 장비함 - 몸통 칸 UI 최신화 메서드
     public void ReadrawBodySlotUI()
     {
         foreach (var slot in bodySlot)
@@ -116,6 +121,7 @@ public class CharacterGearUI : MonoBehaviour
         }
     }
 
+    // 장비함 - 손 칸 UI 최신화 메서드
     public void ReadrawHandsSlotUI()
     {
         foreach (var slot in handsSlot)
@@ -130,6 +136,7 @@ public class CharacterGearUI : MonoBehaviour
         }
     }
 
+    // 장비함 - 다리 칸 UI 최신화 메서드
     public void ReadrawLegsSlotUI()
     {
         foreach (var slot in legsSlot)
@@ -144,6 +151,7 @@ public class CharacterGearUI : MonoBehaviour
         }
     }
 
+    // 장비함 - 신발 칸 UI 최신화 메서드
     public void ReadrawFeetSlotUI()
     {
         foreach (var slot in feetSlot)
@@ -158,6 +166,7 @@ public class CharacterGearUI : MonoBehaviour
         }
     }
 
+    // 장비함 - 보조 도구 칸 UI 최신화 메서드
     public void ReadrawAuxiliarySlotUI()
     {
         foreach (var slot in auxiliarySlot)
@@ -172,6 +181,7 @@ public class CharacterGearUI : MonoBehaviour
         }
     }
 
+    // 장비함 - 귀걸이 칸 UI 최신화 메서드
     public void ReadrawEarringSlotUI()
     {
         foreach (var slot in earringSlot)
@@ -186,6 +196,7 @@ public class CharacterGearUI : MonoBehaviour
         }
     }
 
+    // 장비함 - 목걸이 칸 UI 최신화 메서드
     public void ReadrawNecklaceSlotUI()
     {
         foreach (var slot in necklaceSlot)
@@ -200,6 +211,7 @@ public class CharacterGearUI : MonoBehaviour
         }
     }
 
+    // 장비함 - 팔찌 칸 UI 최신화 메서드
     public void ReadrawBraceletSlotUI()
     {
         foreach (var slot in braceletSlot)
@@ -214,6 +226,7 @@ public class CharacterGearUI : MonoBehaviour
         }
     }
 
+    // 장비함 - 반지 칸 UI 최신화 메서드
     public void ReadrawRingSlotUI()
     {
         foreach (var slot in ringSlot)

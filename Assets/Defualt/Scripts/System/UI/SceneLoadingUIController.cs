@@ -18,6 +18,7 @@ public class SceneLoadingUIController : MonoBehaviour
         SetImage();
     }
 
+    // 로딩 이미지 랜덤 부여
     private void SetImage()
     {
         if (loadingImages.Length > 0)
@@ -28,11 +29,13 @@ public class SceneLoadingUIController : MonoBehaviour
         }
     }
 
+    // 로딩 호출
     public void Loading(string sceneName)
     {
         StartCoroutine(LoadAsyncScene(sceneName));
     }
 
+    // 로그인 > 메인 씬 전환 로딩 코루틴
     IEnumerator LoadAsyncScene(string sceneName)
     {
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
@@ -47,11 +50,13 @@ public class SceneLoadingUIController : MonoBehaviour
         }
     }
 
+    // 메인 > 게임 씬 전환 로딩 호출 메서드
     public void UpdataLoadingProgress(int progress)
     {
         StartCoroutine(UpdataLoadingProgressCoroutine(progress));
     }
 
+    // 메인 > 게임 씬 전환 로딩 코루틴 (1차: 0% ~ 30% 2차: 30% ~ 70%)
     IEnumerator UpdataLoadingProgressCoroutine(int targetProgress)
     {
         while (currentProgress < targetProgress)
@@ -66,11 +71,17 @@ public class SceneLoadingUIController : MonoBehaviour
         }
     }
 
+    // 메인 > 게임 씬 전환 로딩 코루틴 (70% ~ 100%)
     IEnumerator LoadAsyncGameScene(string sceneName)
     {
-        while (currentProgress < 100)
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
+
+        while (!asyncLoad.isDone)
         {
-            currentProgress++;
+            if (currentProgress < 100)
+            {
+                currentProgress++;
+            }
             loadingText.text = $"{currentProgress}%";
             yield return new WaitForSeconds(Random.Range(0.01f, 0.05f));
         }

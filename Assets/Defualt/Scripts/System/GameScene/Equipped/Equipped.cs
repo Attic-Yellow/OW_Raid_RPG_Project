@@ -31,11 +31,24 @@ public class Equipped : MonoBehaviour
 
     public bool AddWeapon(Equipment equipment)
     {
-        if (weapon.Count < 30 && equipment.equipment == EquipmentType.Weapon)
+        if (equipment.equipment != EquipmentType.Weapon)
         {
-            weapon.Add(equipment);
-            onChangeGear?.Invoke();
-            return true;
+            return false;
+        }
+
+        if (weapon.Count > 29)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < weapon.Count; i++)
+        {
+            if (weapon[i].equipment == EquipmentType.None)
+            {
+                weapon[i] = equipment;
+                onChangeGear?.Invoke();
+                return true;
+            }
         }
 
         return false;
@@ -151,14 +164,39 @@ public class Equipped : MonoBehaviour
 
     public bool AddRing(Equipment equipment)
     {
-        if (ring.Count < 30 && equipment.equipment == EquipmentType.Ring)
+        if (equipment.equipment != EquipmentType.Ring)
         {
-            ring.Add(equipment);
-            onChangeGear?.Invoke();
-            return true;
+            return false;
+        }
+
+        if (ring.Count > 29)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < ring.Count; i++)
+        {
+            if (ring[i].equipment == EquipmentType.None)
+            {
+                ring[i] = equipment;
+                onChangeGear?.Invoke();
+                return true;
+            }
         }
 
         return false;
+    }
+
+    public bool AssignRingAtIndex(Equipment equipment, int index)
+    {
+        if (index < 0 || index > 29 || equipment.equipment != EquipmentType.Ring)
+        {
+            return false; 
+        }
+
+        ring[index] = equipment;
+        onChangeGear?.Invoke();
+        return true;
     }
 
     public void RemoveWeapon(Equipment equipment)

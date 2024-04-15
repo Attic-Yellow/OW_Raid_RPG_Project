@@ -51,20 +51,20 @@ public class EquippedSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandl
             if (equipment != null && slot != null && equipmentType == slot.equipmentType)
             {
                 // 드랍 성공: 아이템을 새 슬롯에 할당
-                slot.AssignEquipment(tempEquipment);
+                slot.AssignEquipment(tempEquipment, slot.slotIndex);
                 slot.UpdateSlotUI();
             }
             else
             {
                 equipment = tempEquipment;
-                AssignEquipment(equipment);
+                AssignEquipment(equipment, slot.slotIndex);
             }
         }
         else
         {
             // 드랍 실패: 원래 슬롯에 아이템을 다시 할당
             equipment = tempEquipment;
-            AssignEquipment(equipment);
+            AssignEquipment(equipment, slotIndex);
         }
 
         // 임시 데이터 초기화
@@ -90,7 +90,7 @@ public class EquippedSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandl
         }
     }
 
-    public override void AssignEquipment(Equipment newEquipment)
+    public override void AssignEquipment(Equipment newEquipment, int index)
     {
         equipment = newEquipment; // 새로운 장비를 할당
 
@@ -129,7 +129,7 @@ public class EquippedSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandl
                     Equipped.Instance.bracelet.Add(newEquipment);
                     break;
                 case EquipmentType.Ring:
-                    Equipped.Instance.ring.Add(newEquipment);
+                    Equipped.Instance.AssignRingAtIndex(newEquipment, index);
                     break;
                 case EquipmentType.None:
                     ClearSlot();

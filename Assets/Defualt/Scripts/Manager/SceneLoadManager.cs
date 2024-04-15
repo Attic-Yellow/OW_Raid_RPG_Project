@@ -9,6 +9,7 @@ public class SceneLoadManager : MonoBehaviour
     public SceneLoadingUIController loadingUIController;
 
     [SerializeField] private GameObject loadingUIPrefab;
+    [SerializeField] private bool isLoading;
 
     private void Awake()
     {
@@ -34,11 +35,17 @@ public class SceneLoadManager : MonoBehaviour
         loadingUIController.Loading(sceneName);
     }
 
+    // 서버 입장시 호출
     public void JoiningServer(int progress)
     {
-        var target = GameObject.Find("LoadingScene Target");
-        var loadingScene = Instantiate(loadingUIPrefab, target.transform);
-        loadingUIController = loadingScene.GetComponent<SceneLoadingUIController>();
+        if (!isLoading)
+        {
+            isLoading = true;
+            var target = GameObject.Find("LoadingScene Target");
+            var loadingScene = Instantiate(loadingUIPrefab, target.transform);
+            loadingUIController = loadingScene.GetComponent<SceneLoadingUIController>();
+        }
+
         loadingUIController.UpdataLoadingProgress(progress);
     }
 }

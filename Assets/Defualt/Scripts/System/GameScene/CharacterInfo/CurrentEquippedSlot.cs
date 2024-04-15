@@ -54,20 +54,20 @@ public class CurrentEquippedSlot : Slot, IDragHandler, IEndDragHandler, IBeginDr
             if (slot != null && equipmentType == slot.equipmentType)
             {
                 // 드랍 성공: 아이템을 새 슬롯에 할당
-                slot.AssignEquipment(tempEquipment);
+                slot.AssignEquipment(tempEquipment, slot.slotIndex);
                 slot.UpdateSlotUI();
             }
             else
             {
                 equipment = tempEquipment;
-                AssignEquipment(equipment);
+                AssignEquipment(equipment, slot.slotIndex);
             }
         }
         else
         {
             // 드랍 실패: 원래 슬롯에 아이템을 다시 할당
             equipment = tempEquipment;
-            AssignEquipment(equipment);
+            AssignEquipment(equipment, slotIndex);
         }
 
         // 임시 데이터 초기화
@@ -93,7 +93,7 @@ public class CurrentEquippedSlot : Slot, IDragHandler, IEndDragHandler, IBeginDr
         }
     }
 
-    public override void AssignEquipment(Equipment newEquipment)
+    public override void AssignEquipment(Equipment newEquipment, int index)
     {
         equipment = newEquipment; // 새로운 장비를 할당
         CurrentEquipped.Instance.IsEquipped(newEquipment);

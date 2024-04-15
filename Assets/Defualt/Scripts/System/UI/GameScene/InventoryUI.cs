@@ -35,6 +35,7 @@ public class InventoryUI : MonoBehaviour
         InventorySlotsAreasController(0);
     }
 
+    // 소지함 활성화/비활성화 컨트롤러
     public void InventoryController()
     {
         if (inventoryUI != null)
@@ -48,6 +49,7 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
+    // 인벤토리 영역 선택 컨트롤러
     public void InventorySlotsAreasController(int index)
     {
         if (inventorySlotAreas.Count > 0)
@@ -59,6 +61,7 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
+    // 인벤토리 UI 최신화 메서드
     public void ReadrawSlotUI()
     {
         for (int i = 0; i < inventorySlots.Count; i++)
