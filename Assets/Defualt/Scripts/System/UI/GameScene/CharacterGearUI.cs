@@ -1,11 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CharacterGearUI : MonoBehaviour
 {
+    #region 장비함 UI 오브젝트
     [SerializeField] private GameObject characterGearUI;
+    [SerializeField] private List<GameObject> characterGearButton;
     [SerializeField] private List<GameObject> characterGears;
+    #endregion
+
+    #region 파츠 별 장비 슬롯 리스트
     [SerializeField] private List<EquippedSlot> weaponSlot;
     [SerializeField] private List<EquippedSlot> headSlot;
     [SerializeField] private List<EquippedSlot> bodySlot;
@@ -17,6 +23,7 @@ public class CharacterGearUI : MonoBehaviour
     [SerializeField] private List<EquippedSlot> necklaceSlot;
     [SerializeField] private List<EquippedSlot> braceletSlot;
     [SerializeField] private List<EquippedSlot> ringSlot;
+    #endregion
 
     [SerializeField]private Equipped equipped;
 
@@ -25,6 +32,7 @@ public class CharacterGearUI : MonoBehaviour
         GameManager.Instance.uiManager.gameSceneUI.characterGearUI = this;
     }
 
+    #region 스타트 메서드
     private void Start()
     {
         equipped = Equipped.Instance;
@@ -49,7 +57,9 @@ public class CharacterGearUI : MonoBehaviour
             GearsController(0);
         }
     }
+    #endregion
 
+    #region 장비함 UI 컨트롤러
     // 장비함 컨트롤러
     public void GearUIController()
     {
@@ -74,8 +84,31 @@ public class CharacterGearUI : MonoBehaviour
                 characterGears[i].gameObject.SetActive(i == index);
             }
         }
-    }
 
+        if (characterGearButton.Count > 0)
+        {
+            for (int i = 0; i < characterGearButton.Count; i++)
+            {
+                var img = characterGearButton[i].gameObject.GetComponent<Image>();
+
+                if (i == index)
+                {
+                    Color newColor = img.color;
+                    newColor.a = 1f;
+                    img.color = newColor;
+                }
+                else
+                {
+                    Color newColor = img.color;
+                    newColor.a = 0.4f;
+                    img.color = newColor;
+                }
+            }
+        }
+    }
+    #endregion
+
+    #region 장비함 파츠 별 UI 최신화 메서드
     // 장비함 - 무기 칸 UI 최신화 메서드
     public void ReadrawWeaponSlotUI()
     {
@@ -239,5 +272,6 @@ public class CharacterGearUI : MonoBehaviour
             ringSlot[i].equipment = equipped.ring[i];
             ringSlot[i].UpdateSlotUI();
         }
-    }
+    }    
+    #endregion
 }

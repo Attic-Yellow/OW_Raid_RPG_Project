@@ -7,6 +7,7 @@ public enum SlotType
 {
     Item,
     Equipment,
+    CurrentEquip,
     Skill,
     Quick,
 }
@@ -33,16 +34,15 @@ public class Slot : MonoBehaviour
 
     }
 
-    public virtual void AssignEquipment(Equipment newEquipment, int index)
+    public virtual void AssignEquipment(Equipment newEquipment, int oldIndex, int newIndex, SlotType oldSlotType, SlotType newslotType)
     {
 
     }
 
-    public virtual void AssignSkill(Skill newSkill)
+    public virtual void AssignSlot(Slot newslot)
     {
 
     }
-
 
     public virtual Equipment GetEquipment()
     {
@@ -59,8 +59,5 @@ public class Slot : MonoBehaviour
         return null;
     }
 
-    public virtual Slot AssignSlot()
-    {
-        return null;
-    }
+
 }

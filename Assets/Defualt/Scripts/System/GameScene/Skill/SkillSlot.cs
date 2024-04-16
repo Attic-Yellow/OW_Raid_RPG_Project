@@ -11,7 +11,13 @@ public class SkillSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
     [SerializeField] private TextMeshProUGUI skillName;
     [SerializeField] private TextMeshProUGUI skillInfo;
     [SerializeField] private Skill skill;
+    [SerializeField] private SkillSlot slot;
     private GameObject dragVisual;
+
+    private void Start()
+    {
+        slot = this;
+    }
 
     public void SkillInfo(Skill skill)
     {
@@ -72,7 +78,7 @@ public class SkillSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
             if (skill != null && slot != null)
             {
                 // 드랍 성공: 아이템을 새 슬롯에 할당
-                // slot.AssignSkill(skill);
+                slot.AssignSlot(this.slot);
                 slot.UpdateSlotUI();
             }
             else
@@ -82,7 +88,6 @@ public class SkillSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
         }
         else
         {
-            // 드랍 실패: 원래 슬롯에 아이템을 다시 할당
             Destroy(dragVisual);
         }
     }

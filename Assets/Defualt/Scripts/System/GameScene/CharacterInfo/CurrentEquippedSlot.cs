@@ -11,6 +11,11 @@ public class CurrentEquippedSlot : Slot, IDragHandler, IEndDragHandler, IBeginDr
     private GameObject dragVisual;
     private Equipment tempEquipment; // 임시로 저장할 장비 데이터
 
+    private void Start()
+    {
+        ClearSlot();
+    }
+
     public override void UpdateSlotUI()
     {
         itemIcon.sprite = equipment.itemImage;
@@ -28,6 +33,7 @@ public class CurrentEquippedSlot : Slot, IDragHandler, IEndDragHandler, IBeginDr
         itemIcon.gameObject.SetActive(false);
     }
 
+    #region 드래그 시작
     public void OnDrag(PointerEventData eventData)
     {
         if (dragVisual != null)
@@ -35,9 +41,16 @@ public class CurrentEquippedSlot : Slot, IDragHandler, IEndDragHandler, IBeginDr
             dragVisual.transform.position = Input.mousePosition; // 마우스 위치로 시각적 표현 이동
         }
     }
+    #endregion
 
+    #region 드래그 종료
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (tempEquipment == null)
+        {
+            return;
+        }
+
         if (dragVisual != null)
         {
             Destroy(dragVisual);
@@ -54,29 +67,31 @@ public class CurrentEquippedSlot : Slot, IDragHandler, IEndDragHandler, IBeginDr
             if (slot != null && equipmentType == slot.equipmentType)
             {
                 // 드랍 성공: 아이템을 새 슬롯에 할당
-                slot.AssignEquipment(tempEquipment, slot.slotIndex);
+                slot.AssignEquipment(tempEquipment, slotIndex, slot.slotIndex, slotType, slot.slotType);
                 slot.UpdateSlotUI();
             }
             else
             {
                 equipment = tempEquipment;
-                AssignEquipment(equipment, slot.slotIndex);
+                AssignEquipment(equipment, slotIndex, slot.slotIndex, slotType, slot.slotType);
             }
         }
         else
         {
             // 드랍 실패: 원래 슬롯에 아이템을 다시 할당
             equipment = tempEquipment;
-            AssignEquipment(equipment, slotIndex);
+            AssignEquipment(equipment, slotIndex, slotIndex, slotType, slotType);
         }
 
         // 임시 데이터 초기화
         tempEquipment = null;
     }
+    #endregion
 
+    #region 드래그 중
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (equipment != null)
+        if (equipment != null && equipment.itemImage != null)
         {
             tempEquipment = equipment;
 
@@ -91,12 +106,20 @@ public class CurrentEquippedSlot : Slot, IDragHandler, IEndDragHandler, IBeginDr
             CurrentEquipped.Instance.RemoveEquipped(equipment);
             ClearSlot(); // 슬롯 클리어
         }
+        else
+        {
+            tempEquipment = null;
+        }
     }
+    #endregion
 
-    public override void AssignEquipment(Equipment newEquipment, int index)
+    #region 슬롯 할당
+    public override void AssignEquipment(Equipment newEquipment, int oldIndex, int newIndex, SlotType oldSlotType, SlotType newSlotType)
     {
         equipment = newEquipment; // 새로운 장비를 할당
-        CurrentEquipped.Instance.IsEquipped(newEquipment);
+        print(equipment);
+        CurrentEquipped.Instance.IsEquipped(newEquipment, oldIndex, newIndex, oldSlotType, newSlotType);
         UpdateSlotUI(); // 슬롯의 UI를 업데이트
     }
+    #endregion
 }

@@ -5,8 +5,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.Rendering.LookDev;
 
-public class QuickSlot : Slot, IDropHandler, IDragHandler, IEndDragHandler, IBeginDragHandler
+public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
 {
     public Slot slot;
     private GameObject dragVisual;
@@ -57,20 +58,6 @@ public class QuickSlot : Slot, IDropHandler, IDragHandler, IEndDragHandler, IBeg
         itemIcon.gameObject.SetActive(false);
     }
 
-    public void OnDrop(PointerEventData eventData)
-    {
-        GameObject droppedObject = eventData.pointerDrag;
-        if (droppedObject != null)
-        {
-            Slot slot = droppedObject.GetComponent<Slot>();
-            if (slot != null)
-            {
-                this.slot = slot;
-                UpdateSlotUI();
-            }
-        }
-    }
-
     public void OnDrag(PointerEventData eventData)
     {
         if (dragVisual != null)
@@ -97,7 +84,9 @@ public class QuickSlot : Slot, IDropHandler, IDragHandler, IEndDragHandler, IBeg
             if (this.slot != null && slot != null)
             {
                 // 드랍 성공: 아이템을 새 슬롯에 할당
-                slot.AssignSlot(slot);
+                Slot tempSlot = slot.slot;
+                slot.AssignSlot(this.slot);
+                this.slot = tempSlot;
                 slot.UpdateSlotUI();
             }
         }
@@ -118,8 +107,10 @@ public class QuickSlot : Slot, IDropHandler, IDragHandler, IEndDragHandler, IBeg
         }
     }
 
-    public void AssignSlot(Slot slot)
+
+    public override void AssignSlot(Slot slot)
     {
         this.slot = slot;
+        UpdateSlotUI();
     }
 }
