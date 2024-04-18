@@ -117,7 +117,6 @@ public class CurrentEquippedSlot : Slot, IDragHandler, IEndDragHandler, IBeginDr
     public override void AssignEquipment(Equipment newEquipment, int oldIndex, int newIndex, SlotType oldSlotType, SlotType newSlotType)
     {
         equipment = newEquipment; // 새로운 장비를 할당
-        print(equipment);
         CurrentEquipped.Instance.IsEquipped(newEquipment, oldIndex, newIndex, oldSlotType, newSlotType);
         UpdateSlotUI(); // 슬롯의 UI를 업데이트
     }

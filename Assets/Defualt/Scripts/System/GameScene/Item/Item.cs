@@ -18,7 +18,7 @@ public class Item
     public Sprite itemImage;
     public int itemId;
 
-    public bool Use()
+    public virtual bool Use()
     {
         return false;
     }

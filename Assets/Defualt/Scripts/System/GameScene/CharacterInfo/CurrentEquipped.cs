@@ -31,6 +31,8 @@ public class CurrentEquipped : MonoBehaviour
         }
     }
 
+    #region 장비 착용 및 교체 메서드
+    // 장비 착용 및 교체 메서드
     public bool IsEquipped(Equipment equipment, int oldIndex, int newIndex, SlotType oldSlotType, SlotType newSlotType)
     {
         int index = (int)equipment.equipment; // EquipmentType에 해당하는 인덱스를 정수로 변환
@@ -84,7 +86,10 @@ public class CurrentEquipped : MonoBehaviour
 
         return true;
     }
+    #endregion
 
+    #region 장비 해제 메서드
+    // 장비 해제 메서드
     public void RemoveEquipped(Equipment equipment)
     {
         int index = (int)equipment.equipment; // EquipmentType에 해당하는 인덱스를 정수로 변환
@@ -93,4 +98,5 @@ public class CurrentEquipped : MonoBehaviour
         currentEquippeds[index] = new Equipment();
         onChangeEquipp?.Invoke();
     }
+    #endregion
 }

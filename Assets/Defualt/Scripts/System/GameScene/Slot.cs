@@ -29,35 +29,51 @@ public class Slot : MonoBehaviour
 
     }
 
-    public virtual void AssignItem(Item newItem)
+    // 아이템 이동 시 메서드
+    public virtual void AssignItem(Consumable consumable, int oldIndex, int newIndex, SlotType oldSlotType, SlotType newSlotType, int itemCount)
     {
 
     }
 
+    // 장비 이동 시 메서드
     public virtual void AssignEquipment(Equipment newEquipment, int oldIndex, int newIndex, SlotType oldSlotType, SlotType newslotType)
     {
 
     }
 
-    public virtual void AssignSlot(Slot newslot)
+    // 아이템, 스킬 퀵 슬롯 할당 시 메서드
+    public virtual void AssignSlot(GameObject newslot)
     {
 
     }
 
+    // 아이템 갯수 지정
+    public virtual void SetItemCount(int itemCount)
+    {
+
+    }
+
+    // 소모품 반환
+    public virtual Consumable GetItem()
+    {
+        return null;
+    }
+
+    // 장비 반환
     public virtual Equipment GetEquipment()
     {
         return null;
     }
 
+    // 스킬 반환
     public virtual Skill GetSkill()
     {
         return null;
     }
 
-    public virtual Item GetItem()
+    // 아이템 갯수 반환
+    public virtual int GetItemCount()
     {
-        return null;
+        return 0;
     }
-
-
 }
