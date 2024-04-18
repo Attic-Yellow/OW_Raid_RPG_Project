@@ -22,8 +22,7 @@ public class AccountSystem : MonoBehaviour
 
     private int currentIndex = 0;
 
-    /***버튼 콜벡 메서드***/
-
+    #region 버튼 콜벡 메서드
     // 로그인 버튼 콜백
     public void OnSigninButtonCallBack()
     {
@@ -64,6 +63,7 @@ public class AccountSystem : MonoBehaviour
         });
     }
 
+
     // 이메일 인증 확인 버튼 콜백
     public void OnCompleteEVButtonCallBack()
     {
@@ -82,9 +82,9 @@ public class AccountSystem : MonoBehaviour
             }
         });
     }
+    #endregion
 
-    /*** 코루틴 ***/
-
+    #region 코루틴
     // 로그인 비동기 로직
     public IEnumerator SigninCoroutine(string email, string password)
     {
@@ -106,13 +106,17 @@ public class AccountSystem : MonoBehaviour
             GameManager.Instance.uiManager.startSceneUI.LoadingAreaController(); // 로딩 화면 비활성화
         }
     }
+    #endregion
 
+    #region 인풋 필드 초기화
     private void InitInputField()
     {
         idInputField.text = "";
         passwordInputField.text = "";
     }
+    #endregion
 
+    #region 인풋 시스템 On메서드
     private void OnNext(InputValue value)
     {
         int index = GameManager.Instance.uiManager.startSceneUI.accountUI.GetCurrentAreaIndex();
@@ -189,4 +193,5 @@ public class AccountSystem : MonoBehaviour
                 break;
         }
     }
+    #endregion
 }

@@ -58,7 +58,7 @@ public class FirebaseManager : MonoBehaviour
         });
     }
 
-    /*** 업로드 ***/
+    #region 업로드
 
     // 캐릭터 생성 및 Firestore에 업로드하는 메서드
     public async Task<bool> CreateCharacter(string userId, string email, string job, string tribe, string serverName, string characterName)
@@ -196,8 +196,9 @@ public class FirebaseManager : MonoBehaviour
 
         return isCharacterCreated;
     }
+    #endregion
 
-    /*** 로드 ***/
+    #region 로드
 
     // 사용자 데이터 로드
     public async Task LoadUserData(string userId, string email, Action<Dictionary<string, object>> onCompletion)
@@ -266,7 +267,9 @@ public class FirebaseManager : MonoBehaviour
             onCompletion(null);
         }
     }
+    #endregion
 
+    #region 데이터 초기화
     // 사용자 데이터 초기화
     public async Task InitializeUserData(string userId, string email, Action<bool> onCompletion)
     {
@@ -293,7 +296,9 @@ public class FirebaseManager : MonoBehaviour
         await docRef.Document(userId).SetAsync(user[0]);
         onCompletion(true);
     }
+    #endregion
 
+    #region 로그아웃
     //  로그아웃
     public void SignOut()
     {
@@ -303,7 +308,9 @@ public class FirebaseManager : MonoBehaviour
             Debug.Log("로그아웃 성공");
         }
     }
+    #endregion
 
+    #region 문서 필드-값 존재 여부
     // 문서 필드 값 존재 여부 확인
     public void CheckFieldValueExists(string document, string userValue, System.Action<bool> onResult)
     {
@@ -343,6 +350,7 @@ public class FirebaseManager : MonoBehaviour
             }
         });
     }
+    #endregion
 }
 
 public static class AsyncOperationExtensions
