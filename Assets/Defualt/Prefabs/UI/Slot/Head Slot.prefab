@@ -91,6 +91,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemIcon: {fileID: 4749326211020319058}
+  slotType: 1
   equipmentType: 2
   equipment:
     itemType: 0

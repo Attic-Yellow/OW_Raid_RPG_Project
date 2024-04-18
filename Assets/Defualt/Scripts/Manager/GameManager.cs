@@ -143,6 +143,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // 로그아웃
     public void LogOut()
     {
         firebaseManager.SignOut();
@@ -159,36 +160,43 @@ public class GameManager : MonoBehaviour
         return isUserGuest;
     }
 
+    // 이메일 인증 여부 저장
     public void SetIsEmailAuthentication(bool isEmailAuthentication)
     {
         this.isEmailAuthentication = isEmailAuthentication;
     }
 
+    // 이메일 인증 여부 반환
     public bool GetIsEmailAuthentication()
     {
         return isEmailAuthentication;
     }
 
+    // 로그인 성공 여부 저장
     public void SetIsSignInSuccess(bool isSignInSuccess)
     {
         this.isSignInSuccess = isSignInSuccess;
     }
 
+    // 로그인 성공 여부 반환
     public bool GetIsSignInSuccess()
     {
         return isSignInSuccess;
     }
 
+    // 매니저인지 반환
     public bool GetIsManager()
     {
         return isManager;
     }
 
+    // 리바인딩 상태 저장
     public void SetIsRebinding(bool isRebind)
     {
         isRebinding = isRebind;
     }
 
+    // 리바인딩 상태 반환
     public bool GetIsRebinding()
     {
         return isRebinding;

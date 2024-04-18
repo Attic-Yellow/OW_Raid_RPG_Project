@@ -94,11 +94,14 @@ MonoBehaviour:
   itemIcon: {fileID: 7135733709751339914}
   slotType: 0
   equipmentType: 0
-  item:
+  slotIndex: 0
+  consumable:
     itemType: 0
     itemName: 
     itemImage: {fileID: 0}
     itemId: 0
+    itemCount: 0
+  countText: {fileID: 1848993760416916917}
 --- !u!1 &2494649744679485061
 GameObject:
   m_ObjectHideFlags: 0
@@ -251,7 +254,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

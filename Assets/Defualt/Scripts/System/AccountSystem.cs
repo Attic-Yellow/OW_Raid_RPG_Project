@@ -128,7 +128,7 @@ public class AccountSystem : MonoBehaviour
                 break;
             case 1:
                 EventSystem.current.SetSelectedGameObject(passwordInputField.gameObject, null);
-                passwordInputField.OnPointerClick(new PointerEventData(EventSystem.current)); // 포커스와 함께 클릭 이벤트도 발생
+                passwordInputField.OnPointerClick(new PointerEventData(EventSystem.current));
                 currentIndex++;
                 break;
             case 2:

@@ -518,20 +518,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemIcon: {fileID: 5541374738153602547}
-  slotType: 2
+  slotType: 3
   equipmentType: 0
+  slotIndex: 0
   skillName: {fileID: 6585645315625130150}
   skillInfo: {fileID: 2939149616864418368}
   skill:
-    skillType: 0
+    skillIcon: {fileID: 0}
+    globalCoolDown: 0
+    isCombo: 0
     skillName: 
     description: 
-    skillIcon: {fileID: 0}
+    addEffects: 
     useLevel: 0
     useMana: 0
-    Damage: 0
+    defaultdamage: 0
+    comboDamage: 0
     heal: 0
     range: 0
+    globalCoolTime: 0
     coolTime: 0
     duration: 0
     spellTime: 0
+    skillType: 0

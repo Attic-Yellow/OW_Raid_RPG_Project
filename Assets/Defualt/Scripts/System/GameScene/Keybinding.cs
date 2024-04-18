@@ -17,13 +17,12 @@ public class Keybinding : MonoBehaviour
     [SerializeField] private int bindingIndex;
     [SerializeField] private TextMeshProUGUI quickText;
 
-    private bool isComposite = false;
-
     private void Start()
     {
         actionToRebind = actionAsset.FindAction(bindName, true);
     }
 
+    // 키 재바인딩 호출
     public void StartRebindingProcess()
     {
         print(bindingIndex);
@@ -44,6 +43,7 @@ public class Keybinding : MonoBehaviour
         }
     }
 
+    // 키 재바인딩 코루틴
     private IEnumerator RebindKey()
     {
         bool isComposite = false;
@@ -60,8 +60,7 @@ public class Keybinding : MonoBehaviour
 
         if (isComposite)
         {
-            // 복합 키의 경우, 두 번째 키 바인딩 시작
-            yield return StartCoroutine(RebindingCoroutine(actionToRebind, bindingIndex + 1, _ => { }));
+            yield return StartCoroutine(RebindingCoroutine(actionToRebind, bindingIndex + 1, _ => { })); // 복합 키의 경우, 두 번째 키 바인딩 시작
         }
         else
         {
@@ -74,15 +73,7 @@ public class Keybinding : MonoBehaviour
         UpdateBindingButtonText();
     }
 
-    private void OnRebindComplete(InputActionRebindingExtensions.RebindingOperation operation, InputAction action)
-    {
-        operation.Dispose(); // 재바인딩 작업 리소스 해제
-
-        action.Enable(); // 재바인딩이 완료되면, 액션을 다시 활성화
-        bindingButtonText.text = action.GetBindingDisplayString(bindingIndex); // 버튼 텍스트 업데이트
-        GameManager.Instance.SetIsRebinding(false); // 게임 매니저 상태 업데이트
-    }
-
+    // 바인딩 텍스트 업데이트
     public void UpdateBindingButtonText()
     {
         if (string.IsNullOrEmpty(bindName))
@@ -93,12 +84,13 @@ public class Keybinding : MonoBehaviour
         InputAction action = actionAsset.FindAction(bindName, throwIfNotFound: false);
         if (action != null)
         {
-            if (action.GetBindingDisplayString(bindingIndex) == action.GetBindingDisplayString(bindingIndex + 1))
+            
+            if (action.GetBindingDisplayString(bindingIndex) == action.GetBindingDisplayString(bindingIndex + 1)) // 복합 바인딩인 경우
             {
                 bindingButtonText.text = action.GetBindingDisplayString(bindingIndex);
                 quickText.text = action.GetBindingDisplayString(bindingIndex);
             }
-            else
+            else // 단일 바인딩인 경우
             {
                 if (action.GetBindingDisplayString(bindingIndex) == "Control")
                 {
@@ -132,6 +124,7 @@ public class Keybinding : MonoBehaviour
         }
     }
 
+    // 첫 번째 키 바인딩 코루틴
     private IEnumerator RebindingCoroutine(InputAction action, int targetBindingIndex, Action<string> onBindingComplete)
     {
         action.Disable();
@@ -156,5 +149,14 @@ public class Keybinding : MonoBehaviour
 
         rebindOperation.Dispose();
         action.Enable();
+    }
+
+    private void OnRebindComplete(InputActionRebindingExtensions.RebindingOperation operation, InputAction action)
+    {
+        operation.Dispose(); // 재바인딩 작업 리소스 해제
+
+        action.Enable(); // 재바인딩이 완료되면, 액션을 다시 활성화
+        bindingButtonText.text = action.GetBindingDisplayString(bindingIndex); // 버튼 텍스트 업데이트
+        GameManager.Instance.SetIsRebinding(false); // 게임 매니저 상태 업데이트
     }
 }

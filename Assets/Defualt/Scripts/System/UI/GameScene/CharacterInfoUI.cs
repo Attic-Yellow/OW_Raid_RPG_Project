@@ -7,19 +7,22 @@ using System;
 
 public class CharacterInfoUI : MonoBehaviour
 {
-    
-
+    #region 캐릭터 능력치 이름
     private string[] characterInfo = { "name", "level", "job" };
     private string[] abilityNames = { "maxHp", "str", "int", "dex", "spi", "vit", "luk", "crt", "dh", "det", "def", "mdf", "pap", "map", "sks", "mhp", "sps", "ten", "pie" };
+    #endregion
 
+    #region 캐릭터 창 UI 오브젝트
     [SerializeField] private GameObject characterInfoUI;
     [SerializeField] private Transform jobIconTransform;
     [SerializeField] private List<GameObject> jobIconPrefabs;
+
 
     [Header("Character Info")]
     [SerializeField] private List<TextMeshProUGUI> characterInfoText;
     [SerializeField] private List<TextMeshProUGUI> abilitesText;
     [SerializeField] private List<CurrentEquippedSlot> currentEquippedSlots;
+    #endregion
 
     [SerializeField] private CurrentEquipped currentEquipped;
 
@@ -28,6 +31,7 @@ public class CharacterInfoUI : MonoBehaviour
         GameManager.Instance.uiManager.gameSceneUI.characterInfoUI = this;
     }
 
+    #region 스타트 메서드
     private void Start()
     {
         currentEquipped = CurrentEquipped.Instance;
@@ -88,7 +92,10 @@ public class CharacterInfoUI : MonoBehaviour
             Instantiate(jobIconPrefabs[jobNumber], jobIconTransform.transform);
         }
     }
+    #endregion
 
+    #region 캐릭터 창 컨트롤러
+    // 캐릭터 창 활성화/비활성화 컨트롤러
     public void CharacterInfoUIController()
     {
         if (characterInfoUI != null)
@@ -101,7 +108,10 @@ public class CharacterInfoUI : MonoBehaviour
             }
         }
     }
+    #endregion
 
+    #region 현재 장비 UI 최신화
+    // 현재 장비 UI 최신화 메서드
     public void ReadrawSlotUI()
     {
         for (int i = 1; i < currentEquippedSlots.Count; i++)
@@ -119,9 +129,14 @@ public class CharacterInfoUI : MonoBehaviour
             }
         }
     }
+    #endregion
 
+    #region 현재 캐릭터 직업 반환
+    // 캐릭터 직업 반환
     public string GetJob()
     {
-        return GameManager.Instance.dataManager.characterData.characterData.ContainsKey(characterInfo[2]) ? GameManager.Instance.dataManager.characterData.characterData[characterInfo[2]].ToString() : "null";
+        return GameManager.Instance.dataManager.characterData.characterData.ContainsKey(characterInfo[2]) ? 
+            GameManager.Instance.dataManager.characterData.characterData[characterInfo[2]].ToString() : "null";
     }
+    #endregion
 }

@@ -11,8 +11,15 @@ public class SkillSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
     [SerializeField] private TextMeshProUGUI skillName;
     [SerializeField] private TextMeshProUGUI skillInfo;
     [SerializeField] private Skill skill;
+    [SerializeField] private SkillSlot slot;
     private GameObject dragVisual;
 
+    private void Start()
+    {
+        slot = this;
+    }
+
+    #region 스킬 정보 UI 업데이트
     public void SkillInfo(Skill skill)
     {
         this.skill = skill;
@@ -27,21 +34,9 @@ public class SkillSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
             skillInfo.text = $"레벨: {skill.useLevel}";
         }
     }
+    #endregion
 
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-        if (skill != null)
-        {
-            // 시각적 표현 생성
-            dragVisual = new GameObject("Drag Visual");
-            dragVisual.transform.SetParent(GameObject.FindObjectOfType<Canvas>().transform); // Canvas를 부모로 설정
-            Image visualImage = dragVisual.AddComponent<Image>();
-            visualImage.sprite = itemIcon.sprite; // 현재 슬롯의 아이템 이미지 사용
-            visualImage.rectTransform.sizeDelta = new Vector2(60, 60); // 크기 조절
-            visualImage.raycastTarget = false; // 이벤트 레이캐스트 무시
-        }
-    }
-
+    #region 드래그 시작
     public void OnDrag(PointerEventData eventData)
     {
         if (dragVisual != null)
@@ -49,7 +44,9 @@ public class SkillSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
             dragVisual.transform.position = Input.mousePosition;
         }
     }
+    #endregion
 
+    #region 드래그 끝
     public void OnEndDrag(PointerEventData eventData)
     {
         if (dragVisual != null)
@@ -72,7 +69,7 @@ public class SkillSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
             if (skill != null && slot != null)
             {
                 // 드랍 성공: 아이템을 새 슬롯에 할당
-                // slot.AssignSkill(skill);
+                slot.AssignSlot(this.slot.gameObject);
                 slot.UpdateSlotUI();
             }
             else
@@ -82,13 +79,31 @@ public class SkillSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
         }
         else
         {
-            // 드랍 실패: 원래 슬롯에 아이템을 다시 할당
             Destroy(dragVisual);
         }
     }
+    #endregion
 
+    #region 드래그 중
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        if (skill != null)
+        {
+            // 시각적 표현 생성
+            dragVisual = new GameObject("Drag Visual");
+            dragVisual.transform.SetParent(GameObject.FindObjectOfType<Canvas>().transform); // Canvas를 부모로 설정
+            Image visualImage = dragVisual.AddComponent<Image>();
+            visualImage.sprite = itemIcon.sprite; // 현재 슬롯의 아이템 이미지 사용
+            visualImage.rectTransform.sizeDelta = new Vector2(60, 60); // 크기 조절
+            visualImage.raycastTarget = false; // 이벤트 레이캐스트 무시
+        }
+    }
+    #endregion
+
+    #region 스킬 반환
     public override Skill GetSkill()
     {
         return skill;
     }
+    #endregion
 }
