@@ -6,12 +6,16 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.Rendering.LookDev;
+using TMPro;
 
 public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
 {
     public GameObject slot;
     private GameObject dragVisual;
     private GameObject tempSlot;
+    [SerializeField] private TextMeshProUGUI itemCountText;
+    [SerializeField] private GameObject coolDownImage;
+    [SerializeField] private TextMeshProUGUI coolDownText;
 
     public override void UpdateSlotUI()
     {
@@ -30,6 +34,7 @@ public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
                 if (s.consumable != null)
                 {
                     itemIcon.sprite = s.consumable.itemImage;
+                    itemCountText.text = s.consumable.itemCount.ToString();
                     itemIcon.gameObject.SetActive(true);
                 }
                 else
@@ -69,6 +74,7 @@ public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
     {
         slot = null;
         itemIcon.sprite = null;
+        itemCountText.text = "";
         itemIcon.gameObject.SetActive(false);
     }
 
@@ -85,6 +91,11 @@ public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
     #region 드래그 끝
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (tempSlot == null)
+        {
+            return;
+        }
+
         if (dragVisual != null)
         {
             Destroy(dragVisual);
@@ -98,17 +109,52 @@ public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
         {
             // 드랍 위치의 슬롯 처리
             QuickSlot slot = hit.Value.gameObject.GetComponent<QuickSlot>();
-            if (tempSlot != null && slot != null)
+            Slot allSlotType = hit.Value.gameObject.GetComponent<Slot>();
+
+            if (tempSlot != null && slot != null && slot.slot != null && allSlotType.slotType == SlotType.Quick)
             {
+                Slot linkSlot = tempSlot.GetComponent<Slot>();
+                Slot hitLinkSlot = slot.slot.GetComponent<Slot>();
+                
+                if (linkSlot.slotType == SlotType.Item && hitLinkSlot.slotType == SlotType.Item)
+                {
+                    var invenSlot = slot.slot.GetComponent<InventorySlot>();
+                    var thisInvenSlot = tempSlot.GetComponent<InventorySlot>();
+                    invenSlot.AddLinked(gameObject);
+                    invenSlot.RemoveLinked(slot.gameObject);
+                    thisInvenSlot.AddLinked(slot.gameObject);
+                }
+                else if (linkSlot.slotType == SlotType.Skill && hitLinkSlot.slotType == SlotType.Item)
+                {
+                    var invenSlot = slot.slot.GetComponent<InventorySlot>();
+                    invenSlot.AddLinked(gameObject);
+                    invenSlot.RemoveLinked(slot.gameObject);
+                }
+                else if (linkSlot.slotType == SlotType.Item && hitLinkSlot.slotType == SlotType.Skill)
+                {
+                    var thisInvenSlot = tempSlot.GetComponent<InventorySlot>();
+                    thisInvenSlot.AddLinked(slot.gameObject);
+                }
+
                 // 드랍 성공: 아이템을 새 슬롯에 할당
                 this.slot = slot.slot;
                 slot.AssignSlot(tempSlot.gameObject);
                 slot.UpdateSlotUI();
             }
-            else
+            else if (allSlotType.slotType == SlotType.Quick)
             {
                 slot.AssignSlot(tempSlot.gameObject);
                 slot.UpdateSlotUI();
+                var thisInvenSlot = tempSlot.GetComponent<InventorySlot>();
+                thisInvenSlot.AddLinked(slot.gameObject);
+            }
+            else if (allSlotType.slotType != SlotType.Quick)
+            {
+                this.slot = tempSlot;
+                AssignSlot(tempSlot.gameObject);
+                UpdateSlotUI(); 
+                var thisInvenSlot = tempSlot.GetComponent<InventorySlot>();
+                thisInvenSlot.AddLinked(gameObject);
             }
         }
         UpdateSlotUI();
@@ -129,6 +175,15 @@ public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
             visualImage.sprite = itemIcon.sprite; // 현재 슬롯의 아이템 이미지 사용
             visualImage.rectTransform.sizeDelta = new Vector2(60, 60); // 크기 조절
             visualImage.raycastTarget = false; // 이벤트 레이캐스트 무시
+
+            Slot linkSlot = tempSlot.GetComponent<Slot>();
+
+            if (linkSlot.slotType == SlotType.Item)
+            {
+                var invenSlot = slot.GetComponent<InventorySlot>();
+                invenSlot.RemoveLinked(gameObject);
+            }
+
             ClearSlot(); // 슬롯 클리어
         }
     }

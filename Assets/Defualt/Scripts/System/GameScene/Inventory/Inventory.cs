@@ -25,6 +25,10 @@ public class Inventory : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F))
         {
             AddItem(ItemData.Instance.items[0], GetItemCount());
+        }
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
             AddItem(ItemData.Instance.items[1], GetItemCount());
         }
     }
@@ -41,11 +45,11 @@ public class Inventory : MonoBehaviour
         Consumable newItem = consumable.Clone();
         newItem.itemCount = itemCount;
 
-        foreach (Consumable item in items)
+        for (int i = 0; i < items.Count; i++)
         {
-            if (item.itemName == newItem.itemName)
+            if (items[i].itemName == newItem.itemName)
             {
-                item.itemCount += newItem.itemCount;
+                items[i].itemCount += newItem.itemCount;
                 onChangeItem?.Invoke();
                 return true;
             }

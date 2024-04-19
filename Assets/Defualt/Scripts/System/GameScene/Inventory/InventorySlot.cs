@@ -12,6 +12,7 @@ public class InventorySlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHand
     public Consumable consumable;
     private GameObject dragVisual;
     private Consumable tempConsumable; // 임시로 저장할 아이템 데이터
+    private DragType dragType;
     [SerializeField] private InventorySlot slot;
     [SerializeField] private List<GameObject> linkedQuick;
 
@@ -26,10 +27,20 @@ public class InventorySlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHand
     {
         itemIcon.sprite = consumable.itemImage;
         countText.text = consumable.itemCount.ToString();
+
         if (itemIcon.sprite != null)
         {
             countText.gameObject.SetActive(true);
             itemIcon.gameObject.SetActive(true);
+        }
+
+        if (dragType == DragType.Idle && linkedQuick.Count > 0)
+        {
+            for (int i = 0; i < linkedQuick.Count; i++)
+            {
+                var quickSlot = linkedQuick[i].GetComponent<QuickSlot>();
+                quickSlot.UpdateSlotUI();
+            }
         }
     }
 
@@ -79,9 +90,8 @@ public class InventorySlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHand
                 
                 if (slot.slotType == SlotType.Item) // 인벤토리 슬롯 드랍 성공: 아이템을 새 슬롯에 할당
                 {
-                    slot.AssignItem(tempConsumable, slotIndex, slot.slotIndex, this.slot.slotType, slot.slotType, tempConsumable.itemCount);
-                    slot.UpdateSlotUI();
-
+                    slot.AssignItem(tempConsumable, slotIndex, slot.slotIndex, this.slot.slotType, slot.slotType, tempConsumable.itemCount); 
+                    
                     var linked = slot.GetComponent<InventorySlot>();
 
                     if (linkedQuick.Count > 0) // 연결 된 퀵 슬롯이 있다면
@@ -94,13 +104,17 @@ public class InventorySlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHand
                             linkedQuick.RemoveAt(0); // 연결 된 퀵 슬롯 삭제
                         }
                     }
+
+                    slot.UpdateSlotUI();
                 }
                 else if (slot.slotType == SlotType.Quick) // 퀵 슬롯 드랍 성공: 아이템을 새 슬롯에 공유
                 {
                     linkedQuick.Add(slot.gameObject); // 연결 된 퀵 슬롯 저장
                     consumable = tempConsumable;
                     slot.AssignSlot(gameObject);
-                    slot.UpdateSlotUI();
+                    slot.UpdateSlotUI(); 
+                    consumable = tempConsumable;
+                    AssignItem(tempConsumable, slotIndex, slotIndex, slotType, slotType, tempConsumable.itemCount);
                     UpdateSlotUI();
                 }
             }
@@ -119,6 +133,7 @@ public class InventorySlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHand
         }
 
         tempConsumable = null; // 임시 데이터 초기화
+        dragType = DragType.Idle; // 드래그 종료 상태로 변경
     }
     #endregion
 
@@ -127,6 +142,7 @@ public class InventorySlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHand
     {
         if (consumable != null && consumable.itemImage != null)
         {
+            dragType = DragType.Drag; // 드래그 중 상태로 변경
             tempConsumable = consumable;
 
             // 시각적 표현 생성
@@ -157,4 +173,14 @@ public class InventorySlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHand
         return consumable;
     }
     #endregion
+
+    public void AddLinked(GameObject quickSlot)
+    {
+        linkedQuick.Add(quickSlot);
+    }
+
+    public void RemoveLinked(GameObject quickSlot)
+    {
+        linkedQuick.Remove(quickSlot);
+    }
 }

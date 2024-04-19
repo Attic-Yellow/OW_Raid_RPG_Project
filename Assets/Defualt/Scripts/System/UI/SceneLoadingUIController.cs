@@ -38,15 +38,36 @@ public class SceneLoadingUIController : MonoBehaviour
     // 로그인 > 메인 씬 전환 로딩 코루틴
     IEnumerator LoadAsyncScene(string sceneName)
     {
+        int progressStep = 0;
+
+        while (progressStep > Random.Range(30, 70))
+        {
+            progressStep++;
+        }
+
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
+        asyncLoad.allowSceneActivation = false;
 
         // 로드가 완료될 때까지 대기
         while (!asyncLoad.isDone)
         {
-            int progressPercentage = (int)(asyncLoad.progress * 100.0f / 0.9f); // 진행 상황을 퍼센트로 변환하여 텍스트로 표시
-            loadingText.text = progressPercentage.ToString() + "%";
+            if (progressStep < 100)
+            {
+                progressStep++;
 
-            yield return null;
+                if (progressStep > 100)
+                {
+                    progressStep = 100;
+                }
+
+                loadingText.text = $"{progressStep}%";
+                yield return new WaitForSeconds(Random.Range(0.01f, 0.1f));
+            }
+            else
+            {
+                asyncLoad.allowSceneActivation = true;
+                yield return null;
+            }
         }
     }
 
@@ -63,11 +84,15 @@ public class SceneLoadingUIController : MonoBehaviour
         {
             currentProgress++;
             loadingText.text = $"{currentProgress}%";
-            yield return new WaitForSeconds(Random.Range(0.01f, 0.05f));
+            yield return new WaitForSeconds(Random.Range(0.01f, 0.1f));
         }
-        if (currentProgress == 70)
+        if (targetProgress > 30 && currentProgress == targetProgress)
         {
             StartCoroutine(LoadAsyncGameScene("GameScene"));
+        }
+        else
+        {
+            yield return null;
         }
     }
 
@@ -75,17 +100,26 @@ public class SceneLoadingUIController : MonoBehaviour
     IEnumerator LoadAsyncGameScene(string sceneName)
     {
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
+        asyncLoad.allowSceneActivation = false;
 
         while (!asyncLoad.isDone)
         {
             if (currentProgress < 100)
             {
-                currentProgress++;
+                int progressStep = 1;
+                currentProgress += progressStep;
+                if (currentProgress > 100)
+                {
+                    currentProgress = 100;
+                }
+                loadingText.text = $"{currentProgress}%";
+                yield return new WaitForSeconds(Random.Range(0.01f, 0.1f));
             }
-            loadingText.text = $"{currentProgress}%";
-            yield return new WaitForSeconds(Random.Range(0.01f, 0.05f));
+            else
+            {
+                asyncLoad.allowSceneActivation = true;
+                yield return null;
+            }
         }
-
-        SceneManager.LoadSceneAsync(sceneName);
     }
 }
