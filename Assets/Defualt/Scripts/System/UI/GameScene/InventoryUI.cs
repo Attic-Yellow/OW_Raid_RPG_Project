@@ -22,13 +22,6 @@ public class InventoryUI : MonoBehaviour
     {
         inventory = Inventory.Instance;
         inventory.onChangeItem += ReadrawSlotUI;
-        for (int i = 0; i < inventorySlotAreas.Count; i++)
-        {
-            foreach (var slot in inventorySlotAreas[i].GetComponentsInChildren<InventorySlot>())
-            {
-                inventorySlots.Add(slot);
-            }
-        }
 
         if (inventoryUI != null)
         {

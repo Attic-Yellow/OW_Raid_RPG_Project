@@ -85,7 +85,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     // 방에 성공적으로 참여하였을 때 호출
     public override void OnJoinedRoom()
     {
-        GameManager.Instance.sceneLoadManager.JoiningServer(70); // 방에 성공적으로 참여한 후 게임 씬으로 이동
+        GameManager.Instance.sceneLoadManager.JoiningServer(Random.Range(30, 70)); // 방에 성공적으로 참여한 후 게임 씬으로 이동
     }
 
     // 방을 성공적으로 생성했을 때 호출

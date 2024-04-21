@@ -25,6 +25,7 @@ public class AuthManager : MonoBehaviour
         GameManager.Instance.authManager = this;
     }
 
+    #region 회원가입
     // 이메일로 회원가입
     public void SignUpWithEmail(string email, string password, Action<bool, bool> onCompletion)
     {
@@ -47,7 +48,9 @@ public class AuthManager : MonoBehaviour
             }
         });
     }
+    #endregion
 
+    #region 로그인
     // 이메일로 로그인
     public void SignInWithEmail(string email, string password, Action<bool> onCompletion)
     {
@@ -64,7 +67,9 @@ public class AuthManager : MonoBehaviour
             }
         });
     }
+    #endregion
 
+    #region 메일 전송
     // 인증 메일 전송
     public void SendEmailVerification(Action<bool> onCompletion)
     {
@@ -91,7 +96,9 @@ public class AuthManager : MonoBehaviour
             onCompletion(false);
         }
     }
+    #endregion
 
+    #region 메일 인증 확인
     // 인증 여부 확인
     public async void CheckEmailVerification(Action<bool> onCompletion)
     {
@@ -126,7 +133,7 @@ public class AuthManager : MonoBehaviour
                             {
                                 onCompletion(false);
                             }
-                            
+
                         });
                     }
                     else
@@ -143,4 +150,5 @@ public class AuthManager : MonoBehaviour
             onCompletion(false);
         }
     }
+    #endregion
 }

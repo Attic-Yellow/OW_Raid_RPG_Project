@@ -12,6 +12,12 @@ public enum SlotType
     Quick,
 }
 
+public enum DragType
+{
+    Idle,
+    Drag
+}
+
 public class Slot : MonoBehaviour
 {
     public Image itemIcon;
