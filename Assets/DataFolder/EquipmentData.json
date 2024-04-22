@@ -9,6 +9,7 @@
     "int": 0,
     "dex": 0,
     "dh": 0,
+    "itemImage": "10000",
     "itemId": 10000,
     "itemName": "낡은 도끼",
     "itemType": 1,

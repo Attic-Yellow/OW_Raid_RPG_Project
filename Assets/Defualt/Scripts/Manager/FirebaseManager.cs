@@ -13,7 +13,7 @@ using System.IO;
 
 public class FirebaseManager : MonoBehaviour
 {
-    private static FirebaseManager Instance;
+    public static FirebaseManager Instance;
 
     public FirebaseAuth auth { get; private set; }
 
@@ -67,6 +67,7 @@ public class FirebaseManager : MonoBehaviour
 
         try
         {
+            #region 캐릭터 스탯 변수
             /*** 기본 스탯 ***/
             int totalSTR = 0; // 힘 (striking power)
             int totalINT = 0; // 지능 (intelligence)
@@ -89,16 +90,18 @@ public class FirebaseManager : MonoBehaviour
 
             /*** 기타 스탯***/
             int totalLUK = 0; // 운 (luck)
+            #endregion
 
-            AssetBundleCreateRequest loadAssetBundleRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, "AssetBundles", "createcharacter"));
-            AssetBundle bundle = await loadAssetBundleRequest.ToTask();
-            if (bundle == null)
+            #region 캐릭터 생성 에셋 번들 로드 및 스탯 할당
+            AssetBundleCreateRequest loadCharAssetBundle = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, "AssetBundles", "createcharacter"));
+            AssetBundle charBundle = await loadCharAssetBundle.ToTask();
+            if (charBundle == null)
             {
                 print("에셋 번들 로드 실패");
                 return false;
             }
 
-            TextAsset loadedJobAsset = await bundle.LoadAssetAsync<TextAsset>(job).ToTask<TextAsset>();
+            TextAsset loadedJobAsset = await charBundle.LoadAssetAsync<TextAsset>(job).ToTask<TextAsset>();
             if (loadedJobAsset != null)
             {
                 string dataAsJson = loadedJobAsset.text;
@@ -126,7 +129,7 @@ public class FirebaseManager : MonoBehaviour
                 return false;
             }
 
-            TextAsset loadedTribeAsset = await bundle.LoadAssetAsync<TextAsset>(tribe).ToTask<TextAsset>();
+            TextAsset loadedTribeAsset = await charBundle.LoadAssetAsync<TextAsset>(tribe).ToTask<TextAsset>();
             if (loadedTribeAsset != null)
             {
                 string dataAsJson = loadedTribeAsset.text;
@@ -177,14 +180,141 @@ public class FirebaseManager : MonoBehaviour
                 { "mdf", totalMDF},
                 { "luk", totalLUK}
             };
+            #endregion
 
-            string uniqueCharacterID = System.Guid.NewGuid().ToString();
+            string uniqueCharacterID = System.Guid.NewGuid().ToString(); // 캐릭터 ID 난수 생성
 
             // 데이터 업로드 경로 설정: users/{userId}/{serverName}/{characterId}
             DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).Collection(serverName).Document(uniqueCharacterID);
-
             // Firestore에 캐릭터 데이터 업로드
             await docRef.SetAsync(newCharacter);
+
+            #region 캐릭터 기본 장비 추가
+            string[] gears = new string[] { "weapon", "head", "body", "hands", "legs", "feet", "auxiliary", "earring", "necklace", "bracelet", "ring" };
+
+            for (int i = 0; i < gears.Length; i++)
+            {
+                DocumentReference deepDocRef = docRef.Collection("currentEquipped").Document(gears[i]);
+                int tempCorrection = UnityEngine.Random.Range(1, 5);
+                float correction = tempCorrection / 10f;
+
+                switch (job)
+                {
+                    case "Warrior":
+                        if (ItemData.Instance.equip.ContainsKey(10000 + (i * 100)))
+                        {
+                            Dictionary<string, float> newEquip = new Dictionary<string, float>
+                            {
+                                { gears[i], ItemData.Instance.equip[10000 + (i * 100)].itemId},
+                                { "correction", correction }
+                            };
+
+                            await deepDocRef.SetAsync(newEquip);
+                        }
+                        else
+                        {
+                            Dictionary<string, float> newEquip = new Dictionary<string, float>
+                            {
+                                { gears[i] , -1 },
+                                { "correction" , 0 }
+                            }; 
+
+                            await deepDocRef.SetAsync(newEquip);
+                        }
+                        break;
+                    case "Dragoon":
+                        if (ItemData.Instance.equip.ContainsKey(20000 + (i * 100)))
+                        {
+                            Dictionary<string, float> newEquip = new Dictionary<string, float>
+                            {
+                                { gears[i], ItemData.Instance.equip[20000 + (i * 100)].itemId},
+                                { "correction", correction}
+                            };
+
+                            await deepDocRef.SetAsync(newEquip);
+                        }
+                        else
+                        {
+                            Dictionary<string, float> newEquip = new Dictionary<string, float>
+                            {
+                                { gears[i] , -1 },
+                                { "correction" , 0 }
+                            };
+
+                            await deepDocRef.SetAsync(newEquip);
+                        }
+                        break;
+                    case "Bard":
+                        if (ItemData.Instance.equip.ContainsKey(30000 + (i * 100)))
+                        {
+                            Dictionary<string, float> newEquip = new Dictionary<string, float>
+                            {
+                                { gears[i], ItemData.Instance.equip[30000 + (i * 100)].itemId},
+                                { "correction", correction}
+                            };
+
+                            await deepDocRef.SetAsync(newEquip);
+                        }
+                        else
+                        {
+                            Dictionary<string, float> newEquip = new Dictionary<string, float>
+                            {
+                                { gears[i] , -1 },
+                                { "correction" , 0 }
+                            };
+
+                            await deepDocRef.SetAsync(newEquip);
+                        }
+                        break;
+                    case "WhiteMage":
+                        if (ItemData.Instance.equip.ContainsKey(40000 + (i * 100)))
+                        {
+                            Dictionary<string, float> newEquip = new Dictionary<string, float>
+                            {
+                                { gears[i], ItemData.Instance.equip[40000 + (i * 100)].itemId},
+                                { "correction", correction}
+                            };
+
+                            await deepDocRef.SetAsync(newEquip);
+                        }
+                        else
+                        {
+                            Dictionary<string, float> newEquip = new Dictionary<string, float>
+                            {
+                                { gears[i] , -1 },
+                                { "correction" , 0 }
+                            };
+
+                            await deepDocRef.SetAsync(newEquip);
+                        }
+                        break;
+                    case "BlackMage":
+                        if (ItemData.Instance.equip.ContainsKey(50000 + (i * 100)))
+                        {
+                            Dictionary<string, float> newEquip = new Dictionary<string, float>
+                            {
+                                { gears[i], ItemData.Instance.equip[50000 + (i * 100)].itemId},
+                                { "correction", correction}
+                            };
+
+                            await deepDocRef.SetAsync(newEquip);
+                        }
+                        else
+                        {
+                            Dictionary<string, float> newEquip = new Dictionary<string, float>
+                            {
+                                { gears[i] , -1 },
+                                { "correction" , 0 }
+                            };
+
+                            await deepDocRef.SetAsync(newEquip);
+                        }
+                        break;
+                }
+               
+            }
+            #endregion
+
             isCharacterCreated = true;
             print($"캐릭터 {characterName} 생성 및 업로드 완료.");
         }
@@ -226,7 +356,7 @@ public class FirebaseManager : MonoBehaviour
         }
     }
 
-    // 캐릭터 로드
+    // 캐릭터 목록 로드
     public async Task LoadCharacter(string userId, string server, Action<List<Dictionary<string, object>>> onCompletion)
     {
         var user = auth.CurrentUser;
@@ -268,6 +398,7 @@ public class FirebaseManager : MonoBehaviour
         }
     }
     #endregion
+
 
     #region 데이터 초기화
     // 사용자 데이터 초기화

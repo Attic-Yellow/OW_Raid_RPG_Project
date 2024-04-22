@@ -18,7 +18,7 @@ public class CurrentEquippedSlot : Slot, IDragHandler, IEndDragHandler, IBeginDr
 
     public override void UpdateSlotUI()
     {
-        itemIcon.sprite = equipment.itemImage;
+        itemIcon.sprite = IconData.Instance.GetitemIcon(equipment.itemImage);
 
         if (itemIcon.sprite != null)
         {

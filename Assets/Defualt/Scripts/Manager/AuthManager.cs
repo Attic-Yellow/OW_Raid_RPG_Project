@@ -54,7 +54,7 @@ public class AuthManager : MonoBehaviour
     // 이메일로 로그인
     public void SignInWithEmail(string email, string password, Action<bool> onCompletion)
     {
-        GameManager.Instance.firebaseManager.auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(task =>
+        FirebaseManager.Instance.auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(task =>
         {
             if (task.IsCanceled || task.IsFaulted)
             {
@@ -123,7 +123,7 @@ public class AuthManager : MonoBehaviour
                         // 이메일 인증 상태 업데이트
                         GameManager.Instance.SetIsEmailAuthentication(true);
 
-                        await GameManager.Instance.firebaseManager.InitializeUserData(user.UserId, user.Email, success =>
+                        await FirebaseManager.Instance.InitializeUserData(user.UserId, user.Email, success =>
                         {
                             if (success)
                             {
