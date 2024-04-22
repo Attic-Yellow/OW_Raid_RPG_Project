@@ -23,11 +23,7 @@ public class CurrentEquipped : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            IsEquipped(ItemData.Instance.equip[0], 0, 0, SlotType.Equipment, SlotType.Equipment);
-        }
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            IsEquipped(ItemData.Instance.equip[1], 0, 0, SlotType.Equipment, SlotType.Equipment);
+            IsEquipped(ItemData.Instance.equip[10000], 0, 0, SlotType.Equipment, SlotType.Equipment);
         }
     }
 

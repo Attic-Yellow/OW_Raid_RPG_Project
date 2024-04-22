@@ -1,7 +1,10 @@
 ManifestFileVersion: 0
-CRC: 2697014781
+CRC: 2409281957
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
       Name: createcharacter
+      Dependencies: {}
+    Info_1:
+      Name: datafolder
       Dependencies: {}

@@ -1,0 +1,24 @@
+{
+  "10000": {
+    "Equipment": 1,
+    "grade": 1,
+    "ten": 0,
+    "def": 0,
+    "crt": 0,
+    "det": 0,
+    "int": 0,
+    "dex": 0,
+    "dh": 0,
+    "itemId": 10000,
+    "itemName": "낡은 도끼",
+    "itemType": 1,
+    "luk": 0,
+    "mef": 0,
+    "pie": 0,
+    "sks": 0,
+    "spi": 0,
+    "sps": 0,
+    "str": 0,
+    "vit": 0
+  }
+}

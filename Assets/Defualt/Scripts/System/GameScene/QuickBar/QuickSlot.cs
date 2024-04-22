@@ -4,8 +4,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using UnityEditor.Experimental.GraphView;
-using UnityEditor.Rendering.LookDev;
 using TMPro;
 
 public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler

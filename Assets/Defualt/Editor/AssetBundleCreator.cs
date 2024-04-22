@@ -5,7 +5,7 @@ using System.IO;
 
 public class AssetBundleCreator : Editor
 {
-    [MenuItem("Firestore/Build createCharacter AssetBundle")]
+    [MenuItem("Firestore/Build AssetBundles")]
     static void BuildAllAssetBundles()
     {
         // "Assets/StreamingAssets/AssetBundles" 폴더로 경로 변경
@@ -16,6 +16,7 @@ public class AssetBundleCreator : Editor
         }
 
         AssignAssetBundleName("Assets/createCharacter", "createCharacter");
+        AssignAssetBundleName("Assets/DataFolder", "DataFolder");
 
         BuildPipeline.BuildAssetBundles(assetBundleDirectory, BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
 
