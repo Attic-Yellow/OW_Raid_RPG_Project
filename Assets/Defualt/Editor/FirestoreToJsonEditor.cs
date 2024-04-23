@@ -62,7 +62,7 @@ public class FirestoreToJsonEditor : EditorWindow
             }
 
             Dictionary<string, object> documentData = snapshot.ToDictionary();
-            string json = JsonConvert.SerializeObject(documentData, Formatting.Indented);
+            string json = JsonConvert.SerializeObject(documentData);
 
             string folderPath = Path.Combine(Application.dataPath, "createCharacter");
             if (!Directory.Exists(folderPath))
@@ -96,7 +96,7 @@ public class FirestoreToJsonEditor : EditorWindow
             }
 
             // 딕셔너리를 JSON으로 직렬화합니다.
-            string json = JsonConvert.SerializeObject(documentsData, Formatting.Indented);
+            string json = JsonConvert.SerializeObject(documentsData);
             string folderPath = Path.Combine(Application.dataPath, "DataFolder");
             if (!Directory.Exists(folderPath))
             {

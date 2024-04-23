@@ -91,6 +91,8 @@ public class CharacterInfoUI : MonoBehaviour
             int jobNumber = (int)job;
             Instantiate(jobIconPrefabs[jobNumber], jobIconTransform.transform);
         }
+
+        ReadrawSlotUI();
     }
     #endregion
 
@@ -118,7 +120,7 @@ public class CharacterInfoUI : MonoBehaviour
         {
             currentEquippedSlots[i].ClearSlot();
 
-            if (i < currentEquipped.currentEquippeds.Count && currentEquipped.currentEquippeds[i] != null)
+            if (i < currentEquipped.currentEquippeds.Count && currentEquipped.currentEquippeds[i].equipment != EquipmentType.None)
             {
                 currentEquippedSlots[i].equipment = currentEquipped.currentEquippeds[i];
                 currentEquippedSlots[i].UpdateSlotUI();

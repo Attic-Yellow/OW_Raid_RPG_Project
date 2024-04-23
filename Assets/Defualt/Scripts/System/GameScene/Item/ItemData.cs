@@ -36,7 +36,7 @@ public class ItemData : MonoBehaviour
             return;
         }
 
-        TextAsset jsonFile = assetBundle.LoadAsset<TextAsset>("EquipmentData.json"); // "equipment_data.json"는 예제 JSON 파일명입니다.
+        TextAsset jsonFile = assetBundle.LoadAsset<TextAsset>("EquipmentData.json"); // "equipment_data.json"는 예제 JSON 파일명
         if (jsonFile != null)
         {
             Dictionary<string, Equipment> loadedData = JsonConvert.DeserializeObject<Dictionary<string, Equipment>>(jsonFile.text);

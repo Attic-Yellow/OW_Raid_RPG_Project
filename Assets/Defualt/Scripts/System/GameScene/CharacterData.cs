@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public class CharacterData : MonoBehaviour
@@ -9,7 +10,6 @@ public class CharacterData : MonoBehaviour
     public static CharacterData Instance;
 
     public Dictionary<string, object> characterData { get; private set; } // 캐릭터 데이터 저장
-
 
     private void Awake()
     {
@@ -63,6 +63,31 @@ public class CharacterData : MonoBehaviour
         }
 
         return stats;
+    }
+
+    public Dictionary<string, int> CurrentEquip()
+    {
+        List<string> gears = new List<string>
+        {
+            "weapon", "head", "body", "hands", "legs", "feet", "auxiliary", "earring", "necklace", "bracelet", "ring"
+        };
+
+        List<string> gearsDict = new List<string>
+        {
+            "itemId", "correction"
+        };
+
+        Dictionary<string, int> gearsInfo = new Dictionary<string, int>();
+
+        foreach (var gear in gears)
+        {
+            foreach (var gearDict in gearsDict)
+            {
+                gearsInfo[$"{gear}{gearDict}"] = Convert.ToInt32(characterData.ContainsKey($"{gear}{gearDict}") ? characterData[$"{gear}{gearDict}"] : -1);
+            }
+        }
+
+        return gearsInfo;
     }
 
     private void ApplyStatGrowth(string job, string race, int level, ref Dictionary<string, int> stats)
@@ -122,7 +147,7 @@ public class CharacterData : MonoBehaviour
         }
     }
 
-
+    #region 능력치 계산
     private void CalculateDerivedStats(ref Dictionary<string, int> stats)
     {
         // 여기에서 파생된 스탯(물리 공격력, 마법 공격력 등)을 계산
@@ -183,7 +208,7 @@ public class CharacterData : MonoBehaviour
 
         return recoveryAmount;
     }
-
+    
     private int BitCount(int value)
     {
         int count = 0;
@@ -194,12 +219,35 @@ public class CharacterData : MonoBehaviour
         }
         return count;
     }
+    #endregion
 
     private void UpdateCharacterData(Dictionary<string, int> stats)
     {
         foreach (var stat in stats)
         {
             characterData[stat.Key] = stat.Value;
+        }
+    }
+
+    public void UpdateEquipData(Dictionary<string, int> gears)
+    {
+        int count = 1;
+        foreach (var gear in gears)
+        {
+            if (!Regex.IsMatch(gear.Key, @"correction"))
+            {
+                if (gear.Value != -1)
+                {
+                    characterData[gear.Key] = gear.Value;
+                    Equipment equipment = ItemData.Instance.equip[gear.Value];
+                    CurrentEquipped.Instance.currentEquippeds[count] = equipment;
+                }
+                count++;
+            }
+            else
+            {
+                characterData[gear.Key] = gear.Value / 10;
+            }
         }
     }
 }

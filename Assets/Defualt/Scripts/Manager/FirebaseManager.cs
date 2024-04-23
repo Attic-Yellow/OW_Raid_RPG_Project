@@ -195,17 +195,16 @@ public class FirebaseManager : MonoBehaviour
             for (int i = 0; i < gears.Length; i++)
             {
                 DocumentReference deepDocRef = docRef.Collection("currentEquipped").Document(gears[i]);
-                int tempCorrection = UnityEngine.Random.Range(1, 5);
-                float correction = tempCorrection / 10f;
+                int correction = UnityEngine.Random.Range(1, 5);
 
                 switch (job)
                 {
                     case "Warrior":
                         if (ItemData.Instance.equip.ContainsKey(10000 + (i * 100)))
                         {
-                            Dictionary<string, float> newEquip = new Dictionary<string, float>
+                            Dictionary<string, int> newEquip = new Dictionary<string, int>
                             {
-                                { gears[i], ItemData.Instance.equip[10000 + (i * 100)].itemId},
+                                { "itemId", ItemData.Instance.equip[10000 + (i * 100)].itemId},
                                 { "correction", correction }
                             };
 
@@ -213,9 +212,9 @@ public class FirebaseManager : MonoBehaviour
                         }
                         else
                         {
-                            Dictionary<string, float> newEquip = new Dictionary<string, float>
+                            Dictionary<string, int> newEquip = new Dictionary<string, int>
                             {
-                                { gears[i] , -1 },
+                                { "itemId" , -1 },
                                 { "correction" , 0 }
                             }; 
 
@@ -225,9 +224,9 @@ public class FirebaseManager : MonoBehaviour
                     case "Dragoon":
                         if (ItemData.Instance.equip.ContainsKey(20000 + (i * 100)))
                         {
-                            Dictionary<string, float> newEquip = new Dictionary<string, float>
+                            Dictionary<string, int> newEquip = new Dictionary<string, int>
                             {
-                                { gears[i], ItemData.Instance.equip[20000 + (i * 100)].itemId},
+                                { "itemId", ItemData.Instance.equip[20000 + (i * 100)].itemId},
                                 { "correction", correction}
                             };
 
@@ -235,9 +234,9 @@ public class FirebaseManager : MonoBehaviour
                         }
                         else
                         {
-                            Dictionary<string, float> newEquip = new Dictionary<string, float>
+                            Dictionary<string, int> newEquip = new Dictionary<string, int>
                             {
-                                { gears[i] , -1 },
+                                { "itemId" , -1 },
                                 { "correction" , 0 }
                             };
 
@@ -247,9 +246,9 @@ public class FirebaseManager : MonoBehaviour
                     case "Bard":
                         if (ItemData.Instance.equip.ContainsKey(30000 + (i * 100)))
                         {
-                            Dictionary<string, float> newEquip = new Dictionary<string, float>
+                            Dictionary<string, int> newEquip = new Dictionary<string, int>
                             {
-                                { gears[i], ItemData.Instance.equip[30000 + (i * 100)].itemId},
+                                { "itemId", ItemData.Instance.equip[30000 + (i * 100)].itemId},
                                 { "correction", correction}
                             };
 
@@ -257,9 +256,9 @@ public class FirebaseManager : MonoBehaviour
                         }
                         else
                         {
-                            Dictionary<string, float> newEquip = new Dictionary<string, float>
+                            Dictionary<string, int> newEquip = new Dictionary<string, int>
                             {
-                                { gears[i] , -1 },
+                                { "itemId" , -1 },
                                 { "correction" , 0 }
                             };
 
@@ -269,9 +268,9 @@ public class FirebaseManager : MonoBehaviour
                     case "WhiteMage":
                         if (ItemData.Instance.equip.ContainsKey(40000 + (i * 100)))
                         {
-                            Dictionary<string, float> newEquip = new Dictionary<string, float>
+                            Dictionary<string, int> newEquip = new Dictionary<string, int>
                             {
-                                { gears[i], ItemData.Instance.equip[40000 + (i * 100)].itemId},
+                                { "itemId", ItemData.Instance.equip[40000 + (i * 100)].itemId},
                                 { "correction", correction}
                             };
 
@@ -279,9 +278,9 @@ public class FirebaseManager : MonoBehaviour
                         }
                         else
                         {
-                            Dictionary<string, float> newEquip = new Dictionary<string, float>
+                            Dictionary<string, int> newEquip = new Dictionary<string, int>
                             {
-                                { gears[i] , -1 },
+                                { "itemId" , -1 },
                                 { "correction" , 0 }
                             };
 
@@ -291,9 +290,9 @@ public class FirebaseManager : MonoBehaviour
                     case "BlackMage":
                         if (ItemData.Instance.equip.ContainsKey(50000 + (i * 100)))
                         {
-                            Dictionary<string, float> newEquip = new Dictionary<string, float>
+                            Dictionary<string, int> newEquip = new Dictionary<string, int>
                             {
-                                { gears[i], ItemData.Instance.equip[50000 + (i * 100)].itemId},
+                                { "itemId", ItemData.Instance.equip[50000 + (i * 100)].itemId},
                                 { "correction", correction}
                             };
 
@@ -301,9 +300,9 @@ public class FirebaseManager : MonoBehaviour
                         }
                         else
                         {
-                            Dictionary<string, float> newEquip = new Dictionary<string, float>
+                            Dictionary<string, int> newEquip = new Dictionary<string, int>
                             {
-                                { gears[i] , -1 },
+                                { "itemId" , -1 },
                                 { "correction" , 0 }
                             };
 
@@ -378,7 +377,28 @@ public class FirebaseManager : MonoBehaviour
             var characters = new List<Dictionary<string, object>>();
             foreach (var document in querySnapshot.Documents)
             {
-                var character = document.ToDictionary();
+                Dictionary<string, object> character = document.ToDictionary();
+
+                var currentEquipRef = serverCharactersRef.Document(document.Id).Collection("currentEquipped");
+                var equipQuery = await currentEquipRef.GetSnapshotAsync();
+                var currentEquip = new Dictionary<string, object>();
+
+                if (equipQuery == null)
+                {
+                    Debug.Log("정보 없음");
+                }
+                else
+                {
+                    foreach (var gear in equipQuery.Documents)
+                    {
+                        Dictionary<string, object> tempGear = gear.ToDictionary();
+                        foreach (var temp in tempGear)
+                        {
+                            character[$"{gear.Id}{temp.Key}"] = temp.Value;
+                        }
+                    }
+                }
+
                 characters.Add(character);
             }
 

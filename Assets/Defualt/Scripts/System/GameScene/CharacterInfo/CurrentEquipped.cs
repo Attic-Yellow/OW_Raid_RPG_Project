@@ -11,12 +11,19 @@ public class CurrentEquipped : MonoBehaviour
 
     public List<Equipment> currentEquippeds = new List<Equipment>();
 
+    private CharacterData CharacterData;
+
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
         }
+    }
+
+    private void Start()
+    {
+        CharacterData.Instance.UpdateEquipData(CharacterData.Instance.CurrentEquip());
     }
 
     private void Update()
@@ -31,8 +38,6 @@ public class CurrentEquipped : MonoBehaviour
     // 장비 착용 및 교체 메서드
     public bool IsEquipped(Equipment equipment, int oldIndex, int newIndex, SlotType oldSlotType, SlotType newSlotType)
     {
-        print(equipment.itemName);
-        print(equipment.equipment);
         int index = (int)equipment.equipment; // EquipmentType에 해당하는 인덱스를 정수로 변환
 
         // 해당 위치에 장비가 이미 있으면, 이전 장비를 적절한 위치에 추가

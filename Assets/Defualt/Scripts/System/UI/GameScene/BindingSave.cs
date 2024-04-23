@@ -67,7 +67,6 @@ public class BindingSave : MonoBehaviour
         }
         else
         {
-            print("로드 실패");
         }
     }
 
