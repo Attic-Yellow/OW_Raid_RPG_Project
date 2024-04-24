@@ -6,15 +6,18 @@ TagManager:
   tags:
   - AnimTag
   - MenuButton
+  - Slot
+  - NPC
+  - Boss
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Attackable
   - Water
   - UI
-  - 
-  - 
+  - Ground
+  - Particle
   - 
   - 
   - 
