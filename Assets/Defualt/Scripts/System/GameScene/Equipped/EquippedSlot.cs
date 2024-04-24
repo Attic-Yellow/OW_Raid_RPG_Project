@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using static UnityEditor.Progress;
 
 public class EquippedSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
 {
@@ -16,7 +15,7 @@ public class EquippedSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandl
     {
         if (equipment != null && equipment.equipment != EquipmentType.None)
         {
-            itemIcon.sprite = equipment.itemImage;
+            itemIcon.sprite = IconData.Instance.GetitemIcon(equipment.itemImage);
             itemIcon.gameObject.SetActive(true);
         }
     }

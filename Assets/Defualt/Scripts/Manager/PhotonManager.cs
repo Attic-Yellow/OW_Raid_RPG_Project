@@ -53,31 +53,25 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     {
         TypedLobby customLobby = new TypedLobby(lobbyName, LobbyType.Default);
         PhotonNetwork.LocalPlayer.NickName = nickname;
-        print(PhotonNetwork.LocalPlayer.NickName);
         PhotonNetwork.JoinLobby(customLobby);
         this.roomName = roomName;
-        
     }
 
     // 로비에 성공적으로 참여하였을 때 호출
     public override void OnJoinedLobby()
     {
         GameManager.Instance.sceneLoadManager.JoiningServer(30);
-        print(GameManager.Instance.GetIsManager());
-        print(lobbyName); 
         if (GameManager.Instance.GetIsManager())
         {
             RoomOptions roomOptions = new RoomOptions();
             roomOptions.IsVisible = true;
             roomOptions.IsOpen = true;
             roomOptions.MaxPlayers = 20; // 최대 플레이어 수 설정
-            print(roomName);
             
             PhotonNetwork.CreateRoom(roomName, roomOptions); // 관리자인 경우 방 생성
         }
         else
         {
-            print(roomName);
             PhotonNetwork.JoinRoom(roomName); // 일반 사용자인 경우 방 참여
         }
     }
@@ -85,7 +79,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     // 방에 성공적으로 참여하였을 때 호출
     public override void OnJoinedRoom()
     {
-        GameManager.Instance.sceneLoadManager.JoiningServer(Random.Range(30, 70)); // 방에 성공적으로 참여한 후 게임 씬으로 이동
+        GameManager.Instance.sceneLoadManager.JoiningServer(Random.Range(31, 70)); // 방에 성공적으로 참여한 후 게임 씬으로 이동
     }
 
     // 방을 성공적으로 생성했을 때 호출

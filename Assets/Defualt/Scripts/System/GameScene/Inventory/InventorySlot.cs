@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -25,7 +24,7 @@ public class InventorySlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHand
 
     public override void UpdateSlotUI()
     {
-        itemIcon.sprite = consumable.itemImage;
+        itemIcon.sprite = IconData.Instance.GetitemIcon(consumable.itemImage);
         countText.text = consumable.itemCount.ToString();
 
         if (itemIcon.sprite != null)

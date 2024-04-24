@@ -32,7 +32,7 @@ public enum GradeType
 public class Equipment : Item
 {
     public EquipmentType equipment;
-    public GradeType grede; 
+    public GradeType grade; 
     public int str;
     public int _int;
     public int dex;

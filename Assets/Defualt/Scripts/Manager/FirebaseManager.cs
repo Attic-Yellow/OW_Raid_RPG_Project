@@ -13,7 +13,7 @@ using System.IO;
 
 public class FirebaseManager : MonoBehaviour
 {
-    private static FirebaseManager Instance;
+    public static FirebaseManager Instance;
 
     public FirebaseAuth auth { get; private set; }
 
@@ -67,6 +67,7 @@ public class FirebaseManager : MonoBehaviour
 
         try
         {
+            #region 캐릭터 스탯 변수
             /*** 기본 스탯 ***/
             int totalSTR = 0; // 힘 (striking power)
             int totalINT = 0; // 지능 (intelligence)
@@ -85,20 +86,22 @@ public class FirebaseManager : MonoBehaviour
 
             /*** 방어 스탯***/
             int totalDEF = 0; // 물리 방어력 (defense)
-            int totalMDF = 0; // 마법 방어력 (magic defense)
+            int totalMEF = 0; // 마법 방어력 (magic defense)
 
             /*** 기타 스탯***/
             int totalLUK = 0; // 운 (luck)
+            #endregion
 
-            AssetBundleCreateRequest loadAssetBundleRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, "AssetBundles", "createcharacter"));
-            AssetBundle bundle = await loadAssetBundleRequest.ToTask();
-            if (bundle == null)
+            #region 캐릭터 생성 에셋 번들 로드 및 스탯 할당
+            AssetBundleCreateRequest loadCharAssetBundle = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, "AssetBundles", "createcharacter"));
+            AssetBundle charBundle = await loadCharAssetBundle.ToTask();
+            if (charBundle == null)
             {
                 print("에셋 번들 로드 실패");
                 return false;
             }
 
-            TextAsset loadedJobAsset = await bundle.LoadAssetAsync<TextAsset>(job).ToTask<TextAsset>();
+            TextAsset loadedJobAsset = await charBundle.LoadAssetAsync<TextAsset>(job).ToTask<TextAsset>();
             if (loadedJobAsset != null)
             {
                 string dataAsJson = loadedJobAsset.text;
@@ -117,7 +120,7 @@ public class FirebaseManager : MonoBehaviour
                 totalTEN += jobData["ten"];
                 totalPIE += jobData["pie"];
                 totalDEF += jobData["def"];
-                totalMDF += jobData["mef"];
+                totalMEF += jobData["mef"];
                 totalLUK += jobData["luk"];
             }
             else
@@ -126,7 +129,7 @@ public class FirebaseManager : MonoBehaviour
                 return false;
             }
 
-            TextAsset loadedTribeAsset = await bundle.LoadAssetAsync<TextAsset>(tribe).ToTask<TextAsset>();
+            TextAsset loadedTribeAsset = await charBundle.LoadAssetAsync<TextAsset>(tribe).ToTask<TextAsset>();
             if (loadedTribeAsset != null)
             {
                 string dataAsJson = loadedTribeAsset.text;
@@ -145,7 +148,7 @@ public class FirebaseManager : MonoBehaviour
                 totalTEN += tribeData["ten"];
                 totalPIE += tribeData["pie"];
                 totalDEF += tribeData["def"];
-                totalMDF += tribeData["mef"];
+                totalMEF += tribeData["mef"];
                 totalLUK += tribeData["luk"];
             }
             else
@@ -174,17 +177,143 @@ public class FirebaseManager : MonoBehaviour
                 { "ten", totalTEN},
                 { "pie", totalPIE},
                 { "def", totalDEF},
-                { "mdf", totalMDF},
+                { "mef", totalMEF},
                 { "luk", totalLUK}
             };
+            #endregion
 
-            string uniqueCharacterID = System.Guid.NewGuid().ToString();
+            string uniqueCharacterID = System.Guid.NewGuid().ToString(); // 캐릭터 ID 난수 생성
 
             // 데이터 업로드 경로 설정: users/{userId}/{serverName}/{characterId}
             DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).Collection(serverName).Document(uniqueCharacterID);
-
             // Firestore에 캐릭터 데이터 업로드
             await docRef.SetAsync(newCharacter);
+
+            #region 캐릭터 기본 장비 추가
+            string[] gears = new string[] { "weapon", "head", "body", "hands", "legs", "feet", "auxiliary", "earring", "necklace", "bracelet", "ring" };
+
+            for (int i = 0; i < gears.Length; i++)
+            {
+                DocumentReference deepDocRef = docRef.Collection("currentEquipped").Document(gears[i]);
+                int correction = UnityEngine.Random.Range(1, 5);
+
+                switch (job)
+                {
+                    case "Warrior":
+                        if (ItemData.Instance.equip.ContainsKey(10000 + (i * 100)))
+                        {
+                            Dictionary<string, int> newEquip = new Dictionary<string, int>
+                            {
+                                { "itemId", ItemData.Instance.equip[10000 + (i * 100)].itemId},
+                                { "correction", correction }
+                            };
+
+                            await deepDocRef.SetAsync(newEquip);
+                        }
+                        else
+                        {
+                            Dictionary<string, int> newEquip = new Dictionary<string, int>
+                            {
+                                { "itemId" , -1 },
+                                { "correction" , 0 }
+                            }; 
+
+                            await deepDocRef.SetAsync(newEquip);
+                        }
+                        break;
+                    case "Dragoon":
+                        if (ItemData.Instance.equip.ContainsKey(20000 + (i * 100)))
+                        {
+                            Dictionary<string, int> newEquip = new Dictionary<string, int>
+                            {
+                                { "itemId", ItemData.Instance.equip[20000 + (i * 100)].itemId},
+                                { "correction", correction}
+                            };
+
+                            await deepDocRef.SetAsync(newEquip);
+                        }
+                        else
+                        {
+                            Dictionary<string, int> newEquip = new Dictionary<string, int>
+                            {
+                                { "itemId" , -1 },
+                                { "correction" , 0 }
+                            };
+
+                            await deepDocRef.SetAsync(newEquip);
+                        }
+                        break;
+                    case "Bard":
+                        if (ItemData.Instance.equip.ContainsKey(30000 + (i * 100)))
+                        {
+                            Dictionary<string, int> newEquip = new Dictionary<string, int>
+                            {
+                                { "itemId", ItemData.Instance.equip[30000 + (i * 100)].itemId},
+                                { "correction", correction}
+                            };
+
+                            await deepDocRef.SetAsync(newEquip);
+                        }
+                        else
+                        {
+                            Dictionary<string, int> newEquip = new Dictionary<string, int>
+                            {
+                                { "itemId" , -1 },
+                                { "correction" , 0 }
+                            };
+
+                            await deepDocRef.SetAsync(newEquip);
+                        }
+                        break;
+                    case "WhiteMage":
+                        if (ItemData.Instance.equip.ContainsKey(40000 + (i * 100)))
+                        {
+                            Dictionary<string, int> newEquip = new Dictionary<string, int>
+                            {
+                                { "itemId", ItemData.Instance.equip[40000 + (i * 100)].itemId},
+                                { "correction", correction}
+                            };
+
+                            await deepDocRef.SetAsync(newEquip);
+                        }
+                        else
+                        {
+                            Dictionary<string, int> newEquip = new Dictionary<string, int>
+                            {
+                                { "itemId" , -1 },
+                                { "correction" , 0 }
+                            };
+
+                            await deepDocRef.SetAsync(newEquip);
+                        }
+                        break;
+                    case "BlackMage":
+                        if (ItemData.Instance.equip.ContainsKey(50000 + (i * 100)))
+                        {
+                            Dictionary<string, int> newEquip = new Dictionary<string, int>
+                            {
+                                { "itemId", ItemData.Instance.equip[50000 + (i * 100)].itemId},
+                                { "correction", correction}
+                            };
+
+                            await deepDocRef.SetAsync(newEquip);
+                        }
+                        else
+                        {
+                            Dictionary<string, int> newEquip = new Dictionary<string, int>
+                            {
+                                { "itemId" , -1 },
+                                { "correction" , 0 }
+                            };
+
+                            await deepDocRef.SetAsync(newEquip);
+                        }
+                        break;
+                }
+               
+            }
+            #endregion
+
             isCharacterCreated = true;
             print($"캐릭터 {characterName} 생성 및 업로드 완료.");
         }
@@ -226,7 +355,7 @@ public class FirebaseManager : MonoBehaviour
         }
     }
 
-    // 캐릭터 로드
+    // 캐릭터 목록 로드
     public async Task LoadCharacter(string userId, string server, Action<List<Dictionary<string, object>>> onCompletion)
     {
         var user = auth.CurrentUser;
@@ -248,7 +377,28 @@ public class FirebaseManager : MonoBehaviour
             var characters = new List<Dictionary<string, object>>();
             foreach (var document in querySnapshot.Documents)
             {
-                var character = document.ToDictionary();
+                Dictionary<string, object> character = document.ToDictionary();
+
+                var currentEquipRef = serverCharactersRef.Document(document.Id).Collection("currentEquipped");
+                var equipQuery = await currentEquipRef.GetSnapshotAsync();
+                var currentEquip = new Dictionary<string, object>();
+
+                if (equipQuery == null)
+                {
+                    Debug.Log("정보 없음");
+                }
+                else
+                {
+                    foreach (var gear in equipQuery.Documents)
+                    {
+                        Dictionary<string, object> tempGear = gear.ToDictionary();
+                        foreach (var temp in tempGear)
+                        {
+                            character[$"{gear.Id}{temp.Key}"] = temp.Value;
+                        }
+                    }
+                }
+
                 characters.Add(character);
             }
 
@@ -268,6 +418,7 @@ public class FirebaseManager : MonoBehaviour
         }
     }
     #endregion
+
 
     #region 데이터 초기화
     // 사용자 데이터 초기화

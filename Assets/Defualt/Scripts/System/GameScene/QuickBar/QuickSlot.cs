@@ -4,8 +4,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using UnityEditor.Experimental.GraphView;
-using UnityEditor.Rendering.LookDev;
 using TMPro;
 
 public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
@@ -33,7 +31,7 @@ public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
                 var s = slot.GetComponent<InventorySlot>();
                 if (s.consumable != null)
                 {
-                    itemIcon.sprite = s.consumable.itemImage;
+                    itemIcon.sprite = IconData.Instance.GetitemIcon(s.consumable.itemImage);
                     itemCountText.text = s.consumable.itemCount.ToString();
                     itemIcon.gameObject.SetActive(true);
                 }
@@ -47,7 +45,7 @@ public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
                 Equipment equipment = linkSlot.GetEquipment();
                 if (equipment != null)
                 {
-                    itemIcon.sprite = equipment.itemImage;
+                    itemIcon.sprite = IconData.Instance.GetitemIcon(equipment.itemImage);
                     itemIcon.gameObject.SetActive(true);
                 }
                 else

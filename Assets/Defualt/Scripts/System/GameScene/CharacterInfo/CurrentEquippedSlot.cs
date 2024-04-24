@@ -11,14 +11,9 @@ public class CurrentEquippedSlot : Slot, IDragHandler, IEndDragHandler, IBeginDr
     private GameObject dragVisual;
     private Equipment tempEquipment; // 임시로 저장할 장비 데이터
 
-    private void Start()
-    {
-        ClearSlot();
-    }
-
     public override void UpdateSlotUI()
     {
-        itemIcon.sprite = equipment.itemImage;
+        itemIcon.sprite = IconData.Instance.GetitemIcon(equipment.itemImage);
 
         if (itemIcon.sprite != null)
         {

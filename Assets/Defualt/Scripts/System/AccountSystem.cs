@@ -98,7 +98,6 @@ public class AccountSystem : MonoBehaviour
         else
         {
             var user = FirebaseAuth.DefaultInstance.CurrentUser;
-            print(user.UserId);
             GameManager.Instance.OnLoginSuccess();
             yield return new WaitUntil(() => GameManager.Instance.GetIsSignInSuccess());
             InitInputField();
@@ -121,8 +120,6 @@ public class AccountSystem : MonoBehaviour
     {
         int index = GameManager.Instance.uiManager.startSceneUI.accountUI.GetCurrentAreaIndex();
 
-        print(index);
-        print(currentIndex);
         switch (currentIndex)
         {
             case 0:
@@ -160,7 +157,6 @@ public class AccountSystem : MonoBehaviour
 
     private void OnBack(InputValue value)
     {
-        print(currentIndex);
         switch (currentIndex)
         {
             case 3:
