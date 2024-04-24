@@ -24,6 +24,7 @@ public class CurrentEquipped : MonoBehaviour
     private void Start()
     {
         CharacterData.Instance.UpdateEquipData(CharacterData.Instance.CurrentEquip());
+        CharacterData.Instance.CalculateAndSetStats();
     }
 
     private void Update()
@@ -84,6 +85,7 @@ public class CurrentEquipped : MonoBehaviour
         // 새 장비를 해당 위치에 설정
         currentEquippeds[index] = equipment;
 
+        CharacterData.Instance.CalculateAndSetStats();
         // 장비 변경 알림
         onChangeEquipp?.Invoke();
 
@@ -99,6 +101,7 @@ public class CurrentEquipped : MonoBehaviour
 
         // 장비를 제거하고, 장비 변경 알림
         currentEquippeds[index] = new Equipment();
+        CharacterData.Instance.CalculateAndSetStats();
         onChangeEquipp?.Invoke();
     }
     #endregion

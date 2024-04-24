@@ -9,7 +9,7 @@ public class CharacterInfoUI : MonoBehaviour
 {
     #region 캐릭터 능력치 이름
     private string[] characterInfo = { "name", "level", "job" };
-    private string[] abilityNames = { "maxHp", "str", "int", "dex", "spi", "vit", "luk", "crt", "dh", "det", "def", "mdf", "pap", "map", "sks", "mhp", "sps", "ten", "pie" };
+    private string[] abilityNames = { "maxHp", "str", "int", "dex", "spi", "vit", "luk", "crt", "dh", "det", "def", "mef", "pap", "map", "sks", "mhp", "sps", "ten", "pie" };
     #endregion
 
     #region 캐릭터 창 UI 오브젝트
@@ -36,7 +36,8 @@ public class CharacterInfoUI : MonoBehaviour
     {
         currentEquipped = CurrentEquipped.Instance;
         currentEquipped.onChangeEquipp += ReadrawSlotUI;
-        var characterData = GameManager.Instance.dataManager.characterData.characterData;
+        var charData = GameManager.Instance.dataManager.characterData.currentStatus;
+        var charInfo = GameManager.Instance.dataManager.characterData.characterData;
 
         if (characterInfoUI != null)
         {
@@ -49,7 +50,7 @@ public class CharacterInfoUI : MonoBehaviour
             {
                 if (i == 2)
                 {
-                    string job = characterData.ContainsKey(characterInfo[i]) ? characterData[characterInfo[i]].ToString() : "null";
+                    string job = charInfo.ContainsKey(characterInfo[i]) ? charInfo[characterInfo[i]].ToString() : "null";
                     switch (job)
                     {
                         case "Warrior":
@@ -71,22 +72,16 @@ public class CharacterInfoUI : MonoBehaviour
                 }
                 else
                 {
-                    characterInfoText[i].text = characterData.ContainsKey(characterInfo[i]) ? characterData[characterInfo[i]].ToString() : "null";
+                    characterInfoText[i].text = charInfo.ContainsKey(characterInfo[i]) ? charInfo[characterInfo[i]].ToString() : "null";
                 }
             }
         }
 
-        if (abilitesText.Count > 0)
-        {
-            for (int i = 0; i < abilityNames.Length; i++)
-            {
-                abilitesText[i].text = characterData.ContainsKey(abilityNames[i]) ? characterData[abilityNames[i]].ToString() : "null";
-            }
-        }
+        ReadrawInfoText(charData);
 
         if (jobIconTransform != null)
         {
-            string jobName = characterData.ContainsKey("job") ? characterData[characterInfo[2]].ToString() : "Warrior";
+            string jobName = charData.ContainsKey("job") ? charData[characterInfo[2]].ToString() : "Warrior";
             Job job = (Job)Enum.Parse(typeof(Job), jobName);
             int jobNumber = (int)job;
             Instantiate(jobIconPrefabs[jobNumber], jobIconTransform.transform);
@@ -112,6 +107,17 @@ public class CharacterInfoUI : MonoBehaviour
     }
     #endregion
 
+    public void ReadrawInfoText(Dictionary<string, int> charData)
+    {
+        if (abilitesText.Count > 0)
+        {
+            for (int i = 0; i < abilityNames.Length; i++)
+            {
+                abilitesText[i].text = charData.ContainsKey(abilityNames[i]) ? charData[abilityNames[i]].ToString() : "null";
+            }
+        }
+    }
+
     #region 현재 장비 UI 최신화
     // 현재 장비 UI 최신화 메서드
     public void ReadrawSlotUI()
@@ -130,6 +136,7 @@ public class CharacterInfoUI : MonoBehaviour
                 currentEquippedSlots[i].ClearSlot();
             }
         }
+        ReadrawInfoText(GameManager.Instance.dataManager.characterData.currentStatus);
     }
     #endregion
 

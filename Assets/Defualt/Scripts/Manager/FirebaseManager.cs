@@ -86,7 +86,7 @@ public class FirebaseManager : MonoBehaviour
 
             /*** 방어 스탯***/
             int totalDEF = 0; // 물리 방어력 (defense)
-            int totalMDF = 0; // 마법 방어력 (magic defense)
+            int totalMEF = 0; // 마법 방어력 (magic defense)
 
             /*** 기타 스탯***/
             int totalLUK = 0; // 운 (luck)
@@ -120,7 +120,7 @@ public class FirebaseManager : MonoBehaviour
                 totalTEN += jobData["ten"];
                 totalPIE += jobData["pie"];
                 totalDEF += jobData["def"];
-                totalMDF += jobData["mef"];
+                totalMEF += jobData["mef"];
                 totalLUK += jobData["luk"];
             }
             else
@@ -148,7 +148,7 @@ public class FirebaseManager : MonoBehaviour
                 totalTEN += tribeData["ten"];
                 totalPIE += tribeData["pie"];
                 totalDEF += tribeData["def"];
-                totalMDF += tribeData["mef"];
+                totalMEF += tribeData["mef"];
                 totalLUK += tribeData["luk"];
             }
             else
@@ -177,7 +177,7 @@ public class FirebaseManager : MonoBehaviour
                 { "ten", totalTEN},
                 { "pie", totalPIE},
                 { "def", totalDEF},
-                { "mdf", totalMDF},
+                { "mef", totalMEF},
                 { "luk", totalLUK}
             };
             #endregion
