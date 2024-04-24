@@ -353,5 +353,94 @@ public class CharacterData : MonoBehaviour
                 characterData[gear.Key] = gear.Value / 10;
             }
         }
+        CalculateEquip();
+    }
+
+    public void CalculateEquip()
+    {
+        string[] keys = new string[]
+        {
+            "weaponcorrection", "headcorrection", "bodycorrection",
+            "handscorrection", "legscorrection", "feetcorrection",
+            "auxiliarycorrection", "earringcorrection", "necklacecorrection",
+            "braceletcorrection", "ringcorrection"
+        };
+
+        int count = 1;
+        foreach (var key in keys)
+        {
+            int value = (int)characterData[key];
+
+            if (CurrentEquipped.Instance.currentEquippeds[count].str != 0)
+            {
+                CurrentEquipped.Instance.currentEquippeds[count].str += CurrentEquipped.Instance.currentEquippeds[count].str * ((value / 10) + 1);
+            }
+
+            if (CurrentEquipped.Instance.currentEquippeds[count]._int != 0)
+            {
+                CurrentEquipped.Instance.currentEquippeds[count]._int += CurrentEquipped.Instance.currentEquippeds[count]._int * ((value / 10) + 1);
+            }
+
+            if (CurrentEquipped.Instance.currentEquippeds[count].dex != 0)
+            {
+                CurrentEquipped.Instance.currentEquippeds[count].dex += CurrentEquipped.Instance.currentEquippeds[count].dex * ((value / 10) + 1);
+            }
+
+            if (CurrentEquipped.Instance.currentEquippeds[count].spi != 0)
+            {
+                CurrentEquipped.Instance.currentEquippeds[count].spi += CurrentEquipped.Instance.currentEquippeds[count].spi * ((value / 10) + 1);
+            }
+
+            if (CurrentEquipped.Instance.currentEquippeds[count].luk != 0)
+            {
+                CurrentEquipped.Instance.currentEquippeds[count].luk += CurrentEquipped.Instance.currentEquippeds[count].luk * ((value / 10) + 1);
+            }
+
+            if (CurrentEquipped.Instance.currentEquippeds[count].crt != 0)
+            {
+                CurrentEquipped.Instance.currentEquippeds[count].crt += CurrentEquipped.Instance.currentEquippeds[count].crt * ((value / 10) + 1);
+            }
+
+            if (CurrentEquipped.Instance.currentEquippeds[count].dh != 0)
+            {
+                CurrentEquipped.Instance.currentEquippeds[count].dh += CurrentEquipped.Instance.currentEquippeds[count].dh * ((value / 10) + 1);
+            }
+
+            if (CurrentEquipped.Instance.currentEquippeds[count].det != 0)
+            {
+                CurrentEquipped.Instance.currentEquippeds[count].det += CurrentEquipped.Instance.currentEquippeds[count].det * ((value / 10) + 1);
+            }
+
+            if (CurrentEquipped.Instance.currentEquippeds[count].def != 0)
+            {
+                CurrentEquipped.Instance.currentEquippeds[count].def += CurrentEquipped.Instance.currentEquippeds[count].def * ((value / 10) + 1);
+            }
+
+            if (CurrentEquipped.Instance.currentEquippeds[count].mef != 0)
+            {
+                CurrentEquipped.Instance.currentEquippeds[count].mef += CurrentEquipped.Instance.currentEquippeds[count].mef * ((value / 10) + 1);
+            }
+
+            if (CurrentEquipped.Instance.currentEquippeds[count].sks != 0)
+            {
+                CurrentEquipped.Instance.currentEquippeds[count].sks += CurrentEquipped.Instance.currentEquippeds[count].sks * ((value / 10) + 1);
+            }
+
+            if (CurrentEquipped.Instance.currentEquippeds[count].sps != 0)
+            {
+                CurrentEquipped.Instance.currentEquippeds[count].sps += CurrentEquipped.Instance.currentEquippeds[count].sps * ((value / 10) + 1);
+            }
+
+            if (CurrentEquipped.Instance.currentEquippeds[count].ten != 0)
+            {
+                CurrentEquipped.Instance.currentEquippeds[count].ten += CurrentEquipped.Instance.currentEquippeds[count].ten * ((value / 10) + 1);
+            }
+
+            if (CurrentEquipped.Instance.currentEquippeds[count].pie != 0)
+            {
+                CurrentEquipped.Instance.currentEquippeds[count].pie += CurrentEquipped.Instance.currentEquippeds[count].pie * ((value / 10) + 1);
+            }
+            count++;
+        }
     }
 }
