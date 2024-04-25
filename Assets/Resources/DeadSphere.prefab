@@ -4842,7 +4842,7 @@ GameObject:
   - component: {fileID: 7428038275496678074}
   - component: {fileID: 5732075512209187971}
   m_Layer: 7
-  m_Name: Deadly
+  m_Name: DeadSphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

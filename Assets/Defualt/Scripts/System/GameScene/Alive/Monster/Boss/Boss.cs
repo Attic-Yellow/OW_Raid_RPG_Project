@@ -26,7 +26,8 @@ public class Boss : Monster
     [SerializeField] List<Color> colorList = new List<Color>();
     Queue<Color> colorQueue = new Queue<Color>();
     Coroutine coroutine = null;
-     
+    
+    
 
     [Header("Need Drag")]
 
@@ -210,9 +211,8 @@ public class Boss : Monster
     {
         midAttackList.Add(LaserAttack);
         midAttackList.Add(FloorAttack);
-
-        /*        midAttackList.Add(PeperoAttack);
-                midAttackList.Add(MeteoAttack);
+         midAttackList.Add(Thunder);
+               /* midAttackList.Add(MeteoAttack);
                 midAttackList.Add(InOutAttack);*/
     }
 
@@ -638,9 +638,17 @@ public class Boss : Monster
     }
 
 
-    private void PeperoAttack()//뺴빼로 공격(자기가 바라보고있는 방향으로 뭐가 떨어진 뒤 떨어진곳 양 옆에 뭐가 떨어짐)
+    private void Thunder()//뺴빼로 공격(자기가 바라보고있는 방향으로 뭐가 떨어진 뒤 떨어진곳 양 옆에 뭐가 떨어짐)
     {
+        print("번개공격");
+        SetApplyRootMotion(false);
 
+        for (int i = 0; i < skillReciver.skillDic[SkillEffectEnum.Thunder].GetComponent<Effect>().createCount; i++)
+        {
+            Vector3 randomPosition = Random.insideUnitSphere * 40;
+            randomPosition.y = 20;
+            PhotonNetwork.Instantiate(skillReciver.skillDic[SkillEffectEnum.Thunder].name, transform.position + randomPosition, Quaternion.identity);
+        }
     }
 
     private void MeteoAttack()//메테오 공격 (고정적으로 몬스터 주변에 떨어지고, 플레이어가 있는곳에 추가로 순차적으로 3회 떨어짐)

@@ -708,6 +708,7 @@ MonoBehaviour:
   laserEffect: {fileID: 0}
   deadSphereEffect: {fileID: 3699077242561859055, guid: 9fb739d500ae593488f6b5335187a6b1,
     type: 3}
+  thunderEffect: {fileID: 0}
 --- !u!1 &2868426581994911675
 GameObject:
   m_ObjectHideFlags: 0
@@ -1001,7 +1002,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 1ec31ee6b4e699b4c919f9ddd24f6f73, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
@@ -1079,7 +1080,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.24999999
-  m_Speed: 3.5
+  m_Speed: 20
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -1140,6 +1141,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
+  - {fileID: 1750497938801831343}
   - {fileID: 1602836604990916443}
   - {fileID: 2291544047966531414}
   sceneViewId: 0

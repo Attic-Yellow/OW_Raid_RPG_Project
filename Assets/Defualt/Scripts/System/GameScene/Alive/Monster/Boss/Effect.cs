@@ -9,7 +9,7 @@ public class Effect : MonoBehaviourPun
     public float damage;
     protected List<Alive> damagedObjs = new List<Alive>(); //데미지를 입었었던
     public ParticleSystem ps;
-
+    public int createCount;
      
     
    

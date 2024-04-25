@@ -9,6 +9,7 @@ public enum SkillEffectEnum
     Fireball,
     BloodFountain,
     Laser,
+    Thunder,
     DeadSphere
 }
 
@@ -19,6 +20,7 @@ public class SkillReceiver : MonoBehaviourPunCallbacks
     [SerializeField] GameObject bloodFounainEffect;
     [SerializeField] GameObject laserEffect;
     [SerializeField] GameObject deadSphereEffect;
+    [SerializeField] GameObject thunderEffect;
      public Dictionary<SkillEffectEnum, GameObject> skillDic = new();
     private void Awake()
     {
@@ -30,6 +32,7 @@ public class SkillReceiver : MonoBehaviourPunCallbacks
         skillDic.Add(SkillEffectEnum.Fireball,fireballEffect);
         skillDic.Add(SkillEffectEnum.BloodFountain,bloodFounainEffect);
         skillDic.Add(SkillEffectEnum.Laser,laserEffect);    
+        skillDic.Add(SkillEffectEnum.Thunder, thunderEffect);
         skillDic.Add(SkillEffectEnum.DeadSphere,deadSphereEffect);
     }
 }

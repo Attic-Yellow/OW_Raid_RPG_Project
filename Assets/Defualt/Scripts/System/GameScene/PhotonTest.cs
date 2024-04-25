@@ -40,10 +40,10 @@ public class PhotonTest : MonoBehaviourPunCallbacks
 
     IEnumerator LoadScene()
     {
-        PhotonNetwork.LoadLevel("New Scene");
+        PhotonNetwork.LoadLevel("Test");
 
         // 씬이 로드될 때까지 대기
-        yield return new WaitUntil(() => SceneManager.GetActiveScene().name == "New Scene");
+        yield return new WaitUntil(() => SceneManager.GetActiveScene().name == "Test");
 
         GameObject player = PhotonNetwork.Instantiate(playerResource.name, Vector3.zero, Quaternion.identity);
         Camera.main.transform.SetParent(player.transform.Find("CamPos"));
