@@ -18,7 +18,7 @@ public class Player : Alive
       public List<GameObject> skillEffectList = new();
       [SerializeField] public float Money { get => money; set => money = value; }
       private Queue<Skill> canLearnSkills = new();
-      private Boss Aggressive;
+      private Monster Aggressive;
       public enum State
           {
           Idle,
@@ -42,7 +42,7 @@ public class Player : Alive
           base.Awake();
           controller = GetComponent<CharacterController>();
        /*   cam = GameObject.FindObjectOfType<CinemachineVirtualCamera>();*/
-          Aggressive = FindObjectOfType<Boss>();
+          Aggressive = FindObjectOfType<Monster>();
         if(Aggressive == null)
         {
             print("보스가 없음");

@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,7 +19,7 @@ public class PhotonTest : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         Debug.Log("Connected to Photon Server!");
-        PhotonNetwork.JoinRandomRoom();
+        PhotonNetwork.JoinOrCreateRoom("MyRoomName", new Photon.Realtime.RoomOptions { MaxPlayers = 2 },TypedLobby.Default);
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)

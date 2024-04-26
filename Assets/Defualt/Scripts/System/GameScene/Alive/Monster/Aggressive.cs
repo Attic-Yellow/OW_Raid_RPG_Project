@@ -7,6 +7,7 @@ using System.Timers;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.VFX;
 
 public class Aggressive : Monster
 {
@@ -58,14 +59,14 @@ public class Aggressive : Monster
     [SerializeField] private float goingDistance;//이동할 최대 거리
     [SerializeField] private float defaultsensingRange; //일반적 감지범위 
     [SerializeField] private float figthingSensingRange; //싸울때 감지범위
-
+    [SerializeField] VisualEffect fireBreath;
 
     private bool isFighting;  //싸우는중인지
     private float timeCheck;
     private float waitTime;
+    
 
-    private float upDownTimer;
-    private float cycleTime;
+    
 
     #endregion
 
@@ -80,12 +81,11 @@ public class Aggressive : Monster
         drangonState = DragonState.Grounded;
         groundState = OnGroundState.Idle;
         flyingState = FlyingState.Idle;
+        fireBreath.Stop();
     }
 
     protected new void Update()
     {
-        if (photonView.IsMine == false) return;
-
         base.Update();
         ManageTiredness();
 
@@ -129,7 +129,6 @@ public class Aggressive : Monster
                     break;
             }
 
-            animator.SetInteger("State", (int)groundState);
         }
         else //하늘일때
         {
@@ -199,7 +198,7 @@ public class Aggressive : Monster
             tiredness += tirednessIncreaseRate * Time.deltaTime;
         }
         // 피곤함 수치가 일정 수치 이상일 때 슬리핑 상태로 변경
-        if (tiredness >= sleepingValue && drangonState == DragonState.Grounded && isFighting == false && groundState == OnGroundState.Idle)
+        if (tiredness >= sleepingValue && drangonState == DragonState.Grounded && isFighting == false && groundState != OnGroundState.Idle)
         {
             ChangeGroundState(OnGroundState.Idle);
         }
@@ -209,6 +208,8 @@ public class Aggressive : Monster
         }
 
     }
+
+    
 
     #region ON GROUND STATE
     void IdleState()
@@ -298,6 +299,9 @@ public class Aggressive : Monster
 
     void RunState()
     {
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0); //런찍턴
+        if (!stateInfo.IsName("Run")) return;
+        
         if (target != null) agent.SetDestination(target.transform.position);
 
         GameObject obj = HighestAggroLevel(aggroLevels);
@@ -316,14 +320,28 @@ public class Aggressive : Monster
         }
 
         if (Vector3.Distance(transform.position, target.transform.position) < agent.stoppingDistance)
-            groundState = (OnGroundState)Random.Range(5, 8);
+            ChangeGroundState((OnGroundState)Random.Range(5, 8));
     }
 
-   
+    public void FireBreath()
+    {
+        print("호출");
+        photonView.RPC("PlayFireBreathAnimation", RpcTarget.AllBuffered);
+    }
+
+    [PunRPC]
+    private void PlayFireBreathAnimation()
+    {
+        fireBreath.Play();
+    }
 
     void AttackState(float range) //스킬 범위에 따라 레이를 쏴서 맞은 적 데미지입히기
     {
-        agent.ResetPath();
+        if (target == null) target = HighestAggroLevel(aggroLevels);
+        if(target == null) LoseTarget();
+
+        if(agent.hasPath) agent.ResetPath();
+
         //TODO : 연속적으로 데미지 입히게 할건지
         RaycastHit[] hits;
         Debug.DrawRay(transform.position, transform.forward * range, Color.blue);
@@ -337,12 +355,14 @@ public class Aggressive : Monster
 
     public void AttackFinish() //공격끝나면 스테이트바꿔주는
     {
+        print("공격끝");
+
         if (currentHP / maxHP <= 0.5) //체력이 50퍼센트 이하이면
         {
             ChangeGroundState(OnGroundState.TakeOff);
             return;
         }
-        groundState = OnGroundState.Run;
+        ChangeGroundState(OnGroundState.Run);
     }
 
     void TakeOffState()
@@ -367,18 +387,19 @@ public class Aggressive : Monster
             ChangeGroundState(OnGroundState.Die);
             return;
         }
-        if (drangonState == DragonState.Grounded && groundState == OnGroundState.GetHit) ChangeGroundState(OnGroundState.Scream);
+         ChangeGroundState(OnGroundState.Scream);
     }
     [PunRPC]
     void SyncGroundState(int state)
     {
         groundState = (OnGroundState)state;
+        animator.SetInteger("State", (int)state);
+        timeCheck = 0f;
     }
     void ChangeGroundState(OnGroundState state)
     {
         photonView.RPC("SyncGroundState", RpcTarget.All, (int)state);
-        animator.SetInteger("State", (int)state);
-        timeCheck = 0f;
+        print(state.ToString());
     }
 
     #endregion
@@ -480,28 +501,50 @@ public class Aggressive : Monster
     {
          isFighting = true; //커스텀 프로퍼티로
 
-        currentHP -= damage; 
+        currentHP -= damage;
+        SetAggroLevel(obj.GetComponent<PhotonView>().ViewID, damage);
+        target = HighestAggroLevel(aggroLevels);
 
         // 체력 감소 동기화
         if (PhotonNetwork.IsConnected) photonView.RPC("SyncHealth", RpcTarget.All, currentHP);
 
-        if (drangonState == DragonState.Grounded && groundState != OnGroundState.GetHit 
+        if (target == null)
+        {
+            LoseTarget();
+        }
+            if (drangonState == DragonState.Grounded && groundState != OnGroundState.GetHit 
             && (groundState == OnGroundState.Walk || groundState == OnGroundState.Idle))
         {
             ChangeGroundState(OnGroundState.GetHit);
-            target = obj;
         }
      
     }
 
+    void LoseTarget()//타겟을 잃어버렸을때
+    {
+        
+            if (drangonState == DragonState.Flying)
+            {
+                fireBreath.Stop();
+                animator.SetTrigger("Change");
+            }
+            else
+            {
+                ChangeGroundState(OnGroundState.Walk);
+            }
+        
+    }
+
     public override void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-       if(stream.IsWriting)
+        if (stream.IsWriting)
         {
             stream.SendNext((int)drangonState);
             stream.SendNext((int)groundState);
             stream.SendNext((int)flyingState);
             stream.SendNext(currentHP);
+            stream.SendNext(isFighting);
+            stream.SendNext((float)tiredness);
         }
         else
         {
@@ -509,8 +552,11 @@ public class Aggressive : Monster
             groundState = (OnGroundState)stream.ReceiveNext();
             flyingState = (FlyingState)stream.ReceiveNext();
             currentHP = (float)stream.ReceiveNext();
+            isFighting = (bool)stream.ReceiveNext();
+            tiredness = (float)stream.ReceiveNext();
+
             photonView.RPC("SyncHealth", RpcTarget.All, currentHP);
-            ChangeAniLayer();
+          
         }
     }
 }
