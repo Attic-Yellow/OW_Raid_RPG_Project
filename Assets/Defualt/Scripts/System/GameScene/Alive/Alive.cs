@@ -13,16 +13,24 @@ public class AggroLevel
         aggroLevel = initialAggroLevel;
         lastUpdateTime = Time.time;
     }
+   
     public float GetAggroLevel()
     {
         return aggroLevel;
     }
+
+    public float GetLastUpdateTime()
+    {
+        return lastUpdateTime;
+    }
+   
 
     public void SetAggroLevel(float newAggroLevel)
     {
         aggroLevel = newAggroLevel;
         lastUpdateTime = Time.time;
     }
+
 
     public void IncreaseAggroLevel(float amount)
     {
@@ -40,10 +48,7 @@ public class AggroLevel
         lastUpdateTime = Time.time;
     }
 
-    public float GetLastUpdateTime()
-    {
-        return lastUpdateTime;
-    }
+  
 }
 
 public class Alive : DefalutState, IPunObservable
@@ -123,7 +128,11 @@ public class Alive : DefalutState, IPunObservable
   
     protected GameObject HighestAggroLevel(Dictionary<int,AggroLevel> aggroDic ) //날 때린놈들 중에 제일 어그로수치가 높은
     {
-        if(aggroDic.Count == 0) return null;
+        print($"{aggroDic.Count}명");
+        if (aggroDic.Count == 0)
+        { 
+            return null;
+        }
 
         float maxAggroLevel = float.MinValue;
         GameObject target = null;

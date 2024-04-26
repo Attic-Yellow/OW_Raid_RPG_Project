@@ -22,17 +22,36 @@ public class Monster : Alive
         if (photonView.IsMine == false) return;
     }
 
+   
     protected void SetAggroLevel(int bossInstanceID, float damage)
     {
         if (!aggroLevels.ContainsKey(bossInstanceID))
         {
-            aggroLevels[bossInstanceID] = new AggroLevel(damage);
+            photonView.RPC("AddAggroLevels", RpcTarget.All, bossInstanceID, damage);
 
         }
         else
         {
-            aggroLevels[bossInstanceID].IncreaseAggroLevel(damage);
+            photonView.RPC("PlusAggroLevel", RpcTarget.All, bossInstanceID, damage);
         }
+    }
+    [PunRPC]
+    public void AddAggroLevels(int ptId, float _value)
+    {
+        print($"추가전{aggroLevels.Count}");
+        aggroLevels[ptId] = new AggroLevel(_value);
+        print($"추가 후{aggroLevels.Count}");
+    }
+    [PunRPC]
+    public void RemoveAggroLevels(int ptId)
+    {
+        aggroLevels.Remove(ptId);
+    }
+
+    [PunRPC]
+    public void PlusAggroLevel(int ptId, float _value)
+    {
+        aggroLevels[ptId].IncreaseAggroLevel(_value);
     }
     public void SetTarget(GameObject obj)
     {
@@ -53,7 +72,7 @@ public class Monster : Alive
 
         foreach (int key in keysToRemove)
         {
-            aggroLevels.Remove(key);
+           photonView.RPC("RemoveAggroLevels",RpcTarget.All, key);  
         }
     }
 
@@ -86,5 +105,6 @@ public class Monster : Alive
                 playerScript.TakeDamage(gameObject,playerScript.MaxHP);
             }
         }
+        aggroLevels.Clear();
     }
 }
