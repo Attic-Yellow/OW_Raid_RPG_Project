@@ -11,6 +11,7 @@ public class GameSceneUI : MonoBehaviour
     public MenuButtonUI menuButtonsUI;
     public KeyBindingUI keyBindingUI;
     public SkillUI skillUI;
+    public HUDController hudController;
 
     private void Awake()
     {

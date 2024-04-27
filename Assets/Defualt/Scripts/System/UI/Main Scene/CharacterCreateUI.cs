@@ -127,8 +127,8 @@ public class CharacterCreateUI : MonoBehaviour
     // 직업 선택 버튼 메서드
     public void OnJobButtonClick(int jobNum)
     {
-        // 현재 시간과 마지막 클릭 시간의 차이를 계산합니다.
-        float timeSinceLastClick = Time.time - lastClickTime;
+        
+        float timeSinceLastClick = Time.time - lastClickTime; // 현재 시간과 마지막 클릭 시간의 차이를 계산
         lastClickTime = Time.time;
 
         // 직업 설명 변경 또는 직업 선택 처리
