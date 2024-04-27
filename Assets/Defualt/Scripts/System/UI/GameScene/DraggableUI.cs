@@ -4,13 +4,28 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Unity.VisualScripting;
+using System;
 
-public class DraggableUI : MonoBehaviour, IDragHandler, IPointerDownHandler, IEndDragHandler
+public class DraggableUI : MonoBehaviour, IPointerClickHandler, IDragHandler, IPointerDownHandler, IEndDragHandler
 {
     [SerializeField] private RectTransform windowRectTransform;
     [SerializeField] private RectTransform dragAreaRectTransform;
     private Vector2 offset;
     private bool isDragging = false;
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        GameObject clickedObject = eventData.pointerPress;
+        GameObject dragArea = clickedObject.transform.childCount > 0 ? clickedObject.transform.GetChild(1).gameObject : null;
+        GameManager.Instance.uiManager.gameSceneUI.hudController.PointerClick(dragArea);
+
+        QuickBar quickBar = clickedObject.GetComponent<QuickBar>();
+
+        if (quickBar != null)
+        {
+            quickBar.UpdateHUDData(-2);
+        }
+    }
 
     // 해당 창 클릭 시 호출
     public void OnPointerDown(PointerEventData eventData)
@@ -21,7 +36,7 @@ public class DraggableUI : MonoBehaviour, IDragHandler, IPointerDownHandler, IEn
         {
             Vector2 mousePosition = RectTransformUtility.WorldToScreenPoint(eventData.pressEventCamera, eventData.position);
             offset = (Vector2)windowRectTransform.position - mousePosition;
-            isDragging = true; 
+            isDragging = true;
         }
     }
 
@@ -39,6 +54,13 @@ public class DraggableUI : MonoBehaviour, IDragHandler, IPointerDownHandler, IEn
     public void OnEndDrag(PointerEventData eventData)
     {
         isDragging = false;
+        GameObject dragObject = eventData.pointerDrag;
+        QuickBar quickBar = dragObject.GetComponent<QuickBar>();
+
+        if (quickBar != null)
+        {
+            quickBar.UpdateHUDData(-2);
+        }
     }
 
     // 해당 창을 최상위로 이동(하이어라키 상 최하위 자식으로 이동)

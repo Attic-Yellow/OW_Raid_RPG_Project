@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:608321564038:android:fce053b13a17c1b9175007",
+        "mobilesdk_app_id": "1:608321564038:android:fcab3720e3ba7d0b175007",
         "android_client_info": {
-          "package_name": "com.UnityTechnologies.com.unity.template.urpblank"
+          "package_name": "com.UnityTechnologies.com.unity"
         }
       },
       "oauth_client": [],
