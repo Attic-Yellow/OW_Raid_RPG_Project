@@ -20,19 +20,6 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            AddItem(ItemData.Instance.items[0], GetItemCount());
-        }
-
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            AddItem(ItemData.Instance.items[1], GetItemCount());
-        }
-    }
-
     #region 아이템 습득 메서드
     // 아이템 습득 메서드
     public bool AddItem(Consumable consumable, int itemCount)

@@ -1,14 +1,25 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
+
+public enum IsSave
+{
+    None,
+    NotSave,
+    Saved
+}
 
 public class HUDController : MonoBehaviour
 {
     [SerializeField] private GameObject background;
     [SerializeField] private GameObject mainSetBoard;
+    [SerializeField] private GameObject notSaveAlarmboard;
     [SerializeField] private GameObject[] SettingBoard;
     [SerializeField] private TMP_Dropdown selectedDropdown;
     [SerializeField] private GameObject[] dragAreas;
@@ -18,6 +29,7 @@ public class HUDController : MonoBehaviour
     private float lastClickTime = 0f; 
     private const float doubleClickThreshold = 0.25f;
     private bool isHUDActive = false;
+    private IsSave isSave = IsSave.None;
 
     private void Awake()
     {
@@ -25,6 +37,21 @@ public class HUDController : MonoBehaviour
     }
 
     private void Start()
+    {
+        Init();
+
+        if (selectedDropdown != null)
+        {
+            List<string> areaName = new List<string>();
+            for (int i = 0; i < dragAreas.Length; i++)
+            {
+                areaName.Add(dragAreas[i].name);
+            }
+            PopulateDropdown(areaName);
+        }
+    }
+
+    public void Init()
     {
         if (background != null)
         {
@@ -41,16 +68,6 @@ public class HUDController : MonoBehaviour
             mainSetBoard.SetActive(false);
         }
 
-        if (selectedDropdown != null)
-        {
-            List<string> areaName = new List<string>();
-            for (int i = 0; i < dragAreas.Length; i++)
-            {
-                areaName.Add(dragAreas[i].name);
-            }
-            PopulateDropdown(areaName);
-        }
-
         if (dragAreas.Length > 0)
         {
             for (int i = 0; i < dragAreas.Length; i++)
@@ -58,28 +75,59 @@ public class HUDController : MonoBehaviour
                 dragAreas[i].SetActive(false);
             }
         }
+
+        if (notSaveAlarmboard != null)
+        {
+            notSaveAlarmboard.SetActive(false);
+        }
+
+        if (isSave == IsSave.NotSave)
+        {
+            foreach (var dragArea in dragAreas)
+            {
+                var quickBar = dragArea.transform.parent.GetComponent<QuickBar>();
+
+                if (quickBar != null)
+                {
+                    quickBar.ApplyHUDSettings();
+                }
+            }
+        }
+
+        isSave = IsSave.None;
     }
 
     public void DragAreaContoller()
     {
-        isHUDActive = !isHUDActive;
-
-        if (background != null)
+        if (isSave == IsSave.None)
         {
-            background.SetActive(!background.activeInHierarchy);
-        }
+            isHUDActive = !isHUDActive;
 
-        if (SettingBoard.Length > 0)
-        {
-            SettingBoardController(-1);
-        }
-
-        if (dragAreas.Length > 0)
-        {
-            for (int i = 0; i < dragAreas.Length; i++)
+            if (background != null)
             {
-                dragAreas[i].SetActive(!dragAreas[i].activeInHierarchy);
+                background.SetActive(!background.activeInHierarchy);
             }
+
+            if (SettingBoard.Length > 0)
+            {
+                SettingBoardController(-1);
+            }
+
+            if (dragAreas.Length > 0)
+            {
+                for (int i = 0; i < dragAreas.Length; i++)
+                {
+                    dragAreas[i].SetActive(!dragAreas[i].activeInHierarchy);
+                }
+            }
+        }
+        else if (isSave == IsSave.NotSave)
+        {
+            NotSaveBoardController();
+        }
+        else if (isSave == IsSave.Saved)
+        {
+            Init();
         }
     }
 
@@ -105,6 +153,7 @@ public class HUDController : MonoBehaviour
     {
         selectedDropdown.ClearOptions(); // 扁粮 可记 昏力
         selectedDropdown.AddOptions(options); // 货肺款 可记 眠啊
+        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)selectedDropdown.transform);
     }
 
     public void MainSetBoardController()
@@ -132,6 +181,8 @@ public class HUDController : MonoBehaviour
 
     public void PointerClick(GameObject clickedObject)
     {
+        isSave = IsSave.NotSave;
+
         int index = Array.IndexOf(dragAreas, clickedObject);
 
         if (index == -1)
@@ -152,6 +203,35 @@ public class HUDController : MonoBehaviour
             {
                 selectedDropdown.value = index;
             }
+        }
+    }
+
+    public void SaveHUDData()
+    {
+        var settings = new JsonSerializerSettings
+        {
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+        };
+
+        string json = JsonConvert.SerializeObject(GameManager.Instance.uiManager.gameSceneUI.hudController.HUDData, settings);
+        var filePath = Path.Combine(Application.persistentDataPath, "HUDData.json");
+
+        var directory = Path.GetDirectoryName(filePath);
+        if (!Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        File.WriteAllText(filePath, json);
+
+        isSave = IsSave.Saved;
+    }
+
+    public void NotSaveBoardController()
+    {
+        if (notSaveAlarmboard != null)
+        {
+            notSaveAlarmboard.SetActive(!notSaveAlarmboard.activeInHierarchy);
         }
     }
 

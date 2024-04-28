@@ -14,7 +14,7 @@ public class HUDDataList
 {
     public float positionX;
     public float positionY;
-
+    public float size;
     public int quickBarShape;
     public bool isActive;
 }

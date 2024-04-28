@@ -10,6 +10,7 @@ public class QuickBar : MonoBehaviour
 {
     [SerializeField] private GameObject quickBar;
     [SerializeField] private GameObject dragArea;
+    [SerializeField] private Slider slider;
     [SerializeField] private Image[] sizeButton;
     [SerializeField] private int selectedShape;
     [SerializeField] private int quickBarNum;
@@ -18,8 +19,19 @@ public class QuickBar : MonoBehaviour
 
     private void Start()
     {
+        // slider.onValueChanged.AddListener(delegate { ChangeQuickBarSize(); });
         UpdateHUDData(-1);
         ApplyHUDSettings();
+    }
+
+    public void ChangeQuickBarSize()
+    {
+        float quickBarSize = ((float)slider.value / 100);
+        var rect = quickBar.GetComponent<RectTransform>();
+        var rectDrag = dragArea.GetComponent<RectTransform>();
+
+        rect.localScale = new Vector2(quickBarSize, quickBarSize);
+        rectDrag.localScale = new Vector2(quickBarSize, quickBarSize);
     }
 
     public void ChangeQuickBarShape(int index)
@@ -31,27 +43,27 @@ public class QuickBar : MonoBehaviour
         {
             case 0:
                 rect.sizeDelta = new Vector2(850, 80);
-                rectDrag.sizeDelta = new Vector2(850, 80);
+                rectDrag.sizeDelta = new Vector2(835, 65);
                 break;
             case 1:
                 rect.sizeDelta = new Vector2(430, 150);
-                rectDrag.sizeDelta = new Vector2(430, 150);
+                rectDrag.sizeDelta = new Vector2(415, 135);
                 break;
             case 2:
                 rect.sizeDelta = new Vector2(290, 220);
-                rectDrag.sizeDelta = new Vector2(290, 220);
+                rectDrag.sizeDelta = new Vector2(275, 205);
                 break;
             case 3:
                 rect.sizeDelta = new Vector2(220, 290);
-                rectDrag.sizeDelta = new Vector2(220, 290);
+                rectDrag.sizeDelta = new Vector2(205, 275);
                 break;
             case 4:
                 rect.sizeDelta = new Vector2(150, 430);
-                rectDrag.sizeDelta = new Vector2(150, 430);
+                rectDrag.sizeDelta = new Vector2(135, 415);
                 break;
             case 5:
                 rect.sizeDelta = new Vector2(80, 850);
-                rectDrag.sizeDelta = new Vector2(80, 850);
+                rectDrag.sizeDelta = new Vector2(65, 835);
                 break;
         }
 
@@ -82,6 +94,7 @@ public class QuickBar : MonoBehaviour
         var transform = quickBar.transform.GetComponent<RectTransform>();
         hudDataList.positionX = transform.position.x;
         hudDataList.positionY = transform.position.y;
+        hudDataList.size = slider.value;
         hudDataList.quickBarShape = selectedShape;
         bool active = quickBar.transform.GetChild(0).gameObject.activeInHierarchy;
         hudDataList.isActive = active;
@@ -132,6 +145,8 @@ public class QuickBar : MonoBehaviour
             var dragArearTrans = dragArea.transform.GetComponent<RectTransform>();
             quickBarTransform.position = new Vector2(data.positionX, data.positionY);
             dragArearTrans.position = new Vector2(data.positionX, data.positionY);
+            slider.value = data.size;
+            ChangeQuickBarSize();
             ChangeQuickBarShape(data.quickBarShape);
             quickBar.SetActive(data.isActive);
         }
