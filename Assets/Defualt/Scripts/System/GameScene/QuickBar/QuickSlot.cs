@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
+using Newtonsoft.Json;
+using System.IO;
 
 public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
 {
@@ -14,7 +16,14 @@ public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
     [SerializeField] private TextMeshProUGUI itemCountText;
     [SerializeField] private GameObject coolDownImage;
     [SerializeField] private TextMeshProUGUI coolDownText;
+    [SerializeField] private GameObject skillContent;
 
+    private void Start()
+    {
+        ApplyHUDSettings();
+    }
+
+    #region 슬롯 UI 업데이트
     public override void UpdateSlotUI()
     {
         if (slot == null)
@@ -67,7 +76,9 @@ public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
                 break;
         }
     }
+    #endregion
 
+    #region 슬롯 초기화
     public override void ClearSlot()
     {
         slot = null;
@@ -75,6 +86,7 @@ public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
         itemCountText.text = "";
         itemIcon.gameObject.SetActive(false);
     }
+    #endregion
 
     #region 드래그 시작
     public void OnDrag(PointerEventData eventData)
@@ -141,18 +153,26 @@ public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
             }
             else if (allSlotType.slotType == SlotType.Quick)
             {
-                slot.AssignSlot(tempSlot.gameObject);
+                slot.AssignSlot(tempSlot);
                 slot.UpdateSlotUI();
                 var thisInvenSlot = tempSlot.GetComponent<InventorySlot>();
-                thisInvenSlot.AddLinked(slot.gameObject);
+
+                if (thisInvenSlot != null)
+                {
+                    thisInvenSlot.AddLinked(slot.gameObject);
+                }
             }
             else if (allSlotType.slotType != SlotType.Quick)
             {
                 this.slot = tempSlot;
-                AssignSlot(tempSlot.gameObject);
+                AssignSlot(tempSlot);
                 UpdateSlotUI(); 
                 var thisInvenSlot = tempSlot.GetComponent<InventorySlot>();
-                thisInvenSlot.AddLinked(gameObject);
+
+                if (thisInvenSlot != null)
+                {
+                    thisInvenSlot.AddLinked(gameObject);
+                }
             }
         }
         UpdateSlotUI();
@@ -192,6 +212,84 @@ public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
     {
         this.slot = slot;
         UpdateSlotUI();
+
+        SlotDataList slotDataList = new SlotDataList();
+
+        var data = GameManager.Instance.uiManager.gameSceneUI.quickSlotData.slotDataList;
+        string name = gameObject.name.ToString();
+
+        slotDataList.slotName = slot.transform.name;
+        slotDataList.slotType = slot.GetComponent<Slot>().slotType.ToString();
+
+        if (!data.ContainsKey(name))
+        {
+            data.Add(name, slotDataList);
+        }
+        else
+        {
+            data[name] = slotDataList;
+        }
+
+        SaveSlotData();
+    }
+    #endregion
+
+    #region 슬롯 정보 Json 저장
+    public void SaveSlotData()
+    {
+        var settings = new JsonSerializerSettings
+        {
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+        };
+
+        string json = JsonConvert.SerializeObject(GameManager.Instance.uiManager.gameSceneUI.quickSlotData, settings);
+        var charName = CharacterData.Instance.characterData;
+        string name = charName.ContainsKey("name") ? charName["name"].ToString() : "null";
+
+        string folderPath = Path.Combine(Application.persistentDataPath, name);
+
+        // 폴더가 존재하지 않는다면 생성
+        if (!Directory.Exists(folderPath))
+        {
+            Directory.CreateDirectory(folderPath);
+        }
+
+        var filePath = Path.Combine(folderPath, $"slotData.json");
+
+        var directory = Path.GetDirectoryName(filePath);
+        if (!Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        File.WriteAllText(filePath, json);
+    }
+    #endregion
+
+    #region 슬롯 정보 Json 불러오기
+    public void ApplyHUDSettings()
+    {
+        var charName = CharacterData.Instance.characterData;
+        string name = charName.ContainsKey("name") ? charName["name"].ToString() : "null";
+
+        string folderPath = Path.Combine(Application.persistentDataPath, name);
+
+        var filePath = Path.Combine(folderPath, $"slotData.json");
+        if (File.Exists(filePath))
+        {
+            string json = File.ReadAllText(filePath);
+            QuickSlotData slotData = JsonConvert.DeserializeObject<QuickSlotData>(json);
+
+            string objectName = gameObject.name.ToString();
+            var data = slotData.slotDataList[objectName];
+
+            if (data.slotType == "Skill")
+            {
+                slot = skillContent.transform.Find(data.slotName).gameObject;
+            }
+            
+            UpdateSlotUI();
+        }
     }
     #endregion
 }

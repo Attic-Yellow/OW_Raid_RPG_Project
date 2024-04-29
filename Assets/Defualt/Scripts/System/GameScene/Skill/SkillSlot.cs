@@ -11,13 +11,9 @@ public class SkillSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
     [SerializeField] private TextMeshProUGUI skillName;
     [SerializeField] private TextMeshProUGUI skillInfo;
     [SerializeField] private Skill skill;
-    [SerializeField] private SkillSlot slot;
-    private GameObject dragVisual;
 
-    private void Start()
-    {
-        slot = this;
-    }
+    private GameObject dragVisual;
+    public SkillSlot slot;
 
     #region 스킬 정보 UI 업데이트
     public void SkillInfo(Skill skill)

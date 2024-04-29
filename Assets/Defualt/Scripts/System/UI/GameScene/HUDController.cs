@@ -24,7 +24,7 @@ public class HUDController : MonoBehaviour
     [SerializeField] private TMP_Dropdown selectedDropdown;
     [SerializeField] private GameObject[] dragAreas;
 
-    public HUDData HUDData = new HUDData();
+    public HUDData hudData = new HUDData();
 
     private float lastClickTime = 0f; 
     private const float doubleClickThreshold = 0.25f;
@@ -161,6 +161,7 @@ public class HUDController : MonoBehaviour
         if (mainSetBoard != null)
         {
             mainSetBoard.SetActive(!mainSetBoard.activeInHierarchy);
+            mainSetBoard.transform.SetAsLastSibling();
         }
     }
 
@@ -175,13 +176,24 @@ public class HUDController : MonoBehaviour
             for (int i = 0; i < SettingBoard.Length; i++)
             {
                 SettingBoard[i].SetActive(i == index);
+
+                if (i == index)
+                {
+                    if (SettingBoard[i].activeSelf)
+                    {
+                        SettingBoard[i].transform.SetAsLastSibling();
+                    }
+                }
             }
         }
     }
 
     public void PointerClick(GameObject clickedObject)
     {
-        isSave = IsSave.NotSave;
+        if (background != null && background.activeInHierarchy)
+        {
+            isSave = IsSave.NotSave;
+        }
 
         int index = Array.IndexOf(dragAreas, clickedObject);
 
@@ -213,8 +225,19 @@ public class HUDController : MonoBehaviour
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore
         };
 
-        string json = JsonConvert.SerializeObject(GameManager.Instance.uiManager.gameSceneUI.hudController.HUDData, settings);
-        var filePath = Path.Combine(Application.persistentDataPath, "HUDData.json");
+        string json = JsonConvert.SerializeObject(GameManager.Instance.uiManager.gameSceneUI.hudController.hudData, settings);
+        var charName = CharacterData.Instance.characterData;
+        string name = charName.ContainsKey("name") ? charName["name"].ToString() : "null";
+
+        string folderPath = Path.Combine(Application.persistentDataPath, name);
+
+        // 폴더가 존재하지 않는다면 생성
+        if (!Directory.Exists(folderPath))
+        {
+            Directory.CreateDirectory(folderPath);
+        }
+
+        var filePath = Path.Combine(folderPath, $"hudData.json");
 
         var directory = Path.GetDirectoryName(filePath);
         if (!Directory.Exists(directory))

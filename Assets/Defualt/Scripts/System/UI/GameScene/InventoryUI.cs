@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
 {
     #region 소지함 UI 오브젝트
     [SerializeField] private GameObject inventoryUI;
+    [SerializeField] private List<GameObject> numberButton;
     [SerializeField] private List<GameObject> inventorySlotAreas;
     [SerializeField] private List<InventorySlot> inventorySlots;
     #endregion
@@ -57,6 +59,28 @@ public class InventoryUI : MonoBehaviour
                 inventorySlotAreas[i].SetActive(i == index);
             }
         }
+
+        if (numberButton.Count > 0)
+        {
+            for (int i = 0; i < numberButton.Count; i++)
+            {
+                var img = numberButton[i].gameObject.GetComponent<Image>();
+
+                if (i == index)
+                {
+                    Color newColor = img.color;
+                    newColor.a = 1f;
+                    img.color = newColor;
+                }
+                else
+                {
+                    Color newColor = img.color;
+                    newColor.a = 0.4f;
+                    img.color = newColor;
+                }
+            }
+        }
+
     }
     #endregion
 

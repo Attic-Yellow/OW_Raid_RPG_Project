@@ -5,17 +5,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+
+public enum BarType
+{
+    Quick,
+    Other
+}
 
 public class QuickBar : MonoBehaviour
 {
+    [SerializeField] private BarType barType;
     [SerializeField] private GameObject quickBar;
     [SerializeField] private GameObject dragArea;
     [SerializeField] private Slider slider;
+    [SerializeField] private TextMeshProUGUI sizeText;
     [SerializeField] private Image[] sizeButton;
     [SerializeField] private int selectedShape;
     [SerializeField] private int quickBarNum;
 
-    private string defaultFilePath = "Assets/StreamingAssets/DefaultHUDData.json";
+    // private string defaultFilePath = "Assets/StreamingAssets/DefaultHUDData.json";
 
     private void Start()
     {
@@ -30,6 +39,7 @@ public class QuickBar : MonoBehaviour
         var rect = quickBar.GetComponent<RectTransform>();
         var rectDrag = dragArea.GetComponent<RectTransform>();
 
+        sizeText.text = $"{quickBarSize * 100}%";
         rect.localScale = new Vector2(quickBarSize, quickBarSize);
         rectDrag.localScale = new Vector2(quickBarSize, quickBarSize);
     }
@@ -85,7 +95,7 @@ public class QuickBar : MonoBehaviour
 
     public void UpdateHUDData(int index)
     {
-        if (index == -1)
+        if (index == -1 && barType == BarType.Quick)
         {
             selectedShape = quickBarNum > 5 ? 5 : 0;
         }
@@ -95,11 +105,16 @@ public class QuickBar : MonoBehaviour
         hudDataList.positionX = transform.position.x;
         hudDataList.positionY = transform.position.y;
         hudDataList.size = slider.value;
-        hudDataList.quickBarShape = selectedShape;
+
+        if (barType == BarType.Quick)
+        {
+            hudDataList.quickBarShape = selectedShape;
+        }
+
         bool active = quickBar.transform.GetChild(0).gameObject.activeInHierarchy;
         hudDataList.isActive = active;
 
-        var data = GameManager.Instance.uiManager.gameSceneUI.hudController.HUDData.hudDataList;
+        var data = GameManager.Instance.uiManager.gameSceneUI.hudController.hudData.hudDataList;
         string name = quickBar.gameObject.name.ToString();
 
         if (!data.ContainsKey(name))
@@ -119,8 +134,19 @@ public class QuickBar : MonoBehaviour
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore
         };
 
-        string json = JsonConvert.SerializeObject(GameManager.Instance.uiManager.gameSceneUI.hudController.HUDData, settings);
-        var filePath = Path.Combine(Application.persistentDataPath, "HUDData.json");
+        string json = JsonConvert.SerializeObject(GameManager.Instance.uiManager.gameSceneUI.hudController.hudData, settings); 
+        var charName = CharacterData.Instance.characterData;
+        string name = charName.ContainsKey("name") ? charName["name"].ToString() : "null";
+
+        string folderPath = Path.Combine(Application.persistentDataPath, name);
+
+        // 폴더가 존재하지 않는다면 생성
+        if (!Directory.Exists(folderPath))
+        {
+            Directory.CreateDirectory(folderPath);
+        }
+
+        var filePath = Path.Combine(folderPath, $"hudData.json");
 
         var directory = Path.GetDirectoryName(filePath);
         if (!Directory.Exists(directory))
@@ -133,21 +159,31 @@ public class QuickBar : MonoBehaviour
 
     public void ApplyHUDSettings()
     {
-        var filePath = Path.Combine(Application.persistentDataPath, "HUDData.json");
+        var charName = CharacterData.Instance.characterData;
+        string name = charName.ContainsKey("name") ? charName["name"].ToString() : "null";
+
+        string folderPath = Path.Combine(Application.persistentDataPath, name);
+
+        var filePath = Path.Combine(folderPath, $"hudData.json");
         if (File.Exists(filePath))
         {
             string json = File.ReadAllText(filePath);
             HUDData hudData = JsonConvert.DeserializeObject<HUDData>(json); 
 
-            string name = quickBar.gameObject.name.ToString();
-            var data = hudData.hudDataList[name];
+            string objectName = quickBar.gameObject.name.ToString();
+            var data = hudData.hudDataList[objectName];
             var quickBarTransform = quickBar.transform.GetComponent<RectTransform>();
             var dragArearTrans = dragArea.transform.GetComponent<RectTransform>();
             quickBarTransform.position = new Vector2(data.positionX, data.positionY);
             dragArearTrans.position = new Vector2(data.positionX, data.positionY);
             slider.value = data.size;
             ChangeQuickBarSize();
-            ChangeQuickBarShape(data.quickBarShape);
+
+            if (barType == BarType.Quick)
+            {
+                ChangeQuickBarShape(data.quickBarShape);
+            }
+
             quickBar.SetActive(data.isActive);
         }
         else

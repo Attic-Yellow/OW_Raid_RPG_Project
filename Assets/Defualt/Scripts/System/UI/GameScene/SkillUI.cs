@@ -32,6 +32,7 @@ public class SkillUI : MonoBehaviour
         if (skillUI != null)
         {
             skillUI.SetActive(!skillUI.activeInHierarchy);
+            skillUI.transform.SetAsLastSibling();
         }
     }
 
@@ -50,7 +51,7 @@ public class SkillUI : MonoBehaviour
     public void CreateSkills()
     {
         var job = GameManager.Instance.uiManager.gameSceneUI.characterInfoUI.GetJob();
-
+        int i = 0;
         switch (job)
         {
             case "Warrior" :
@@ -62,7 +63,11 @@ public class SkillUI : MonoBehaviour
                     
                     if (skillSlot != null)
                     {
+                        skillSlot.name = $"skill{i}";
                         skillSlot.SkillInfo(skill);
+                        skillSlot.slot = skillSlot;
+                        skillSlot.slotIndex = i;
+                        i++;
                     }
                 }
                 break;
@@ -75,7 +80,8 @@ public class SkillUI : MonoBehaviour
 
                     if (skillSlot != null)
                     {
-                        skillSlot.SkillInfo(skill);
+                        skillSlot.SkillInfo(skill); 
+                        skillSlot.slot = skillSlot;
                     }
                 }
                 break;
@@ -89,6 +95,7 @@ public class SkillUI : MonoBehaviour
                     if (skillSlot != null)
                     {
                         skillSlot.SkillInfo(skill);
+                        skillSlot.slot = skillSlot;
                     }
                 }
                 break;
@@ -102,6 +109,7 @@ public class SkillUI : MonoBehaviour
                     if (skillSlot != null)
                     {
                         skillSlot.SkillInfo(skill);
+                        skillSlot.slot = skillSlot;
                     }
                 }
                 break;
@@ -115,6 +123,7 @@ public class SkillUI : MonoBehaviour
                     if (skillSlot != null)
                     {
                         skillSlot.SkillInfo(skill);
+                        skillSlot.slot = skillSlot;
                     }
                 }
                 break;

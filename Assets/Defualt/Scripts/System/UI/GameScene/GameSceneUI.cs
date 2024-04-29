@@ -13,6 +13,8 @@ public class GameSceneUI : MonoBehaviour
     public SkillUI skillUI;
     public HUDController hudController;
 
+    public QuickSlotData quickSlotData = new QuickSlotData();
+
     private void Awake()
     {
         GameManager.Instance.uiManager.gameSceneUI = this;
