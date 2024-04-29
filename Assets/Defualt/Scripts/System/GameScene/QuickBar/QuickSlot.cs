@@ -110,11 +110,12 @@ public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
         {
             Destroy(dragVisual);
         }
+
         // 마우스 포인터 아래의 "Slot" 태그를 가진 오브젝트만 검사
         List<RaycastResult> hits = new List<RaycastResult>();
         EventSystem.current.RaycastAll(eventData, hits);
         RaycastResult? hit = hits.FirstOrDefault(h => h.gameObject.CompareTag("Slot"));
-
+        RemoveSlotData();
         if (hit.HasValue && hit.Value.gameObject != null)
         {
             // 드랍 위치의 슬롯 처리
@@ -175,6 +176,7 @@ public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
                 }
             }
         }
+
         UpdateSlotUI();
         tempSlot = null;
     }
@@ -186,8 +188,8 @@ public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
         if (slot != null)
         {
             tempSlot = slot;
-            // 시각적 표현 생성
-            dragVisual = new GameObject("Drag Visual");
+           
+            dragVisual = new GameObject("Drag Visual");  // 시각적 표현 생성
             dragVisual.transform.SetParent(FindObjectOfType<Canvas>().transform); // Canvas를 부모로 설정
             Image visualImage = dragVisual.AddComponent<Image>();
             visualImage.sprite = itemIcon.sprite; // 현재 슬롯의 아이템 이미지 사용
@@ -213,24 +215,48 @@ public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
         this.slot = slot;
         UpdateSlotUI();
 
+        AddSlotData(slot);
+
+        SaveSlotData();
+    }
+    #endregion
+
+    #region 슬롯 정보 추가
+    public void AddSlotData(GameObject slot)
+    {
         SlotDataList slotDataList = new SlotDataList();
 
         var data = GameManager.Instance.uiManager.gameSceneUI.quickSlotData.slotDataList;
         string name = gameObject.name.ToString();
 
-        slotDataList.slotName = slot.transform.name;
-        slotDataList.slotType = slot.GetComponent<Slot>().slotType.ToString();
-
-        if (!data.ContainsKey(name))
+        if (slot != null)
         {
-            data.Add(name, slotDataList);
-        }
-        else
-        {
-            data[name] = slotDataList;
-        }
+            slotDataList.slotName = slot.transform.name;
+            slotDataList.slotType = slot.GetComponent<Slot>().slotType.ToString();
 
-        SaveSlotData();
+            if (!data.ContainsKey(name))
+            {
+                data.Add(name, slotDataList);
+            }
+            else
+            {
+                data[name] = slotDataList;
+            }
+        }
+    }
+    #endregion
+
+    #region 슬롯 정보 지우기
+    public void RemoveSlotData()
+    {
+        var data = GameManager.Instance.uiManager.gameSceneUI.quickSlotData.slotDataList;
+        string name = gameObject.name.ToString();
+
+        if(data.ContainsKey(name))
+        {
+            print($"{name}: 지운다잉");
+            data.Remove(name);
+        }
     }
     #endregion
 
@@ -281,14 +307,17 @@ public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
             QuickSlotData slotData = JsonConvert.DeserializeObject<QuickSlotData>(json);
 
             string objectName = gameObject.name.ToString();
-            var data = slotData.slotDataList[objectName];
-
-            if (data.slotType == "Skill")
+            if (slotData.slotDataList.ContainsKey(objectName))
             {
-                slot = skillContent.transform.Find(data.slotName).gameObject;
+                var data = slotData.slotDataList[objectName];
+
+                if (data.slotType == "Skill")
+                {
+                    slot = skillContent.transform.Find(data.slotName).gameObject;
+                }
+
+                UpdateSlotUI();
             }
-            
-            UpdateSlotUI();
         }
     }
     #endregion

@@ -5767,6 +5767,7 @@ MonoBehaviour:
   loadingUIController: {fileID: 0}
   loadingUIPrefab: {fileID: 395368867260900273, guid: be6ec94116b1f524093da0a500f77c00,
     type: 3}
+  isLoading: 0
 --- !u!1 &1907647542
 GameObject:
   m_ObjectHideFlags: 0

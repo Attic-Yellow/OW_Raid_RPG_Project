@@ -13,6 +13,8 @@ public class DraggableUI : MonoBehaviour, IPointerClickHandler, IDragHandler, IP
     private Vector2 offset;
     private bool isDragging = false;
 
+    #region 창 클릭 이벤트
+    // 해당 창 클릭 시 호출
     public void OnPointerClick(PointerEventData eventData)
     {
         GameObject clickedObject = eventData.pointerPress;
@@ -26,7 +28,9 @@ public class DraggableUI : MonoBehaviour, IPointerClickHandler, IDragHandler, IP
             quickBar.UpdateHUDData(-2);
         }
     }
+    #endregion
 
+    #region 창 버튼 다운 이벤트
     // 해당 창 클릭 시 호출
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -39,7 +43,9 @@ public class DraggableUI : MonoBehaviour, IPointerClickHandler, IDragHandler, IP
             isDragging = true;
         }
     }
+    #endregion
 
+    #region 창 드래그 이벤트
     // 해당 창 드래그 영역 드래그 시 호출
     public void OnDrag(PointerEventData eventData)
     {
@@ -49,7 +55,9 @@ public class DraggableUI : MonoBehaviour, IPointerClickHandler, IDragHandler, IP
             windowRectTransform.position = newPosition;
         }
     }
+    #endregion
 
+    #region 창 드래그 종료 이벤트
     // 드래그 종료 시 호출
     public void OnEndDrag(PointerEventData eventData)
     {
@@ -62,10 +70,13 @@ public class DraggableUI : MonoBehaviour, IPointerClickHandler, IDragHandler, IP
             quickBar.UpdateHUDData(-2);
         }
     }
+    #endregion
 
+    #region 창 최상위로 이동
     // 해당 창을 최상위로 이동(하이어라키 상 최하위 자식으로 이동)
     public void SetAsLast()
     {
         windowRectTransform.SetAsLastSibling(); // 클릭 시 해당 창을 최상위로 이동
     }
+    #endregion
 }

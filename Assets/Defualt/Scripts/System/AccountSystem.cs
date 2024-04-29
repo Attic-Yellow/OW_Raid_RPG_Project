@@ -63,7 +63,6 @@ public class AccountSystem : MonoBehaviour
         });
     }
 
-
     // 이메일 인증 확인 버튼 콜백
     public void OnCompleteEVButtonCallBack()
     {
