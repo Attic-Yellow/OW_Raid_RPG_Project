@@ -349,7 +349,7 @@ public class Aggressive : Monster
         foreach (RaycastHit hit in hits)
         {
             print($"¸ÂÀº³ð{hit.collider.gameObject.name}");
-            hit.collider.gameObject.GetComponent<Player>().TakeDamage(gameObject, this.Power);
+            hit.collider.gameObject.GetComponent<Alive>().TakeDamage(gameObject, this.Power);
         }
     }
 

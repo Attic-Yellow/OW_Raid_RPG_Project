@@ -6,7 +6,7 @@ public class BloodFountain : Effect
 {
     private void OnParticleCollision(GameObject other)
     {
-        Collision(other);
+        /*Collision(other);*/
     }
 
     private void OnParticleSystemStopped() //파티클이 종료될때
@@ -14,7 +14,7 @@ public class BloodFountain : Effect
         Init();
     }
 
-    protected override void Collision(GameObject obj)
+    /*protected override void Collision(GameObject obj)
     {
         if (obj.GetComponent<Alive>() != null)
         {
@@ -27,7 +27,7 @@ public class BloodFountain : Effect
             aliveComponent.TakeDamage(gameObject, damage);
         }
     }
-
+*/
     protected override void Init()
     {
         damagedObjs.Clear();

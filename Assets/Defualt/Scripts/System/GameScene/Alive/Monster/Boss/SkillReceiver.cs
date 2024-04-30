@@ -11,6 +11,7 @@ public enum SkillEffectEnum
     Laser,
     Thunder,
     DeadSphere,
+    MagicBall,
     FireBreath
 }
 
@@ -22,6 +23,8 @@ public class SkillReceiver : MonoBehaviourPunCallbacks
     [SerializeField] GameObject laserEffect;
     [SerializeField] GameObject deadSphereEffect;
     [SerializeField] GameObject thunderEffect;
+    [SerializeField] GameObject magicBallEffect;
+
 
     [Header("Dragon")]
     [SerializeField] GameObject FireBreathEffect;
@@ -40,6 +43,7 @@ public class SkillReceiver : MonoBehaviourPunCallbacks
         skillDic.Add(SkillEffectEnum.Laser,laserEffect);    
         skillDic.Add(SkillEffectEnum.Thunder, thunderEffect);
         skillDic.Add(SkillEffectEnum.DeadSphere,deadSphereEffect);
+        skillDic.Add(SkillEffectEnum.MagicBall, magicBallEffect);
 
         skillDic.Add(SkillEffectEnum.FireBreath, FireBreathEffect);
     }
