@@ -9,16 +9,12 @@ using TMPro;
 
 public class Player : Alive
 {
-    /* public User.Job playerJob;*/
-      public string charName;
-      private CharacterController controller;
-     /*private CinemachineVirtualCamera cam;*/
 
       private float money;
       public List<GameObject> skillEffectList = new();
       [SerializeField] public float Money { get => money; set => money = value; }
       private Queue<Skill> canLearnSkills = new();
-      private Monster Aggressive;
+      private Monster monster;
       public enum State
           {
           Idle,
@@ -40,10 +36,8 @@ public class Player : Alive
       private new void Awake()
       {
           base.Awake();
-          controller = GetComponent<CharacterController>();
-       /*   cam = GameObject.FindObjectOfType<CinemachineVirtualCamera>();*/
-          Aggressive = FindObjectOfType<Monster>();
-        if(Aggressive == null)
+          monster = FindObjectOfType<Monster>();
+        if(monster == null)
         {
             print("보스가 없음");
         }
@@ -73,7 +67,7 @@ public class Player : Alive
           {
              if(Input.GetKeyDown(KeyCode.Escape))
               {
-                  Aggressive.TakeDamage(gameObject,this.Power);
+                  monster.TakeDamage(gameObject,this.Power);
               }
 
               switch(currentState)
@@ -88,7 +82,7 @@ public class Player : Alive
                       case State.Skill4:
                       break;
               }
-              Move();
+            
 
           }
 
@@ -97,15 +91,7 @@ public class Player : Alive
 
       #endregion
       #region overridMethod
-      protected override void Move()
-      {
-          float x = Input.GetAxis("Horizontal");
-          float z = Input.GetAxis("Vertical");
-
-          Vector3 movement = new Vector3(x, 0f, z) ;
-          animator.SetFloat("Speed",movement.magnitude);
-          controller.Move(movement * moveSpeed * Time.deltaTime);
-      }
+  
 
       #endregion
       #region customMethod

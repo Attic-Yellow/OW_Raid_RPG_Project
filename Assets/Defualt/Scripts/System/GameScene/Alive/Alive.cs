@@ -79,20 +79,31 @@ public class Alive : DefalutState, IPunObservable
     public virtual void TakeDamage(GameObject obj, float damage)
     {
         // 받은 데미지만큼 체력 감소
-        currentHP -= damage;
+        if((currentHP -= damage) < 0)
+        {
+            currentHP = 0;
+        }
+        else
+        {
+            currentHP -= damage;
+        }
+        
+
+        if (PhotonNetwork.IsConnected)
+        {
+            // 네트워크 연결된 경우에만 동기화
+            photonView.RPC("SyncHealth", RpcTarget.All, currentHP);
+        }
 
         // 현재 체력이 0 이하로 떨어졌을 때 처리
         if (currentHP <= 0)
         {
             Die(); // 죽음 처리
+            return;
         }
 
         // 체력 감소를 동기화
-        if (PhotonNetwork.IsConnected)
-        {
-            // 네트워크 연결된 경우에만 동기화
-            photonView.RPC("SyncHealth", RpcTarget.All, currentHP);
-        } 
+       
     }
 
     [PunRPC]
@@ -108,7 +119,8 @@ public class Alive : DefalutState, IPunObservable
     {
         if (hpSlider != null)
         {
-            hpSlider.value = currentHP / maxHP;
+            float amount = currentHP / maxHP;
+            hpSlider.value = amount;
         }
     }
     protected virtual void Move()

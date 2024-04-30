@@ -1,3 +1,4 @@
+using Cinemachine;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
@@ -47,8 +48,10 @@ public class PhotonTest : MonoBehaviourPunCallbacks
         yield return new WaitUntil(() => SceneManager.GetActiveScene().name == "Test");
 
         GameObject player = PhotonNetwork.Instantiate(playerResource.name, Vector3.zero, Quaternion.identity);
-        Camera.main.transform.SetParent(player.transform.Find("CamPos"));
-        Camera.main.transform.localPosition = Vector3.zero;
-        Camera.main.transform.localRotation = Quaternion.identity;
+        
+        CinemachineVirtualCamera cam = FindObjectOfType<CinemachineVirtualCamera>();
+        cam.Follow = player.transform.Find("PlayerCameraRoot");
+
+        
     }
 }
