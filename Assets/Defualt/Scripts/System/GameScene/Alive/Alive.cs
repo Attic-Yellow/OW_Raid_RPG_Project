@@ -79,20 +79,31 @@ public class Alive : DefalutState, IPunObservable
     public virtual void TakeDamage(GameObject obj, float damage)
     {
         // 받은 데미지만큼 체력 감소
-        currentHP -= damage;
+        if((currentHP -= damage) < 0)
+        {
+            currentHP = 0;
+        }
+        else
+        {
+            currentHP -= damage;
+        }
+        
+
+        if (PhotonNetwork.IsConnected)
+        {
+            // 네트워크 연결된 경우에만 동기화
+            photonView.RPC("SyncHealth", RpcTarget.All, currentHP);
+        }
 
         // 현재 체력이 0 이하로 떨어졌을 때 처리
         if (currentHP <= 0)
         {
             Die(); // 죽음 처리
+            return;
         }
 
         // 체력 감소를 동기화
-        if (PhotonNetwork.IsConnected)
-        {
-            // 네트워크 연결된 경우에만 동기화
-            photonView.RPC("SyncHealth", RpcTarget.All, currentHP);
-        } 
+       
     }
 
     [PunRPC]
@@ -108,7 +119,8 @@ public class Alive : DefalutState, IPunObservable
     {
         if (hpSlider != null)
         {
-            hpSlider.value = currentHP / maxHP;
+            float amount = currentHP / maxHP;
+            hpSlider.value = amount;
         }
     }
     protected virtual void Move()
@@ -125,9 +137,36 @@ public class Alive : DefalutState, IPunObservable
     {
       
     }
-  
-  
-   /* void TankerAggroUp(float skillAmout)  //탱커가 어그로 스킬쓰면 호출 TODO : 플레이어한테 넘겨주면될듯
+    protected GameObject HighestAggroLevel(Dictionary<int, AggroLevel> aggroDic) //날 때린놈들 중에 제일 어그로수치가 높은
+    {
+        print($"{aggroDic.Count}명");
+        if (aggroDic.Count == 0)
+        {
+            return null;
+        }
+
+        float maxAggroLevel = float.MinValue;
+        GameObject target = null;
+
+        foreach (var kvp in aggroDic)
+        {
+            if (target == null && kvp.Value.GetAggroLevel() == maxAggroLevel)
+            {
+                maxAggroLevel = kvp.Value.GetAggroLevel();
+                target = PhotonView.Find(kvp.Key)?.gameObject;
+            }
+            else if (kvp.Value.GetAggroLevel() > maxAggroLevel)
+            {
+                maxAggroLevel = kvp.Value.GetAggroLevel();
+                target = PhotonView.Find(kvp.Key)?.gameObject;
+            }
+        }
+
+        return target;
+    }
+
+
+    void TankerAggroUp(float skillAmout)  //탱커가 어그로 스킬쓰면 호출 TODO : 플레이어한테 넘겨주면될듯
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, 30, 1<<3);
         foreach (Collider collider in colliders)
@@ -139,5 +178,5 @@ public class Alive : DefalutState, IPunObservable
                 monster.SetTarget(HighestAggroLevel(monster.aggroLevels));
             }
         }
-    }*/
+    }
 }

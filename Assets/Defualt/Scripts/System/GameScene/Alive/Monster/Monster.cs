@@ -18,7 +18,7 @@ public class Monster : Alive
 
     protected void Update()
     {
-        if (aggroLevels.Count > 0) RemoveInactiveAggroLevels();
+        if (aggroLevels.Count > 1) RemoveInactiveAggroLevels();
         if (photonView.IsMine == false) return;
     }
 
@@ -40,6 +40,7 @@ public class Monster : Alive
     {
         print($"추가전{aggroLevels.Count}");
         aggroLevels[ptId] = new AggroLevel(_value);
+
         print($"추가 후{aggroLevels.Count}");
     }
     [PunRPC]
@@ -72,7 +73,14 @@ public class Monster : Alive
 
         foreach (int key in keysToRemove)
         {
-           photonView.RPC("RemoveAggroLevels",RpcTarget.All, key);  
+           photonView.RPC("RemoveAggroLevels",RpcTarget.All, key);
+            GameObject thisObj = PhotonView.Find(key).gameObject;
+            if (thisObj != null)
+                thisObj.GetComponent<Player>().RemoveAggroMonster(this);
+            else
+            {
+                print("여기서 오류");
+            }
         }
     }
 
@@ -107,34 +115,7 @@ public class Monster : Alive
         }
         aggroLevels.Clear();
     }
-    protected GameObject HighestAggroLevel(Dictionary<int, AggroLevel> aggroDic) //날 때린놈들 중에 제일 어그로수치가 높은
-    {
-        print($"{aggroDic.Count}명");
-        if (aggroDic.Count == 0)
-        {
-            return null;
-        }
-
-        float maxAggroLevel = float.MinValue;
-        GameObject target = null;
-
-        foreach (var kvp in aggroDic)
-        {
-            if (target == null && kvp.Value.GetAggroLevel() == maxAggroLevel)
-            {
-                maxAggroLevel = kvp.Value.GetAggroLevel();
-                target = PhotonView.Find(kvp.Key)?.gameObject;
-            }
-            else if (kvp.Value.GetAggroLevel() > maxAggroLevel)
-            {
-                maxAggroLevel = kvp.Value.GetAggroLevel();
-                target = PhotonView.Find(kvp.Key)?.gameObject;
-            }
-        }
-
-        return target;
-    }
-
+   
 
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)

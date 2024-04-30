@@ -10,12 +10,14 @@ public enum SkillType
     Passive
 }
 
+
 [Serializable]
 public class Skill
 {
     public Sprite skillIcon;
     public bool globalCoolDown;
     public bool isCombo;
+    public bool isOn;
     public string skillName;
     public string description;
     public string addEffects;
@@ -30,8 +32,10 @@ public class Skill
     public float duration;
     public float spellTime;
     public SkillType skillType;
+    public int skillId;
+    public int animationNum;
 
-    public virtual void UseSkill()
+    public virtual void UseSkill(int id)
     {
         Debug.Log("Use Skill");
     }

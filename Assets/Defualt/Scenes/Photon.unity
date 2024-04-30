@@ -238,6 +238,37 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
+--- !u!1 &1457875867
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1457875868}
+  m_Layer: 0
+  m_Name: War Skill Berserk
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1457875868
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1457875867}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.236406, y: 1.2073767, z: 1.8134769}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1542763819
 GameObject:
   m_ObjectHideFlags: 0
@@ -282,7 +313,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96706e039b7e0e941be920d6eb524c5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerResource: {fileID: 396523354229538500, guid: 2cf15f444fef1f24cbae4ad1b31c9b70,
+  playerResource: {fileID: 1165135659208018636, guid: 872b26b2eda08cd4f925d7a419c00794,
     type: 3}
 --- !u!1 &1760513597
 GameObject:
