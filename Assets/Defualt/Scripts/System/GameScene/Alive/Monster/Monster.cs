@@ -22,7 +22,7 @@ public class Monster : Alive
         if (photonView.IsMine == false) return;
     }
 
-   
+ 
     protected void SetAggroLevel(int bossInstanceID, float damage)
     {
         if (!aggroLevels.ContainsKey(bossInstanceID))
@@ -107,4 +107,45 @@ public class Monster : Alive
         }
         aggroLevels.Clear();
     }
+    protected GameObject HighestAggroLevel(Dictionary<int, AggroLevel> aggroDic) //날 때린놈들 중에 제일 어그로수치가 높은
+    {
+        print($"{aggroDic.Count}명");
+        if (aggroDic.Count == 0)
+        {
+            return null;
+        }
+
+        float maxAggroLevel = float.MinValue;
+        GameObject target = null;
+
+        foreach (var kvp in aggroDic)
+        {
+            if (target == null && kvp.Value.GetAggroLevel() == maxAggroLevel)
+            {
+                maxAggroLevel = kvp.Value.GetAggroLevel();
+                target = PhotonView.Find(kvp.Key)?.gameObject;
+            }
+            else if (kvp.Value.GetAggroLevel() > maxAggroLevel)
+            {
+                maxAggroLevel = kvp.Value.GetAggroLevel();
+                target = PhotonView.Find(kvp.Key)?.gameObject;
+            }
+        }
+
+        return target;
+    }
+
+
+
+    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
+    {
+       if(PhotonNetwork.IsMasterClient)
+        {
+            foreach (var kvp in aggroLevels)
+            {
+                photonView.RPC("AddAggroLevels", newPlayer, kvp.Key, kvp.Value.GetAggroLevel());
+            }
+        }
+    }
+
 }

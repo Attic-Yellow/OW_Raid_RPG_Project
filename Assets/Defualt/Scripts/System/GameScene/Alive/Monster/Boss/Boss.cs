@@ -1,9 +1,12 @@
 using Photon.Pun;
+using Photon.Pun.Demo.PunBasics;
 using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -26,7 +29,8 @@ public class Boss : Monster
     [SerializeField] List<Color> colorList = new List<Color>();
     Queue<Color> colorQueue = new Queue<Color>();
     Coroutine coroutine = null;
-    
+
+    public TextMeshProUGUI testText;
     
 
     [Header("Need Drag")]
@@ -66,13 +70,18 @@ public class Boss : Monster
 
     private void Start()
     {
+        if(PhotonNetwork.IsMasterClient)
+        {
+            aggroLevels.Clear();
+        }
+
         firstDeadlyAmount = Random.Range(0.4f, 0.6f);
         lastDeadlyAmount = Random.Range(0.15f, 0.3f);
 
         AddMidList();
         AddAttackList();
 
-        AddBasicQ();
+        AddBasicQ(); 
         AddMidQ();
 
         AddAttackDic();
@@ -90,6 +99,20 @@ public class Boss : Monster
 
     protected new void Update()
     {
+        var firstKvp = aggroLevels.FirstOrDefault();
+        var secondKvp = aggroLevels.Skip(1).FirstOrDefault();
+
+        if (aggroLevels.Count > 1)
+        {
+            testText.text = $"First Key: {firstKvp.Key}, First Value: {firstKvp.Value}\n" +
+                            $"Second Key: {secondKvp.Key}, Second Value: {secondKvp.Value}";
+        }
+        else
+        {
+            // 딕셔너리가 비어있을 때 처리
+            testText.text = "Dictionary is nujl.";
+        }
+
         if (isDie) return;
         base.Update();
         ManageTiredness();
@@ -212,8 +235,8 @@ public class Boss : Monster
         midAttackList.Add(LaserAttack);
         midAttackList.Add(FloorAttack);
          midAttackList.Add(Thunder);
-               /* midAttackList.Add(MeteoAttack);
-                midAttackList.Add(InOutAttack);*/
+          midAttackList.Add(MagicBall);
+        
     }
 
     void AddMidQ()
@@ -430,6 +453,12 @@ public class Boss : Monster
         print("공격끝");
         if(attackRangeImg.gameObject.activeSelf) attackRangeImg.gameObject.SetActive(false);
 
+        if(target == null)
+        {
+            currentState = State.Walk;
+            animator.SetInteger("State", (int)currentState);
+            return;
+        }
         if (Vector3.Distance(transform.position, target.transform.position) > attackRange)
         {
             currentState = State.Walk;
@@ -540,34 +569,11 @@ public class Boss : Monster
     }
     public void FireBall()
     {
-        photonView.RPC("ReceiveSkill", RpcTarget.All, SkillEffectEnum.Fireball, shotPoint.position,Quaternion.identity);
+        PhotonNetwork.Instantiate(skillReciver.skillDic[SkillEffectEnum.Fireball].name, shotPoint.position, Quaternion.identity);
     }
   
-    [PunRPC]
-    public void ReceiveSkill(SkillEffectEnum skillEnum, Vector3 position,Quaternion quaternion)
-    {
-        Instantiate(skillReciver.skillDic[skillEnum], position, quaternion);
-    }
-
-    [PunRPC]    
-    public void ReceiveSkill(SkillEffectEnum skillEnum, Vector3 position, Quaternion quaternion,Color color)
-    {
-       GameObject obj = Instantiate(skillReciver.skillDic[skillEnum], position, quaternion);
-        print("생성완료");
-
-        DeadSphere deadSphere = obj.GetComponent<DeadSphere>();
-        if (deadSphere!= null)
-        {
-            deadSphere.psStartColor = color;
-        }
-    }
 
     #endregion
-
-
-
-
-
 
 
     #region MIDATTACKS
@@ -575,27 +581,26 @@ public class Boss : Monster
     {
         SetApplyRootMotion(false);
         attackRangeImg.gameObject.SetActive(true);
-        Collider[] colliders = Physics.OverlapSphere(transform.position, radius,1<<3);
 
 
         int randomNum = Random.Range(0, 4);
         switch (attackRangeImg.fillOrigin)
         {
             case 0://왼쪽,뒤
-               StartCoroutine(CheckAngle(colliders, -Vector3.right, -Vector3.forward));
-                photonView.RPC("ReceiveSkill", RpcTarget.All, SkillEffectEnum.BloodFountain, transform.position, transform.rotation * Quaternion.Euler(0, -180, 0));
+               StartCoroutine(CheckAngle( -Vector3.right, -Vector3.forward));
+                PhotonNetwork.Instantiate(skillReciver.skillDic[SkillEffectEnum.BloodFountain].name, transform.position, transform.rotation * Quaternion.Euler(0, -180, 0));
                 break;
             case 1:// 오른쪽,뒤
-               StartCoroutine(CheckAngle(colliders, Vector3.right, -Vector3.forward));
-                photonView.RPC("ReceiveSkill", RpcTarget.All, SkillEffectEnum.BloodFountain, transform.position, transform.rotation *  Quaternion.Euler(0, 90, 0));
+               StartCoroutine(CheckAngle( Vector3.right, -Vector3.forward));
+                PhotonNetwork.Instantiate(skillReciver.skillDic[SkillEffectEnum.BloodFountain].name, transform.position, transform.rotation * Quaternion.Euler(0, 90, 0));
                 break;
             case 2://오른쪽, 앞
-              StartCoroutine(CheckAngle(colliders, Vector3.right, Vector3.forward));
-                photonView.RPC("ReceiveSkill", RpcTarget.All, SkillEffectEnum.BloodFountain, transform.position, transform.rotation * Quaternion.identity);
+              StartCoroutine(CheckAngle( Vector3.right, Vector3.forward));
+                PhotonNetwork.Instantiate(skillReciver.skillDic[SkillEffectEnum.BloodFountain].name, transform.position, transform.rotation * Quaternion.identity);
                 break;
             case 3://왼쪽 앞
-               StartCoroutine(CheckAngle(colliders, -Vector3.right, Vector3.forward));
-                photonView.RPC("ReceiveSkill", RpcTarget.All, SkillEffectEnum.BloodFountain, transform.position, transform.rotation * Quaternion.Euler(0, -90, 0));
+               StartCoroutine(CheckAngle( -Vector3.right, Vector3.forward));
+                PhotonNetwork.Instantiate(skillReciver.skillDic[SkillEffectEnum.BloodFountain].name, transform.position, transform.rotation * Quaternion.Euler(0, -90, 0));
                 break;
             default:
                 break;
@@ -604,27 +609,40 @@ public class Boss : Monster
         attackRangeImg.fillOrigin = randomNum;
     }
 
-  
-    IEnumerator CheckAngle(Collider[] colliders, Vector3 right, Vector3 foward)                
-    {
-        yield return new WaitForSeconds(floorSkillAniTime);
-        foreach (Collider collider in colliders)
-        {
-            if (collider == GetComponent<Collider>())
-            {
-                continue;
-            }
 
-            Vector3 directionToCollider = collider.transform.position - transform.position; 
-          bool IsXBool =  right.x < 0 ? directionToCollider.x < 0 : directionToCollider.x > 0;
-          bool isZBool = foward.z < 0 ? directionToCollider.z < 0 : directionToCollider.z > 0;
-            if (IsXBool == false || isZBool == false)
+    IEnumerator CheckAngle(Vector3 right, Vector3 forward)
+    {
+       
+        float elapsedTime = 0f;
+
+        while (elapsedTime < floorSkillAniTime)
+        {
+        
+            elapsedTime += Time.deltaTime;
+            Collider[] colliders = Physics.OverlapSphere(transform.position, radius, 1 << 3);
+
+            foreach (Collider collider in colliders)
             {
-                print("안전지역x");
-                collider.GetComponent<Alive>().TakeDamage(gameObject, power);
+                if (collider == GetComponent<Collider>())
+                {
+                    continue;
+                }
+                print(collider.gameObject.name);
+                Vector3 directionToCollider = collider.transform.position - transform.position;
+                bool isXBool = right.x < 0 ? directionToCollider.x < 0 : directionToCollider.x > 0;
+                bool isZBool = forward.z < 0 ? directionToCollider.z < 0 : directionToCollider.z > 0;
+
+                if (!isXBool || !isZBool)
+                {
+                    print("안전지역x");
+                    collider.GetComponent<Alive>().TakeDamage(gameObject, skillReciver.skillDic[SkillEffectEnum.BloodFountain].GetComponent<Effect>().damage);
+                }
+                else
+                {
+                    print("안전지역o");
+                }
             }
-            else print("안전지역o");
-            
+            yield return new WaitForSeconds(0.1f);
         }
 
     }
@@ -636,13 +654,20 @@ public class Boss : Monster
 
 
     }
-
+    public void InitLaser()
+    {
+        PhotonNetwork.Instantiate(skillReciver.skillDic[SkillEffectEnum.Laser].name, shotPoint.position, Quaternion.identity);
+    }
 
     private void Thunder()//뺴빼로 공격(자기가 바라보고있는 방향으로 뭐가 떨어진 뒤 떨어진곳 양 옆에 뭐가 떨어짐)
     {
         print("번개공격");
         SetApplyRootMotion(false);
+    }
 
+    public void InitThunder()
+    {
+        
         for (int i = 0; i < skillReciver.skillDic[SkillEffectEnum.Thunder].GetComponent<Effect>().createCount; i++)
         {
             Vector3 randomPosition = Random.insideUnitSphere * 40;
@@ -651,9 +676,23 @@ public class Boss : Monster
         }
     }
 
-    private void MeteoAttack()//메테오 공격 (고정적으로 몬스터 주변에 떨어지고, 플레이어가 있는곳에 추가로 순차적으로 3회 떨어짐)
+    private void MagicBall()
     {
+        print("번개공격");
+        SetApplyRootMotion(false);
+        InitMagicBall();
+    }
 
+    public void InitMagicBall()
+    {
+        float distance = 20f;
+        for (int i = 0; i < skillReciver.skillDic[SkillEffectEnum.MagicBall].GetComponent<Effect>().createCount; i++)
+        {
+            Vector3 randomPosition = Random.insideUnitSphere * (i* distance);
+            randomPosition += transform.position;
+            GameObject magicBall = PhotonNetwork.Instantiate(skillReciver.skillDic[SkillEffectEnum.MagicBall].name, randomPosition, Quaternion.identity);
+            magicBall.transform.parent = transform;
+        }
     }
 
     private void InOutAttack() //안밖 공격 (머리위에 큐브가 빨간색이면 바깥원형에 터지고 파란색이면 안쪽원형에 데미지)
@@ -670,8 +709,6 @@ public class Boss : Monster
 
             float radius = 40f; // 생성할 오브젝트의 반지름
             
-
-
             for (int i = 0; i < colorList.Count; i++)
             {
                 float angle = i * Mathf.PI * 2 / colorList.Count; // 360도를 오브젝트 갯수로 나누어 각도를 구함
@@ -694,11 +731,13 @@ public class Boss : Monster
         print("2인데?");
     }
 
-  
-        
- 
+
+
+
 
     #endregion
+
+  
 
 }
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class DefalutState : MonoBehaviourPun
+public class DefalutState : MonoBehaviourPunCallbacks
 {
     [Header("Status")]
     //스테이터스들은 스크랩터블로 관리하는게 좋아보임
