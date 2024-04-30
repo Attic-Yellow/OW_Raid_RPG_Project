@@ -99,4 +99,5 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     {
         Debug.Log($"방 참여 실패: {message}");
     }
+
 }

@@ -420,7 +420,11 @@ public class Boss : Monster
             return;
         }
 
-      
+       if(obj.GetComponent<Player>() != null)
+        {
+            obj.GetComponent<Player>().AddAggroMonster(this);
+        }
+
         SetAggroLevel(obj.GetComponent<PhotonView>().ViewID, damage);
         target = HighestAggroLevel(aggroLevels);
         isFighting = true;

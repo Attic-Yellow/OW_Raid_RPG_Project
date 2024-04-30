@@ -465,9 +465,14 @@ MonoBehaviour:
   - Type: 1
     SynchronizeType: 0
     Name: MotionSpeed
+  - Type: 3
+    SynchronizeType: 0
+    Name: SkillNum
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
+  - SynchronizeType: 0
+    LayerIndex: 1
 --- !u!114 &-4618555672795401674
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -546,6 +551,7 @@ MonoBehaviour:
   hpSlider: {fileID: 0}
   haveSkills: []
   skillEffectList: []
+  aggroMonsters: []
 --- !u!1 &1236049848542760991
 GameObject:
   m_ObjectHideFlags: 0

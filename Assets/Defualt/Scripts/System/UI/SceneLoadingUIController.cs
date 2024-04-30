@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Analytics;
 using UnityEngine.SceneManagement;
+using Photon.Pun;
 
 public class SceneLoadingUIController : MonoBehaviour
 {
@@ -121,5 +122,7 @@ public class SceneLoadingUIController : MonoBehaviour
                 yield return null;
             }
         }
+     /* CharacterData.Instance.currentCharObj = PhotonNetwork.Instantiate(CharacterData.Instance.characterData["Job"].ToString(), Vector3.zero, Quaternion.identity);*/
+
     }
 }

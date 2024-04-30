@@ -15,6 +15,7 @@ public class Player : Alive
       [SerializeField] public float Money { get => money; set => money = value; }
       private Queue<Skill> canLearnSkills = new();
       private Monster monster;
+      public List<Monster> aggroMonsters;
       public enum State
           {
           Idle,
@@ -108,6 +109,20 @@ public class Player : Alive
               }
           }
       }
+    public void AddAggroMonster(Monster monster)
+    {
+        bool isHave = false;
+        foreach (Monster mon in aggroMonsters)
+        {
+            if(mon == monster) isHave = true;
+        }
+        if(isHave == false)   aggroMonsters.Add(monster);
+    }
+
+    public void RemoveAggroMonster(Monster monster)
+    {
+        aggroMonsters.Remove(monster);
+    }
 
      /* public void InitializePlayerInfo(User.Job job, string nickName)
       {
