@@ -1,3 +1,4 @@
+using Firebase.Auth;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,6 +7,8 @@ using UnityEngine;
 public class Equipped : MonoBehaviour
 {
     public static Equipped Instance;
+
+    public LinkState linkState = LinkState.Idle;
 
     public delegate void OnGearChanged();
     public OnGearChanged onChangeGear;
@@ -30,6 +33,11 @@ public class Equipped : MonoBehaviour
         {
             Instance = this;
         }
+    }
+
+    private void Start()
+    {
+        StartCoroutine(LoadData());
     }
 
     #region 장비 습득 메서드
@@ -912,4 +920,26 @@ public class Equipped : MonoBehaviour
     }
 
     #endregion
+
+    private IEnumerator LoadData()
+    {
+        linkState = LinkState.Load;
+
+        LoadAsync();
+
+        yield return new WaitUntil(() => (linkState == LinkState.Idle));
+
+        print("실행함");
+        onChangeGear?.Invoke();
+    }
+
+    private async void LoadAsync()
+    {
+        var user = FirebaseAuth.DefaultInstance.CurrentUser;
+        var charInfo = GameManager.Instance.dataManager.characterData.characterData;
+
+        await FirebaseManager.Instance.LoadEquipped(user.UserId, user.Email, charInfo["server"].ToString(), charInfo["charId"].ToString());
+
+        linkState = LinkState.Idle;
+    }
 }

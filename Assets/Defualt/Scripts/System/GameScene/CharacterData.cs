@@ -340,17 +340,21 @@ public class CharacterData : MonoBehaviour
         {
             if (!Regex.IsMatch(gear.Key, @"correction"))
             {
-                if (gear.Value != -1)
+                if (gear.Value != 0)
                 {
-                    characterData[gear.Key] = gear.Value;
-                    Equipment equipment = ItemData.Instance.equip[gear.Value];
-                    CurrentEquipped.Instance.currentEquippeds[count] = equipment;
+                    characterData[gear.Key] = gear.Value; 
+                    
+                    if (ItemData.Instance.equip.ContainsKey(gear.Value))
+                    {
+                        Equipment equipment = ItemData.Instance.equip[gear.Value];
+                        CurrentEquipped.Instance.currentEquippeds[count] = equipment;
+                    }
                 }
                 count++;
             }
             else
             {
-                characterData[gear.Key] = gear.Value / 10;
+                characterData[gear.Key] = gear.Value;
             }
         }
         CalculateEquip();
@@ -440,6 +444,8 @@ public class CharacterData : MonoBehaviour
             {
                 CurrentEquipped.Instance.currentEquippeds[count].pie += CurrentEquipped.Instance.currentEquippeds[count].pie * ((value / 10) + 1);
             }
+
+            CurrentEquipped.Instance.currentEquippeds[count].cor += value;
             count++;
         }
     }

@@ -10,6 +10,7 @@ using UnityEngine.Networking;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.IO;
+using Unity.VisualScripting;
 
 public class FirebaseManager : MonoBehaviour
 {
@@ -159,13 +160,16 @@ public class FirebaseManager : MonoBehaviour
                 return false;
             }
 
+            string uniqueCharacterID = System.Guid.NewGuid().ToString(); // 캐릭터 ID 난수 생성
+
             Dictionary<string, object> newCharacter = new Dictionary<string, object>
             {
                 { "name", characterName },
-                { "job", job },
+                { "charId", uniqueCharacterID},
+                { "server", serverName },
                 { "tribe", tribe },
+                { "job", job },
                 { "level", 1 },
-                { "server", serverName }, 
                 { "str", totalSTR},
                 { "int", totalINT},
                 { "dex", totalDEX},
@@ -183,8 +187,6 @@ public class FirebaseManager : MonoBehaviour
                 { "luk", totalLUK}
             };
             #endregion
-
-            string uniqueCharacterID = System.Guid.NewGuid().ToString(); // 캐릭터 ID 난수 생성
 
             // 데이터 업로드 경로 설정: users/{userId}/{serverName}/{characterId}
             DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).Collection(serverName).Document(uniqueCharacterID);
@@ -327,6 +329,121 @@ public class FirebaseManager : MonoBehaviour
 
         return isCharacterCreated;
     }
+
+    // 캐릭터 현재 장비 데이터 업로드
+    public async Task<bool> UpLoadCurrentEquip(string userId, string email, string serverName, string uniqueCharacterID)
+    {
+        string[] gears = new string[] { "weapon", "head", "body", "hands", "legs", "feet", "auxiliary", "earring", "necklace", "bracelet", "ring" };
+
+        var currentEquip = CurrentEquipped.Instance.currentEquippeds;
+        int i = 1;
+
+        try
+        {
+            foreach (var gear in gears)
+            {
+                DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).Collection(serverName).Document(uniqueCharacterID).Collection("currentEquipped").Document(gear);
+                Dictionary<string, int> newEquip = new Dictionary<string, int>
+                            {
+                                { "itemId", currentEquip[i].itemId },
+                                { "correction", currentEquip[i].cor }
+                            };
+                i++;
+                await docRef.SetAsync(newEquip);
+            }
+            return true;
+        }
+        catch (Exception e)
+        {
+            print($"현재 장비 데이터 업로드 오류: {e.Message}");
+        }
+        return false;
+    }
+
+    // 캐릭터 장비함 데이터 업로드
+    public async Task<bool> UpLoadEquipped(string userId, string email, string serverName, string uniqueCharacterID, EquipmentType equipmentType)
+    {
+        //var hands = Equipped.Instance.hands;
+        //var legss = Equipped.Instance.legs;
+        //var feets = Equipped.Instance.feet;
+        //var auxiliarys = Equipped.Instance.auxiliary;
+        //var earrings = Equipped.Instance.earring;
+        //var necklaces = Equipped.Instance.necklace;
+        //var bracelets = Equipped.Instance.bracelet;
+        //var rings = Equipped.Instance.ring;
+
+        try
+        {
+            int i = 0;
+
+            switch (equipmentType)
+            {
+                case EquipmentType.Weapon:
+
+                    var weapons = Equipped.Instance.weapon;
+
+                    foreach (var weapon in weapons)
+                    {
+                        DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).Collection(serverName).Document(uniqueCharacterID).Collection("weapon").Document($"weapon{i}");
+
+                        Dictionary<string, int> newEquip = new Dictionary<string, int>()
+                        {
+                            { "itemId", weapon.itemId },
+                            { "correction", weapon.cor }
+                        };
+
+                        i++;
+                        await docRef.SetAsync(newEquip);
+                    }
+
+                    break;
+                case EquipmentType.Head:
+
+                    var heads = Equipped.Instance.head;
+
+                    foreach (var head in heads)
+                    {
+                        DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).Collection(serverName).Document(uniqueCharacterID).Collection("head").Document($"head{i}");
+
+                        Dictionary<string, int> newEquip = new Dictionary<string, int>()
+                        {
+                            { "itemId", head.itemId },
+                            { "correction", head.cor }
+                        };
+
+                        i++;
+                        await docRef.SetAsync(newEquip);
+                    }
+
+                    break;
+                case EquipmentType.Body:
+
+                    var bodys = Equipped.Instance.body;
+
+                    foreach (var body in bodys)
+                    {
+                        DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).Collection(serverName).Document(uniqueCharacterID).Collection("body").Document($"body{i}");
+
+                        Dictionary<string, int> newEquip = new Dictionary<string, int>()
+                        {
+                            { "itemId", body.itemId },
+                            { "correction", body.cor }
+                        };
+
+                        i++;
+                        await docRef.SetAsync(newEquip);
+                    }
+
+                    break;
+            }
+            return true;
+        }
+        catch (Exception e)
+        {
+            print($"장비함 데이터 업로드 오류: {e.Message}");
+        }
+        return false;
+    }
     #endregion
 
     #region 로드
@@ -419,8 +536,75 @@ public class FirebaseManager : MonoBehaviour
             onCompletion(null);
         }
     }
-    #endregion
 
+    public async Task<bool> LoadEquipped(string userId, string email, string serverName, string uniqueCharacterID)
+    {
+        string[] gears = new string[] { "weapon", "head", "body", "hands", "legs", "feet", "auxiliary", "earring", "necklace", "bracelet", "ring" };
+
+        try
+        {
+            var weapons = Equipped.Instance.weapon;
+            var head = Equipped.Instance.head;
+            var body = Equipped.Instance.body;
+
+            foreach (var gear in gears)
+            {
+                for (int i = 0; i < 30; i++)
+                {
+                    DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).Collection(serverName).Document(uniqueCharacterID).Collection(gear).Document($"{gear}{i}");
+                    var equipQuery = await docRef.GetSnapshotAsync();
+                    var equip = new Dictionary<string, object>();
+
+                    if (equipQuery.Exists)
+                    {
+                        foreach (var field in equipQuery.ToDictionary())
+                        {
+                            equip[field.Key] = field.Value;
+                        }
+                        
+                        if (equip.ContainsKey("itemId") && equip.ContainsKey("correction"))
+                        {
+                            int itemId = Convert.ToInt32(equip["itemId"]);
+                            int correction = Convert.ToInt32(equip["correction"]);
+
+                            switch (gear)
+                            {
+                                case "weapon":
+                                    if (ItemData.Instance.equip.ContainsKey(itemId))
+                                    {
+                                        weapons[i] = ItemData.Instance.equip[itemId];
+                                    }
+                                    weapons[i].cor = correction;
+                                    break;
+                                case "head":
+                                    if (ItemData.Instance.equip.ContainsKey(itemId))
+                                    {
+                                        print("넣음");
+                                        head[i] = ItemData.Instance.equip[itemId];
+                                    }
+                                    head[i].cor = correction;
+                                    break;
+                                case "body":
+                                    if (ItemData.Instance.equip.ContainsKey(itemId))
+                                    {
+                                        body[i] = ItemData.Instance.equip[itemId];
+                                    }
+                                    body[i].cor = correction;
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+        catch (Exception e)
+        {
+            print($"장비함 데이터 로드 중 오류 발생: {e.Message}");
+        }
+        return false;
+    }
+    #endregion
 
     #region 데이터 초기화
     // 사용자 데이터 초기화

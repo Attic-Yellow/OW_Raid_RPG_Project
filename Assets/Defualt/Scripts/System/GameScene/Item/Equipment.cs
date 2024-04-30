@@ -48,4 +48,5 @@ public class Equipment : Item
     public int sps;
     public int ten;
     public int pie;
+    public int cor;
 }

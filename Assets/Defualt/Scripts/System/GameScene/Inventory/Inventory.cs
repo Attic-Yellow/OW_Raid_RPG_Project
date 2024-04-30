@@ -20,6 +20,15 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            var item = ItemData.Instance.items[0];
+            AddItem(item, Random.Range(item.minDropCount, item.maxDropCount));
+        }
+    }
+
     #region 아이템 습득 메서드
     // 아이템 습득 메서드
     public bool AddItem(Consumable consumable, int itemCount)
