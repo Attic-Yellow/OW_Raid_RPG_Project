@@ -110,7 +110,7 @@ public class InventorySlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHand
                 {
                     linkedQuick.Add(slot.gameObject); // ¿¬°á µÈ Äü ½½·Ô ÀúÀå
                     consumable = tempConsumable;
-                    slot.AssignSlot(gameObject);
+                    slot.AssignSlot(this.slot.gameObject);
                     slot.UpdateSlotUI(); 
                     consumable = tempConsumable;
                     AssignItem(tempConsumable, slotIndex, slotIndex, slotType, slotType, tempConsumable.itemCount);

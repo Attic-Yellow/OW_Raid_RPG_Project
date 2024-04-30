@@ -32,8 +32,6 @@ enum Server
 
 public class CharacterCreateUI : MonoBehaviour
 {
-
-
     [SerializeField] private List<GameObject> characterCreationAreas;
     [SerializeField] private List<GameObject> jobExplanations;
     [SerializeField] private List<GameObject> jobsArea;
@@ -66,8 +64,7 @@ public class CharacterCreateUI : MonoBehaviour
         }
     }
 
-    /*** 영역 컨트롤러 메서드 ***/
-
+    #region 영역 컨트롤러 메서드
     // 다른 영역 호출 메서드
     public void CreationAreasController(int areaNum)
     {
@@ -121,9 +118,9 @@ public class CharacterCreateUI : MonoBehaviour
     {
         checkMessage.SetActive(!checkMessage.activeInHierarchy);
     }
+    #endregion
 
-    /*** 버튼 메서드 ***/
-
+    #region 버튼 메서드
     // 직업 선택 버튼 메서드
     public void OnJobButtonClick(int jobNum)
     {
@@ -202,7 +199,9 @@ public class CharacterCreateUI : MonoBehaviour
             GameManager.Instance.uiManager.mainSceneUI.MainSceneInit();
         }
     }
+    #endregion
 
+    #region 캐릭터 생성
     // 캐릭터 생성 메서드
     private async void CreateCharacterCallBack(int serverNum)
     {
@@ -221,4 +220,5 @@ public class CharacterCreateUI : MonoBehaviour
             print("캐릭터 생성에 실패하였습니다");
         }
     }
+    #endregion
 }

@@ -31,7 +31,6 @@ public class Skill
     public float spellTime;
     public SkillType skillType;
 
-
     public virtual void UseSkill()
     {
         Debug.Log("Use Skill");

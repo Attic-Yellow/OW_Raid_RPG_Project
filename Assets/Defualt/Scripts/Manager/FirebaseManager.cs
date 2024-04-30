@@ -20,6 +20,7 @@ public class FirebaseManager : MonoBehaviour
     FirebaseFirestore db;
     public bool IsFirebaseInitialized = false; // 초기화 상태 플래그
 
+    #region Firebase 초기화
     private void Awake()
     {
         if (Instance == null)
@@ -57,6 +58,7 @@ public class FirebaseManager : MonoBehaviour
             }
         });
     }
+    #endregion
 
     #region 업로드
 

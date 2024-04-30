@@ -1,16 +1,35 @@
+using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+
+public enum IsSave
+{
+    None,
+    NotSave,
+    Saved
+}
 
 public class HUDController : MonoBehaviour
 {
     [SerializeField] private GameObject background;
+    [SerializeField] private GameObject mainSetBoard;
+    [SerializeField] private GameObject notSaveAlarmboard;
     [SerializeField] private GameObject[] SettingBoard;
-    [SerializeField] private GameObject selectedDropdown;
+    [SerializeField] private TMP_Dropdown selectedDropdown;
     [SerializeField] private GameObject[] dragAreas;
+
+    public HUDData hudData = new HUDData();
 
     private float lastClickTime = 0f; 
     private const float doubleClickThreshold = 0.25f;
+    private bool isHUDActive = false;
+    private IsSave isSave = IsSave.None;
 
     private void Awake()
     {
@@ -18,6 +37,21 @@ public class HUDController : MonoBehaviour
     }
 
     private void Start()
+    {
+        Init();
+
+        if (selectedDropdown != null)
+        {
+            List<string> areaName = new List<string>();
+            for (int i = 0; i < dragAreas.Length; i++)
+            {
+                areaName.Add(dragAreas[i].name);
+            }
+            PopulateDropdown(areaName);
+        }
+    }
+
+    public void Init()
     {
         if (background != null)
         {
@@ -29,6 +63,11 @@ public class HUDController : MonoBehaviour
             SettingBoardController(-1);
         }
 
+        if (mainSetBoard != null)
+        {
+            mainSetBoard.SetActive(false);
+        }
+
         if (dragAreas.Length > 0)
         {
             for (int i = 0; i < dragAreas.Length; i++)
@@ -36,41 +75,59 @@ public class HUDController : MonoBehaviour
                 dragAreas[i].SetActive(false);
             }
         }
+
+        if (notSaveAlarmboard != null)
+        {
+            notSaveAlarmboard.SetActive(false);
+        }
+
+        if (isSave == IsSave.NotSave)
+        {
+            foreach (var dragArea in dragAreas)
+            {
+                var quickBar = dragArea.transform.parent.GetComponent<QuickBar>();
+
+                if (quickBar != null)
+                {
+                    quickBar.ApplyHUDSettings();
+                }
+            }
+        }
+
+        isSave = IsSave.None;
     }
 
     public void DragAreaContoller()
     {
-        if (background != null)
+        if (isSave == IsSave.None)
         {
-            background.SetActive(!background.activeInHierarchy);
-        }
+            isHUDActive = !isHUDActive;
 
-        if (SettingBoard.Length > 0)
-        {
-            SettingBoardController(0);
-        }
-
-        if (dragAreas.Length > 0)
-        {
-            for (int i = 0; i < dragAreas.Length; i++)
+            if (background != null)
             {
-                dragAreas[i].SetActive(!dragAreas[i].activeInHierarchy);
+                background.SetActive(!background.activeInHierarchy);
+            }
+
+            if (SettingBoard.Length > 0)
+            {
+                SettingBoardController(-1);
+            }
+
+            if (dragAreas.Length > 0)
+            {
+                for (int i = 0; i < dragAreas.Length; i++)
+                {
+                    dragAreas[i].SetActive(!dragAreas[i].activeInHierarchy);
+                }
             }
         }
-    }
-
-    public void DragAreaController(int index)
-    {
-        float timeSinceLastClick = Time.time - lastClickTime;
-        lastClickTime = Time.time;
-
-        if (timeSinceLastClick <= doubleClickThreshold) // 더블 클릭으로 간주되는 경우
+        else if (isSave == IsSave.NotSave)
         {
-            DragAreaActive(index);
+            NotSaveBoardController();
         }
-        else // 단일 클릭으로 간주되는 경우
+        else if (isSave == IsSave.Saved)
         {
-            selectedDropdown = dragAreas[index];
+            Init();
         }
     }
 
@@ -78,7 +135,6 @@ public class HUDController : MonoBehaviour
     {
         if (index < 0 || index >= dragAreas.Length)
         {
-            print("Index out of range: " + index);
             return;
         }
 
@@ -86,7 +142,6 @@ public class HUDController : MonoBehaviour
 
         if (parent.childCount == 0)
         {
-            print("No children found for the given parent.");
             return;
         }
 
@@ -94,15 +149,117 @@ public class HUDController : MonoBehaviour
         quickBar.gameObject.SetActive(!quickBar.gameObject.activeInHierarchy);
     }
 
+    void PopulateDropdown(List<string> options)
+    {
+        selectedDropdown.ClearOptions(); // 기존 옵션 삭제
+        selectedDropdown.AddOptions(options); // 새로운 옵션 추가
+        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)selectedDropdown.transform);
+    }
+
+    public void MainSetBoardController()
+    {
+        if (mainSetBoard != null)
+        {
+            mainSetBoard.SetActive(!mainSetBoard.activeInHierarchy);
+            mainSetBoard.transform.SetAsLastSibling();
+        }
+    }
+
     public void SettingBoardController(int index)
     {
+        index = index >= 0 ? selectedDropdown.value : index;
+
+        MainSetBoardController();
+
         if (SettingBoard.Length > 0)
         {
             for (int i = 0; i < SettingBoard.Length; i++)
             {
                 SettingBoard[i].SetActive(i == index);
+
+                if (i == index)
+                {
+                    if (SettingBoard[i].activeSelf)
+                    {
+                        SettingBoard[i].transform.SetAsLastSibling();
+                    }
+                }
             }
         }
     }
 
+    public void PointerClick(GameObject clickedObject)
+    {
+        if (background != null && background.activeInHierarchy)
+        {
+            isSave = IsSave.NotSave;
+        }
+
+        int index = Array.IndexOf(dragAreas, clickedObject);
+
+        if (index == -1)
+        {
+            return; // 드래그 영역이 아닌 경우 무시
+        }
+
+        float timeSinceLastClick = Time.time - lastClickTime;
+        lastClickTime = Time.time;
+
+        if (timeSinceLastClick <= doubleClickThreshold) // 더블 클릭 간주
+        {
+            DragAreaActive(index);
+        }
+        else // 단일 클릭 간주
+        {
+            if (index >= 0 && index < dragAreas.Length)
+            {
+                selectedDropdown.value = index;
+            }
+        }
+    }
+
+    public void SaveHUDData()
+    {
+        var settings = new JsonSerializerSettings
+        {
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+        };
+
+        string json = JsonConvert.SerializeObject(GameManager.Instance.uiManager.gameSceneUI.hudController.hudData, settings);
+        var charName = CharacterData.Instance.characterData;
+        string name = charName.ContainsKey("name") ? charName["name"].ToString() : "null";
+
+        string folderPath = Path.Combine(Application.persistentDataPath, name);
+
+        // 폴더가 존재하지 않는다면 생성
+        if (!Directory.Exists(folderPath))
+        {
+            Directory.CreateDirectory(folderPath);
+        }
+
+        var filePath = Path.Combine(folderPath, $"hudData.json");
+
+        var directory = Path.GetDirectoryName(filePath);
+        if (!Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        File.WriteAllText(filePath, json);
+
+        isSave = IsSave.Saved;
+    }
+
+    public void NotSaveBoardController()
+    {
+        if (notSaveAlarmboard != null)
+        {
+            notSaveAlarmboard.SetActive(!notSaveAlarmboard.activeInHierarchy);
+        }
+    }
+
+    public bool GetIsHUDActive()
+    {
+        return isHUDActive;
+    }
 }

@@ -63,7 +63,6 @@ public class AccountSystem : MonoBehaviour
         });
     }
 
-
     // 이메일 인증 확인 버튼 콜백
     public void OnCompleteEVButtonCallBack()
     {
@@ -93,7 +92,8 @@ public class AccountSystem : MonoBehaviour
 
         if (signInTask.Exception != null)
         {
-            print("로그인 실패: " + signInTask.Exception);
+            print("로그인 실패: " + signInTask.Exception); 
+            GameManager.Instance.uiManager.startSceneUI.LoadingAreaController(); // 로딩 화면 활성화
         }
         else
         {
