@@ -254,7 +254,6 @@ public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
 
         if(data.ContainsKey(name))
         {
-            print($"{name}: Áö¿î´ÙÀ×");
             data.Remove(name);
         }
     }

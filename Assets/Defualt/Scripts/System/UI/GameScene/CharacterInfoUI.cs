@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using Firebase.Auth;
+using System.Threading.Tasks;
 
 public class CharacterInfoUI : MonoBehaviour
 {
@@ -11,6 +13,8 @@ public class CharacterInfoUI : MonoBehaviour
     private string[] characterInfo = { "name", "level", "job" };
     private string[] abilityNames = { "maxHp", "str", "int", "dex", "spi", "vit", "luk", "crt", "dh", "det", "def", "mef", "pap", "map", "sks", "mhp", "sps", "ten", "pie" };
     #endregion
+
+    LinkState linkState = LinkState.Idle;
 
     #region 캐릭터 창 UI 오브젝트
     [SerializeField] private GameObject characterInfoUI;
@@ -137,8 +141,29 @@ public class CharacterInfoUI : MonoBehaviour
             }
         }
         ReadrawInfoText(GameManager.Instance.dataManager.characterData.currentStatus);
+
+        StartCoroutine(UpLoad());
     }
     #endregion
+
+    private IEnumerator UpLoad()
+    {
+        linkState = LinkState.UpLoad;
+
+        UpLoadAsync();
+
+        yield return new WaitUntil(() => (linkState == LinkState.Idle));
+    }
+
+    private async void UpLoadAsync()
+    {
+        var user = FirebaseAuth.DefaultInstance.CurrentUser;
+        var charInfo = GameManager.Instance.dataManager.characterData.characterData;
+
+        await FirebaseManager.Instance.UpLoadCurrentEquip(user.UserId, user.Email, charInfo["server"].ToString(), charInfo["charId"].ToString());
+
+        linkState = LinkState.Idle;
+    }
 
     #region 현재 캐릭터 직업 반환
     // 캐릭터 직업 반환

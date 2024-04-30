@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum LinkState
+{
+    Idle,
+    UpLoad,
+    Load
+}
+
 public class UIManager : MonoBehaviour
 {
     public StartSceneUI startSceneUI;

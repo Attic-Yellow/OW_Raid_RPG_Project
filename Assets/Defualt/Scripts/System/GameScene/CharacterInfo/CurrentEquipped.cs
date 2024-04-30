@@ -27,14 +27,6 @@ public class CurrentEquipped : MonoBehaviour
         CharacterData.Instance.CalculateAndSetStats();
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            IsEquipped(ItemData.Instance.equip[10000], 0, 0, SlotType.Equipment, SlotType.Equipment);
-        }
-    }
-
     #region 장비 착용 및 교체 메서드
     // 장비 착용 및 교체 메서드
     public bool IsEquipped(Equipment equipment, int oldIndex, int newIndex, SlotType oldSlotType, SlotType newSlotType)

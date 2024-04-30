@@ -1,3 +1,4 @@
+using Firebase.Auth;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,6 +27,8 @@ public class CharacterGearUI : MonoBehaviour
     #endregion
 
     [SerializeField]private Equipped equipped;
+
+    LinkState linkState = LinkState.Idle;
 
     private void Awake()
     {
@@ -122,6 +125,8 @@ public class CharacterGearUI : MonoBehaviour
             weaponSlot[i].equipment = equipped.weapon[i];
             weaponSlot[i].UpdateSlotUI();
         }
+
+        StartCoroutine(UpLoad(EquipmentType.Weapon));
     }
 
     // 장비함 - 머리 칸 UI 최신화 메서드
@@ -137,6 +142,8 @@ public class CharacterGearUI : MonoBehaviour
             headSlot[i].equipment = equipped.head[i];
             headSlot[i].UpdateSlotUI();
         }
+
+        StartCoroutine(UpLoad(EquipmentType.Head));
     }
 
     // 장비함 - 몸통 칸 UI 최신화 메서드
@@ -152,6 +159,8 @@ public class CharacterGearUI : MonoBehaviour
             bodySlot[i].equipment = equipped.body[i];
             bodySlot[i].UpdateSlotUI();
         }
+
+        StartCoroutine(UpLoad(EquipmentType.Body));
     }
 
     // 장비함 - 손 칸 UI 최신화 메서드
@@ -272,6 +281,25 @@ public class CharacterGearUI : MonoBehaviour
             ringSlot[i].equipment = equipped.ring[i];
             ringSlot[i].UpdateSlotUI();
         }
-    }    
+    }
     #endregion
+
+    private IEnumerator UpLoad(EquipmentType equipmentType)
+    {
+        linkState = LinkState.UpLoad;
+
+        UpLoadAsync(equipmentType);
+
+        yield return new WaitUntil(() => (linkState == LinkState.Idle));
+    }
+
+    private async void UpLoadAsync(EquipmentType equipmentType)
+    {
+        var user = FirebaseAuth.DefaultInstance.CurrentUser;
+        var charInfo = GameManager.Instance.dataManager.characterData.characterData;
+
+        await FirebaseManager.Instance.UpLoadEquipped(user.UserId, user.Email, charInfo["server"].ToString(), charInfo["charId"].ToString(), equipmentType);
+
+        linkState = LinkState.Idle;
+    }
 }
