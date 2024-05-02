@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     private bool isUserGuest = false;
     private bool isEmailAuthentication = false;
     private bool isManager = false;
+    public GameObject currentPlayerObj;
 
     [Header("게임 데이터")]
     private bool isDataLoaded;
@@ -200,5 +201,22 @@ public class GameManager : MonoBehaviour
     public bool GetIsRebinding()
     {
         return isRebinding;
+    }
+
+    public void AddPowerCoroutine(float _value, float addPowerValue)
+    {
+        StartCoroutine(AddPower(_value, addPowerValue));
+    }
+
+    IEnumerator AddPower(float _value, float addPowerValue)
+    {
+        if (currentPlayerObj != null)
+         currentPlayerObj.GetComponent<Player>().Power += addPowerValue;
+
+        yield return new WaitForSeconds(_value);
+
+        if (currentPlayerObj != null)
+           currentPlayerObj.GetComponent<Player>().Power -= addPowerValue;
+
     }
 }

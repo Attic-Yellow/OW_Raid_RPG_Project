@@ -41,15 +41,19 @@ public class WarriorSkill : Skill
  재사용 시 해제됩니다.
  지속시간: 해제 시까지*/
     {
-        /*isOn = isOn ? false : true;
-        if(isOn)
-           {
-               Player player =   CharacterData.Instance.currentCharObj.GetComponent<Player>();
-               foreach(Monster mon in player.aggroMonsters)
-               {
-                   mon.PlusAggroLevel(player.photonView.ViewID, 300);
-               }
-           }*/
+        isOn = !isOn; 
+        float addAggroValue = 200f;
+
+        if (!isOn)
+        {
+            addAggroValue *= -1f; 
+        }
+
+        Player player = GameManager.Instance.currentPlayerObj.GetComponent<Player>();
+        foreach (Monster mon in player.aggroMonsters)
+        {
+            mon.PlusAggroLevel(player.photonView.ViewID, addAggroValue);
+        }
 
     }
 
@@ -57,44 +61,16 @@ public class WarriorSkill : Skill
     /*대상에게 물리 공격을 가합니다.
     위력: 200*/
     {
-
-     /*   ThirdPersonController controller = CharacterData.Instance.currentCharObj.GetComponent<ThirdPersonController>();
-        controller.Skill(1);*/
-
-
-    }
-    void Berserk()
-    {
-      
-    
+        float addPowerValue = 200f;
+        ThirdPersonController controller = GameManager.Instance.currentPlayerObj.GetComponent<ThirdPersonController>();
+        if(controller.Skill(1))
+        {
+            GameManager.Instance.AddPowerCoroutine(controller.ReturnCurrentAniTime(), addPowerValue);
+        }
     }
 
-     void bloodwhetting()
-    {
-
-    }
-
-     void ChaoticCyclone()
-    {
-
-    }
-
-    void Decimate()
-    {
-
-    }
-
-  
-
-    void Equilibrium()
-    {
-
-    }
-
-    void FellCleave()
-    {
-
-    }
+   
+   
 
    
 }

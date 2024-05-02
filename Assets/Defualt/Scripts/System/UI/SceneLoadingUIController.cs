@@ -95,6 +95,7 @@ public class SceneLoadingUIController : MonoBehaviour
         {
             yield return null;
         }
+        GameManager.Instance.currentPlayerObj = PhotonNetwork.Instantiate(CharacterData.Instance.characterData["Job"].ToString(), Vector3.zero, Quaternion.identity);
     }
 
     // 메인 > 게임 씬 전환 로딩 코루틴 (70% ~ 100%)
@@ -122,7 +123,6 @@ public class SceneLoadingUIController : MonoBehaviour
                 yield return null;
             }
         }
-     /* CharacterData.Instance.currentCharObj = PhotonNetwork.Instantiate(CharacterData.Instance.characterData["Job"].ToString(), Vector3.zero, Quaternion.identity);*/
 
     }
 }
