@@ -342,7 +342,9 @@ public class FirebaseManager : MonoBehaviour
         {
             foreach (var gear in gears)
             {
-                DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).Collection(serverName).Document(uniqueCharacterID).Collection("currentEquipped").Document(gear);
+                DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).
+                    Collection(serverName).Document(uniqueCharacterID).Collection("currentEquipped").Document(gear);
+
                 Dictionary<string, int> newEquip = new Dictionary<string, int>
                             {
                                 { "itemId", currentEquip[i].itemId },
@@ -384,12 +386,13 @@ public class FirebaseManager : MonoBehaviour
 
                     foreach (var weapon in weapons)
                     {
-                        DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).Collection(serverName).Document(uniqueCharacterID).Collection("weapon").Document($"weapon{i}");
+                        DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).
+                            Collection(serverName).Document(uniqueCharacterID).Collection("weapon").Document($"weapon{i}");
 
                         Dictionary<string, int> newEquip = new Dictionary<string, int>()
                         {
-                            { "itemId", weapon.itemId },
-                            { "correction", weapon.cor }
+                            { $"itemId", weapon.itemId },
+                            { $"correction", weapon.cor }
                         };
 
                         i++;
@@ -403,12 +406,13 @@ public class FirebaseManager : MonoBehaviour
 
                     foreach (var head in heads)
                     {
-                        DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).Collection(serverName).Document(uniqueCharacterID).Collection("head").Document($"head{i}");
+                        DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).
+                            Collection(serverName).Document(uniqueCharacterID).Collection("head").Document($"head{i}");
 
                         Dictionary<string, int> newEquip = new Dictionary<string, int>()
                         {
-                            { "itemId", head.itemId },
-                            { "correction", head.cor }
+                            { $"itemId", head.itemId },
+                            { $"correction", head.cor }
                         };
 
                         i++;
@@ -422,12 +426,13 @@ public class FirebaseManager : MonoBehaviour
 
                     foreach (var body in bodys)
                     {
-                        DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).Collection(serverName).Document(uniqueCharacterID).Collection("body").Document($"body{i}");
+                        DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).
+                            Collection(serverName).Document(uniqueCharacterID).Collection("body").Document($"body{i}");
 
                         Dictionary<string, int> newEquip = new Dictionary<string, int>()
                         {
-                            { "itemId", body.itemId },
-                            { "correction", body.cor }
+                            { $"itemId", body.itemId },
+                            { $"correction", body.cor }
                         };
 
                         i++;
@@ -500,7 +505,6 @@ public class FirebaseManager : MonoBehaviour
 
                 var currentEquipRef = serverCharactersRef.Document(document.Id).Collection("currentEquipped");
                 var equipQuery = await currentEquipRef.GetSnapshotAsync();
-                var currentEquip = new Dictionary<string, object>();
 
                 if (equipQuery == null)
                 {
@@ -514,6 +518,25 @@ public class FirebaseManager : MonoBehaviour
                         foreach (var temp in tempGear)
                         {
                             character[$"{gear.Id}{temp.Key}"] = temp.Value;
+                        }
+                    }
+                }
+
+                string[] gearTypes = { "weapon", "head", "body", "hands", "legs", "feet", "auxiliary", "earring", "necklace", "bracelet", "ring" };
+
+                foreach (string gearType in gearTypes)
+                {
+                    var gearCollectionRef = serverCharactersRef.Document(document.Id).Collection(gearType);
+                    var gearCollectionSnapshot = await gearCollectionRef.GetSnapshotAsync();
+                    if (gearCollectionSnapshot != null)
+                    {
+                        foreach (var gearDoc in gearCollectionSnapshot.Documents)
+                        {
+                            var gearData = gearDoc.ToDictionary();
+                            foreach (var entry in gearData)
+                            {
+                                character[$"{gearDoc.Id}{entry.Key}"] = entry.Value;
+                            }
                         }
                     }
                 }

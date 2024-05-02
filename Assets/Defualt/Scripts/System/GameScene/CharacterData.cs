@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CharacterData : MonoBehaviour
@@ -43,6 +45,7 @@ public class CharacterData : MonoBehaviour
             currentStatus.Clear();
             var tempStatus = ExtractStats();
             UpdateCharacterData(tempStatus);
+            UpdateEquipData(Equip());
         }
         else
         {
@@ -97,6 +100,34 @@ public class CharacterData : MonoBehaviour
             }
         }
 
+        return gearsInfo;
+    }
+
+    public Dictionary<string, int> Equip()
+    {
+        List<string> gears = new List<string>
+        {
+            "weapon", "head", "body", "hands", "legs", "feet", "auxiliary", "earring", "necklace", "bracelet", "ring"
+        };
+
+        List<string> gearsDict = new List<string>
+        {
+            "itemId", "correction"
+        };
+
+        Dictionary<string, int> gearsInfo = new Dictionary<string, int>();
+
+        foreach (var gear in gears)
+        {
+            for (int i = 0; i < 30; i++)
+            {
+                foreach (var gearDict in gearsDict)
+                {
+                    gearsInfo[$"{gear}{i}{gearDict}"] = Convert.ToInt32(characterData.ContainsKey($"{gear}{i}{gearDict}") ? characterData[$"{gear}{i}{gearDict}"] : -1);
+                }
+            }
+        }
+        print(gearsInfo["head0itemId"]);
         return gearsInfo;
     }
 
@@ -333,7 +364,7 @@ public class CharacterData : MonoBehaviour
         currentStatus = stats;
     }
 
-    public void UpdateEquipData(Dictionary<string, int> gears)
+    public void UpdateCurrentEquipData(Dictionary<string, int> gears)
     {
         int count = 1;
         foreach (var gear in gears)
@@ -358,6 +389,67 @@ public class CharacterData : MonoBehaviour
             }
         }
         CalculateEquip();
+    }
+
+    public void UpdateEquipData(Dictionary<string, int> equipData)
+    {
+        // 장비 타입별로 처리
+        string[] gearTypes = new string[] { "weapon", "head", "body", "hands", "legs", "feet", "auxiliary", "earring", "necklace", "bracelet", "ring" };
+        foreach (string gearType in gearTypes)
+        {
+            // 장비 리스트에 대한 참조 가져오기
+            var gearList = GetTypeList(gearType);
+
+            if (gearList == null) 
+            {
+                continue; // 유효한 리스트가 아니면 스킵
+            }
+
+            // 각 슬롯별로 장비 데이터 업데이트
+            for (int i = 0; i < gearList.Count; i++)
+            {
+                foreach (var gear in equipData)
+                {
+                    if (!Regex.IsMatch(gear.Key, @"correction"))
+                    {
+                        if (gear.Value != 0)
+                        {
+                            if (ItemData.Instance.equip.ContainsKey(gear.Value))
+                            {
+                                gearList[i] = ItemData.Instance.equip[gear.Value];
+                            }
+                        }
+                    }
+                    else
+                    {
+                        gearList[i].cor = gear.Value;
+                    }
+                }
+            }
+        }
+
+        // 장비 변경 알림
+        Equipped.Instance.onChangeGear?.Invoke();
+    }
+
+    // 장비 타입에 따른 리스트 참조 반환
+    private List<Equipment> GetTypeList(string gearType)
+    {
+        switch (gearType.ToLower())
+        {
+            case "weapon": return Equipped.Instance.weapon;
+            case "head": return Equipped.Instance.head;
+            case "body": return Equipped.Instance.body;
+            case "hands": return Equipped.Instance.hands;
+            case "legs": return Equipped.Instance.legs;
+            case "feet": return Equipped.Instance.feet;
+            case "auxiliary": return Equipped.Instance.auxiliary;
+            case "earring": return Equipped.Instance.earring;
+            case "necklace": return Equipped.Instance.necklace;
+            case "bracelet": return Equipped.Instance.bracelet;
+            case "ring": return Equipped.Instance.ring;
+            default: return null;
+        }
     }
 
     public void CalculateEquip()

@@ -59,6 +59,10 @@ public class CharacterGearUI : MonoBehaviour
         {
             GearsController(0);
         }
+
+        ReadrawWeaponSlotUI();
+        ReadrawHeadSlotUI();
+        ReadrawBodySlotUI();
     }
     #endregion
 
@@ -126,7 +130,7 @@ public class CharacterGearUI : MonoBehaviour
             weaponSlot[i].UpdateSlotUI();
         }
 
-        StartCoroutine(UpLoad(EquipmentType.Weapon));
+        StartCoroutine(UpLoad(weaponSlot[0].equipment.equipment));
     }
 
     // 장비함 - 머리 칸 UI 최신화 메서드
@@ -143,7 +147,7 @@ public class CharacterGearUI : MonoBehaviour
             headSlot[i].UpdateSlotUI();
         }
 
-        StartCoroutine(UpLoad(EquipmentType.Head));
+        StartCoroutine(UpLoad(headSlot[0].equipment.equipment));
     }
 
     // 장비함 - 몸통 칸 UI 최신화 메서드
@@ -160,7 +164,7 @@ public class CharacterGearUI : MonoBehaviour
             bodySlot[i].UpdateSlotUI();
         }
 
-        StartCoroutine(UpLoad(EquipmentType.Body));
+        StartCoroutine(UpLoad(bodySlot[0].equipment.equipment));
     }
 
     // 장비함 - 손 칸 UI 최신화 메서드

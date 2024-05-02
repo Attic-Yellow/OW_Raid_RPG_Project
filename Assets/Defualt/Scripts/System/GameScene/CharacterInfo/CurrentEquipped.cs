@@ -23,7 +23,7 @@ public class CurrentEquipped : MonoBehaviour
 
     private void Start()
     {
-        CharacterData.Instance.UpdateEquipData(CharacterData.Instance.CurrentEquip());
+        CharacterData.Instance.UpdateCurrentEquipData(CharacterData.Instance.CurrentEquip());
         CharacterData.Instance.CalculateAndSetStats();
     }
 
