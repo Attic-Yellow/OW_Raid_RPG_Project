@@ -29,6 +29,7 @@ public class CharacterGearUI : MonoBehaviour
     [SerializeField]private Equipped equipped;
 
     LinkState linkState = LinkState.Idle;
+    private bool isStarted = false;
 
     private void Awake()
     {
@@ -38,6 +39,8 @@ public class CharacterGearUI : MonoBehaviour
     #region 스타트 메서드
     private void Start()
     {
+        isStarted = true;
+
         equipped = Equipped.Instance;
         equipped.onChangeGear += ReadrawWeaponSlotUI;
         equipped.onChangeGear += ReadrawHeadSlotUI;
@@ -63,6 +66,16 @@ public class CharacterGearUI : MonoBehaviour
         ReadrawWeaponSlotUI();
         ReadrawHeadSlotUI();
         ReadrawBodySlotUI();
+        ReadrawHandsSlotUI();
+        ReadrawLegsSlotUI();
+        ReadrawFeetSlotUI();
+        ReadrawAuxiliarySlotUI();
+        ReadrawEarringSlotUI();
+        ReadrawNecklaceSlotUI();
+        ReadrawBraceletSlotUI();
+        ReadrawRingSlotUI();
+
+        isStarted = false;
     }
     #endregion
 
@@ -130,7 +143,10 @@ public class CharacterGearUI : MonoBehaviour
             weaponSlot[i].UpdateSlotUI();
         }
 
-        StartCoroutine(UpLoad(weaponSlot[0].equipment.equipment));
+        if (!isStarted)
+        {
+            StartCoroutine(UpLoad(EquipmentType.Weapon));
+        }
     }
 
     // 장비함 - 머리 칸 UI 최신화 메서드
@@ -147,7 +163,10 @@ public class CharacterGearUI : MonoBehaviour
             headSlot[i].UpdateSlotUI();
         }
 
-        StartCoroutine(UpLoad(headSlot[0].equipment.equipment));
+        if (!isStarted)
+        {
+            StartCoroutine(UpLoad(EquipmentType.Head));
+        }
     }
 
     // 장비함 - 몸통 칸 UI 최신화 메서드
@@ -164,7 +183,10 @@ public class CharacterGearUI : MonoBehaviour
             bodySlot[i].UpdateSlotUI();
         }
 
-        StartCoroutine(UpLoad(bodySlot[0].equipment.equipment));
+        if (!isStarted)
+        {
+            StartCoroutine(UpLoad(EquipmentType.Body));
+        }
     }
 
     // 장비함 - 손 칸 UI 최신화 메서드
@@ -179,6 +201,11 @@ public class CharacterGearUI : MonoBehaviour
         {
             handsSlot[i].equipment = equipped.hands[i];
             handsSlot[i].UpdateSlotUI();
+        }
+
+        if (!isStarted)
+        {
+            StartCoroutine(UpLoad(EquipmentType.Hands));
         }
     }
 
@@ -195,6 +222,10 @@ public class CharacterGearUI : MonoBehaviour
             legsSlot[i].equipment = equipped.legs[i];
             legsSlot[i].UpdateSlotUI();
         }
+        if (!isStarted)
+        {
+            StartCoroutine(UpLoad(EquipmentType.Legs));
+        }
     }
 
     // 장비함 - 신발 칸 UI 최신화 메서드
@@ -209,6 +240,10 @@ public class CharacterGearUI : MonoBehaviour
         {
             feetSlot[i].equipment = equipped.feet[i];
             feetSlot[i].UpdateSlotUI();
+        }
+        if (!isStarted)
+        {
+            StartCoroutine(UpLoad(EquipmentType.Feet));
         }
     }
 
@@ -225,6 +260,10 @@ public class CharacterGearUI : MonoBehaviour
             auxiliarySlot[i].equipment = equipped.auxiliary[i];
             auxiliarySlot[i].UpdateSlotUI();
         }
+        if (!isStarted)
+        {
+            StartCoroutine(UpLoad(EquipmentType.Auxiliary));
+        }
     }
 
     // 장비함 - 귀걸이 칸 UI 최신화 메서드
@@ -239,6 +278,10 @@ public class CharacterGearUI : MonoBehaviour
         {
             earringSlot[i].equipment = equipped.earring[i];
             earringSlot[i].UpdateSlotUI();
+        }
+        if (!isStarted)
+        {
+            StartCoroutine(UpLoad(EquipmentType.Earring));
         }
     }
 
@@ -255,6 +298,10 @@ public class CharacterGearUI : MonoBehaviour
             necklaceSlot[i].equipment = equipped.necklace[i];
             necklaceSlot[i].UpdateSlotUI();
         }
+        if (!isStarted)
+        {
+            StartCoroutine(UpLoad(EquipmentType.Necklace));
+        }
     }
 
     // 장비함 - 팔찌 칸 UI 최신화 메서드
@@ -270,6 +317,10 @@ public class CharacterGearUI : MonoBehaviour
             braceletSlot[i].equipment = equipped.bracelet[i];
             braceletSlot[i].UpdateSlotUI();
         }
+        if (!isStarted)
+        {
+            StartCoroutine(UpLoad(EquipmentType.Bracelet));
+        }
     }
 
     // 장비함 - 반지 칸 UI 최신화 메서드
@@ -284,6 +335,10 @@ public class CharacterGearUI : MonoBehaviour
         {
             ringSlot[i].equipment = equipped.ring[i];
             ringSlot[i].UpdateSlotUI();
+        }
+        if (!isStarted)
+        {
+            StartCoroutine(UpLoad(EquipmentType.Ring));
         }
     }
     #endregion

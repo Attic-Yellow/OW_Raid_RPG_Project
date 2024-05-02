@@ -10,9 +10,10 @@ public class CurrentEquipped : MonoBehaviour
     public OnEquippChanged onChangeEquipp;
 
     public List<Equipment> currentEquippeds = new List<Equipment>();
+    public bool isStarted;
 
     private CharacterData CharacterData;
-
+    
     private void Awake()
     {
         if (Instance == null)
@@ -23,8 +24,10 @@ public class CurrentEquipped : MonoBehaviour
 
     private void Start()
     {
+        isStarted = true;
         CharacterData.Instance.UpdateCurrentEquipData(CharacterData.Instance.CurrentEquip());
         CharacterData.Instance.CalculateAndSetStats();
+        isStarted = false;
     }
 
     #region 장비 착용 및 교체 메서드

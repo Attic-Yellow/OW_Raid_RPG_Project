@@ -45,7 +45,10 @@ public class CharacterData : MonoBehaviour
             currentStatus.Clear();
             var tempStatus = ExtractStats();
             UpdateCharacterData(tempStatus);
-            UpdateEquipData(Equip());
+            if (CurrentEquipped.Instance.isStarted)
+            {
+                UpdateEquipData(Equip());
+            }
         }
         else
         {
@@ -78,6 +81,7 @@ public class CharacterData : MonoBehaviour
         return stats;
     }
 
+    #region 현재 장비 딕셔너리 언패킹
     public Dictionary<string, int> CurrentEquip()
     {
         List<string> gears = new List<string>
@@ -102,12 +106,14 @@ public class CharacterData : MonoBehaviour
 
         return gearsInfo;
     }
+    #endregion
 
+    #region 장비함 딕셔너리 언패킹
     public Dictionary<string, int> Equip()
     {
         List<string> gears = new List<string>
         {
-            "weapon", "head", "body", "hands", "legs", "feet", "auxiliary", "earring", "necklace", "bracelet", "ring"
+            "weapons", "heads", "bodys", "hands", "legs", "feet", "auxiliary", "earring", "necklace", "bracelet", "ring"
         };
 
         List<string> gearsDict = new List<string>
@@ -127,10 +133,12 @@ public class CharacterData : MonoBehaviour
                 }
             }
         }
-        print(gearsInfo["head0itemId"]);
+
         return gearsInfo;
     }
+    #endregion
 
+    #region 레벨에 따른 능력치 적용
     private void ApplyStatGrowth(string job, string race, int level, ref Dictionary<string, int> stats)
     {
         // 모든 캐릭터에 대해 레벨업 시 모든 능력치 기본 상승 적용
@@ -187,6 +195,7 @@ public class CharacterData : MonoBehaviour
                 break;
         }
     }
+    #endregion
 
     #region 능력치 계산
     private void CalculateDerivedStats(ref Dictionary<string, int> stats)
@@ -281,6 +290,7 @@ public class CharacterData : MonoBehaviour
     }
     #endregion
 
+    #region 캐릭터 능력치 적용
     private void UpdateCharacterData(Dictionary<string, int> stats)
     {
         Dictionary<string, int> beforeStats = new Dictionary<string, int>();
@@ -363,7 +373,9 @@ public class CharacterData : MonoBehaviour
         }
         currentStatus = stats;
     }
+    #endregion
 
+    #region 캐릭터 현재 장비 적용
     public void UpdateCurrentEquipData(Dictionary<string, int> gears)
     {
         int count = 1;
@@ -390,47 +402,290 @@ public class CharacterData : MonoBehaviour
         }
         CalculateEquip();
     }
+    #endregion
 
+    #region 캐릭터 장비함 데이터 불러오기
     public void UpdateEquipData(Dictionary<string, int> equipData)
     {
         // 장비 타입별로 처리
         string[] gearTypes = new string[] { "weapon", "head", "body", "hands", "legs", "feet", "auxiliary", "earring", "necklace", "bracelet", "ring" };
+
         foreach (string gearType in gearTypes)
         {
-            // 장비 리스트에 대한 참조 가져오기
             var gearList = GetTypeList(gearType);
 
-            if (gearList == null) 
-            {
-                continue; // 유효한 리스트가 아니면 스킵
-            }
-
+            int i = 0;
             // 각 슬롯별로 장비 데이터 업데이트
-            for (int i = 0; i < gearList.Count; i++)
+            foreach (var gear in equipData)
             {
-                foreach (var gear in equipData)
+                switch (gearType)
                 {
-                    if (!Regex.IsMatch(gear.Key, @"correction"))
-                    {
-                        if (gear.Value != 0)
+                    #region 무기 장비함
+                    case "weapon":
+                        if (Regex.IsMatch(gear.Key, @"weapon"))
                         {
-                            if (ItemData.Instance.equip.ContainsKey(gear.Value))
+                            if (!Regex.IsMatch(gear.Key, @"correction"))
                             {
-                                gearList[i] = ItemData.Instance.equip[gear.Value];
+                                if (gear.Value != 0)
+                                {
+                                    if (ItemData.Instance.equip.ContainsKey(gear.Value))
+                                    {
+                                        gearList[i] = ItemData.Instance.equip[gear.Value];
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                gearList[i].cor = gear.Value;
+                                i++;
+                                if (i == 30)
+                                {
+                                    i = 0;
+                                }
+                            }
+                        }    
+                        break;
+                    #endregion
+                    #region 머리 장비함
+                    case "head":
+                        if (!Regex.IsMatch(gear.Key, @"correction") && Regex.IsMatch(gear.Key, @"head"))
+                        {
+                            if (gear.Value != 0)
+                            {
+                                if (ItemData.Instance.equip.ContainsKey(gear.Value))
+                                {
+                                    gearList[i] = ItemData.Instance.equip[gear.Value];
+                                }
                             }
                         }
-                    }
-                    else
-                    {
-                        gearList[i].cor = gear.Value;
-                    }
+                        else
+                        {
+                            gearList[i].cor = gear.Value;
+                            i++; 
+                            if (i == 30)
+                            {
+                                i = 0;
+                            }
+                        }
+                        break;
+                    #endregion
+                    #region 몸통 장비함
+                    case "body":
+                        if (!Regex.IsMatch(gear.Key, @"correction") && Regex.IsMatch(gear.Key, @"body"))
+                        {
+                            if (gear.Value != 0)
+                            {
+                                if (ItemData.Instance.equip.ContainsKey(gear.Value))
+                                {
+                                    gearList[i] = ItemData.Instance.equip[gear.Value];
+                                }
+                            }
+                        }
+                        else
+                        {
+                            gearList[i].cor = gear.Value;
+                            i++;
+                            if (i == 30)
+                            {
+                                i = 0;
+                            }
+                        }
+                        break;
+                    #endregion
+                    #region 손 장비함
+                    case "hands":
+                        if (!Regex.IsMatch(gear.Key, @"correction") && Regex.IsMatch(gear.Key, @"hands"))
+                        {
+                            if (gear.Value != 0)
+                            {
+                                if (ItemData.Instance.equip.ContainsKey(gear.Value))
+                                {
+                                    gearList[i] = ItemData.Instance.equip[gear.Value];
+                                }
+                            }
+                        }
+                        else
+                        {
+                            gearList[i].cor = gear.Value;
+                            i++;
+                            if (i == 30)
+                            {
+                                i = 0;
+                            }
+                        }
+                        break;
+                    #endregion
+                    #region 다리 장비함
+                    case "legs":
+                        if (!Regex.IsMatch(gear.Key, @"correction") && Regex.IsMatch(gear.Key, @"legs"))
+                        {
+                            if (gear.Value != 0)
+                            {
+                                if (ItemData.Instance.equip.ContainsKey(gear.Value))
+                                {
+                                    gearList[i] = ItemData.Instance.equip[gear.Value];
+                                }
+                            }
+                        }
+                        else
+                        {
+                            gearList[i].cor = gear.Value;
+                            i++;
+                            if (i == 30)
+                            {
+                                i = 0;
+                            }
+                        }
+                        break;
+                    #endregion
+                    #region 신발 장비함
+                    case "feet":
+                        if (!Regex.IsMatch(gear.Key, @"correction") && Regex.IsMatch(gear.Key, @"feet"))
+                        {
+                            if (gear.Value != 0)
+                            {
+                                if (ItemData.Instance.equip.ContainsKey(gear.Value))
+                                {
+                                    gearList[i] = ItemData.Instance.equip[gear.Value];
+                                }
+                            }
+                        }
+                        else
+                        {
+                            gearList[i].cor = gear.Value;
+                            i++;
+                            if (i == 30)
+                            {
+                                i = 0;
+                            }
+                        }
+                        break;
+                    #endregion
+                    #region 보조 도구 장비함
+                    case "auxiliary":
+                        if (!Regex.IsMatch(gear.Key, @"correction") && Regex.IsMatch(gear.Key, @"auxiliary"))
+                        {
+                            if (gear.Value != 0)
+                            {
+                                if (ItemData.Instance.equip.ContainsKey(gear.Value))
+                                {
+                                    gearList[i] = ItemData.Instance.equip[gear.Value];
+                                }
+                            }
+                        }
+                        else
+                        {
+                            gearList[i].cor = gear.Value;
+                            i++;
+                            if (i == 30)
+                            {
+                                i = 0;
+                            }
+                        }
+                        break;
+                    #endregion
+                    #region 귀걸이 장비함
+                    case "earring":
+                        if (!Regex.IsMatch(gear.Key, @"correction") && Regex.IsMatch(gear.Key, @"earring"))
+                        {
+                            if (gear.Value != 0)
+                            {
+                                if (ItemData.Instance.equip.ContainsKey(gear.Value))
+                                {
+                                    gearList[i] = ItemData.Instance.equip[gear.Value];
+                                }
+                            }
+                        }
+                        else
+                        {
+                            gearList[i].cor = gear.Value;
+                            i++;
+                            if (i == 30)
+                            {
+                                i = 0;
+                            }
+                        }
+                        break;
+                    #endregion
+                    #region 목걸이 장비함
+                    case "necklace":
+                        if (!Regex.IsMatch(gear.Key, @"correction") && Regex.IsMatch(gear.Key, @"necklace"))
+                        {
+                            if (gear.Value != 0)
+                            {
+                                if (ItemData.Instance.equip.ContainsKey(gear.Value))
+                                {
+                                    gearList[i] = ItemData.Instance.equip[gear.Value];
+                                }
+                            }
+                        }
+                        else
+                        {
+                            gearList[i].cor = gear.Value;
+                            i++;
+                            if (i == 30)
+                            {
+                                i = 0;
+                            }
+                        }
+                        break;
+                    #endregion
+                    #region 팔찌 장비함
+                    case "bracelet":
+                        if (!Regex.IsMatch(gear.Key, @"correction") && Regex.IsMatch(gear.Key, @"bracelet"))
+                        {
+                            if (gear.Value != 0)
+                            {
+                                if (ItemData.Instance.equip.ContainsKey(gear.Value))
+                                {
+                                    gearList[i] = ItemData.Instance.equip[gear.Value];
+                                }
+                            }
+                        }
+                        else
+                        {
+                            gearList[i].cor = gear.Value;
+                            i++;
+                            if (i == 30)
+                            {
+                                i = 0;
+                            }
+                        }
+                        break;
+                    #endregion
+                    #region 반지 장비함
+                    case "ring":
+                        if (!Regex.IsMatch(gear.Key, @"correction") && Regex.IsMatch(gear.Key, @"ring"))
+                        {
+                            if (gear.Value != 0)
+                            {
+                                if (ItemData.Instance.equip.ContainsKey(gear.Value))
+                                {
+                                    gearList[i] = ItemData.Instance.equip[gear.Value];
+                                }
+                            }
+                        }
+                        else
+                        {
+                            gearList[i].cor = gear.Value;
+                            i++;
+                            if (i == 30)
+                            {
+                                i = 0;
+                            }
+                        }
+                        break;
+                        #endregion
+
                 }
+
             }
         }
 
         // 장비 변경 알림
         Equipped.Instance.onChangeGear?.Invoke();
     }
+    #endregion
 
     // 장비 타입에 따른 리스트 참조 반환
     private List<Equipment> GetTypeList(string gearType)

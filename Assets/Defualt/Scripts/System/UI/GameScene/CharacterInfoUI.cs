@@ -15,6 +15,7 @@ public class CharacterInfoUI : MonoBehaviour
     #endregion
 
     LinkState linkState = LinkState.Idle;
+    bool isStarted = false;
 
     #region 캐릭터 창 UI 오브젝트
     [SerializeField] private GameObject characterInfoUI;
@@ -38,6 +39,7 @@ public class CharacterInfoUI : MonoBehaviour
     #region 스타트 메서드
     private void Start()
     {
+        isStarted = true;
         currentEquipped = CurrentEquipped.Instance;
         currentEquipped.onChangeEquipp += ReadrawSlotUI;
         var charData = GameManager.Instance.dataManager.characterData.currentStatus;
@@ -92,6 +94,7 @@ public class CharacterInfoUI : MonoBehaviour
         }
 
         ReadrawSlotUI();
+        isStarted = false;
     }
     #endregion
 

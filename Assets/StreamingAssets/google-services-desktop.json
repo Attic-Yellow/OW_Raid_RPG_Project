@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "608321564038",
-    "project_id": "unity-3d-owrp-project-db",
-    "storage_bucket": "unity-3d-owrp-project-db.appspot.com"
+    "project_number": "129237831184",
+    "project_id": "test-owrp1",
+    "storage_bucket": "test-owrp1.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:608321564038:android:fcab3720e3ba7d0b175007",
+        "mobilesdk_app_id": "1:129237831184:android:bbe7467a9701b82a898495",
         "android_client_info": {
           "package_name": "com.UnityTechnologies.com.unity"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCsj9Cf63pzmQqHrO34NQodRLe5IbH97wI"
+          "current_key": "AIzaSyBNIECl86Ga6Rf0ph_f7ll-wbl0RsCt8Ho"
         }
       ],
       "services": {
