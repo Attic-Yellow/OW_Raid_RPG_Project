@@ -27,6 +27,11 @@ public class EquippedSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandl
         itemIcon.gameObject.SetActive(false);
     }
 
+    public override Equipment GetEquipment()
+    {
+        return equipment;
+    }
+
     #region 드래그 시작
     public void OnDrag(PointerEventData eventData)
     {
@@ -114,45 +119,7 @@ public class EquippedSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandl
 
         if (equipment != null)
         {
-            switch (newEquipment.equipment)
-            {
-                case EquipmentType.Weapon:
-                    Equipped.Instance.AssignWeaponAtIndex(newEquipment, oldIndex, newIndex, oldSlotType, newSlotType);
-                    break;
-                case EquipmentType.Head:
-                    Equipped.Instance.AssignHeadAtIndex(newEquipment, oldIndex, newIndex, oldSlotType, newSlotType);
-                    break;
-                case EquipmentType.Body:
-                    Equipped.Instance.AssignBodyAtIndex(newEquipment, oldIndex, newIndex, oldSlotType, newSlotType);
-                    break;
-                case EquipmentType.Hands:
-                    Equipped.Instance.AssignHandsAtIndex(newEquipment, oldIndex, newIndex, oldSlotType, newSlotType);
-                    break;
-                case EquipmentType.Legs:
-                    Equipped.Instance.AssignLegsAtIndex(newEquipment, oldIndex, newIndex, oldSlotType, newSlotType);
-                    break;
-                case EquipmentType.Feet:
-                    Equipped.Instance.AssignFeetAtIndex(newEquipment, oldIndex, newIndex, oldSlotType, newSlotType);
-                    break;
-                case EquipmentType.Auxiliary:
-                    Equipped.Instance.AssignAuxiliaryAtIndex(newEquipment, oldIndex, newIndex, oldSlotType, newSlotType);
-                    break;
-                case EquipmentType.Earring:
-                    Equipped.Instance.AssignEarringAtIndex(newEquipment, oldIndex, newIndex, oldSlotType, newSlotType);
-                    break;
-                case EquipmentType.Necklace:
-                    Equipped.Instance.AssignNecklaceAtIndex(newEquipment, oldIndex, newIndex, oldSlotType, newSlotType);
-                    break;
-                case EquipmentType.Bracelet:
-                    Equipped.Instance.AssignBraceletAtIndex(newEquipment, oldIndex, newIndex, oldSlotType, newSlotType);
-                    break;
-                case EquipmentType.Ring:
-                    Equipped.Instance.AssignRingAtIndex(newEquipment, oldIndex, newIndex, oldSlotType, newSlotType);
-                    break;
-                case EquipmentType.None:
-                    ClearSlot();
-                    break;
-            }
+            Equipped.Instance.AssignEquipAtIndex(newEquipment, oldIndex, newIndex, oldSlotType, newSlotType);
             if (equipment != null)
             {
                 UpdateSlotUI(); // 슬롯의 UI를 업데이트
@@ -164,47 +131,7 @@ public class EquippedSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandl
     #region 슬롯 초기화
     private void RemoveSlot(Equipment newEquipment, int index)
     {
-        switch (newEquipment.equipment)
-        {
-            case EquipmentType.Weapon:
-                Equipped.Instance.RemoveWeapon(newEquipment, index);
-                break;
-            case EquipmentType.Head:
-                Equipped.Instance.RemoveHead(newEquipment, index);
-                break;
-            case EquipmentType.Body:
-                Equipped.Instance.RemoveBody(newEquipment, index);
-                break;
-            case EquipmentType.Hands:
-                Equipped.Instance.RemoveHands(newEquipment, index);
-                break;
-            case EquipmentType.Legs:
-                Equipped.Instance.RemoveLegs(newEquipment, index);
-                break;
-            case EquipmentType.Feet:
-                Equipped.Instance.RemoveFeet(newEquipment, index);
-                break;
-            case EquipmentType.Auxiliary:
-                Equipped.Instance.RemoveAuxiliary(newEquipment, index);
-                break;
-            case EquipmentType.Earring:
-                Equipped.Instance.RemoveEarring(newEquipment, index);
-                break;
-            case EquipmentType.Necklace:
-                Equipped.Instance.RemoveNecklace(newEquipment, index);
-                break;
-            case EquipmentType.Bracelet:
-                Equipped.Instance.RemoveBracelet(newEquipment, index);
-                break;
-            case EquipmentType.Ring:
-                Equipped.Instance.RemoveRing(newEquipment, index);
-                break;
-        }
+        Equipped.Instance.RemoveEquip(newEquipment, index);
     }
     #endregion
-
-    public override Equipment GetEquipment()
-    {
-        return equipment;
-    }
 }

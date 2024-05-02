@@ -113,7 +113,7 @@ public class CharacterData : MonoBehaviour
     {
         List<string> gears = new List<string>
         {
-            "weapons", "heads", "bodys", "hands", "legs", "feet", "auxiliary", "earring", "necklace", "bracelet", "ring"
+            "weapons", "heads", "bodys", "hands", "legs", "feets", "auxiliarys", "earrings", "necklaces", "bracelets", "rings"
         };
 
         List<string> gearsDict = new List<string>
@@ -494,7 +494,7 @@ public class CharacterData : MonoBehaviour
                     #endregion
                     #region 손 장비함
                     case "hands":
-                        if (!Regex.IsMatch(gear.Key, @"correction") && Regex.IsMatch(gear.Key, @"hands"))
+                        if (!Regex.IsMatch(gear.Key, @"correction") && Regex.IsMatch(gear.Key, @"hand"))
                         {
                             if (gear.Value != 0)
                             {
@@ -517,7 +517,7 @@ public class CharacterData : MonoBehaviour
                     #endregion
                     #region 다리 장비함
                     case "legs":
-                        if (!Regex.IsMatch(gear.Key, @"correction") && Regex.IsMatch(gear.Key, @"legs"))
+                        if (!Regex.IsMatch(gear.Key, @"correction") && Regex.IsMatch(gear.Key, @"leg"))
                         {
                             if (gear.Value != 0)
                             {

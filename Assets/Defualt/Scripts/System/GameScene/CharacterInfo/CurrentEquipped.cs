@@ -39,42 +39,7 @@ public class CurrentEquipped : MonoBehaviour
         // 해당 위치에 장비가 이미 있으면, 이전 장비를 적절한 위치에 추가
         if (currentEquippeds[index] != null && currentEquippeds[index].equipment != EquipmentType.None)
         {
-            switch (equipment.equipment)
-            {
-                case EquipmentType.Weapon:
-                    Equipped.Instance.AssignWeaponAtIndex(currentEquippeds[index], oldIndex, newIndex, oldSlotType, newSlotType);
-                    break;
-                case EquipmentType.Head:
-                    Equipped.Instance.AssignHeadAtIndex(currentEquippeds[index], oldIndex, newIndex, oldSlotType, newSlotType);
-                    break;
-                case EquipmentType.Body:
-                    Equipped.Instance.AssignBodyAtIndex(currentEquippeds[index], oldIndex, newIndex, oldSlotType, newSlotType);
-                    break;
-                case EquipmentType.Hands:
-                    Equipped.Instance.AssignHandsAtIndex(currentEquippeds[index], oldIndex, newIndex, oldSlotType, newSlotType);
-                    break;
-                case EquipmentType.Legs:
-                    Equipped.Instance.AssignLegsAtIndex(currentEquippeds[index], oldIndex, newIndex, oldSlotType, newSlotType);
-                    break;
-                case EquipmentType.Feet:
-                    Equipped.Instance.AssignFeetAtIndex(currentEquippeds[index], oldIndex, newIndex, oldSlotType, newSlotType);
-                    break;
-                case EquipmentType.Auxiliary:
-                    Equipped.Instance.AssignAuxiliaryAtIndex(currentEquippeds[index], oldIndex, newIndex, oldSlotType, newSlotType);
-                    break;
-                case EquipmentType.Earring:
-                    Equipped.Instance.AssignEarringAtIndex(currentEquippeds[index], oldIndex, newIndex, oldSlotType, newSlotType);
-                    break;
-                case EquipmentType.Necklace:
-                    Equipped.Instance.AssignNecklaceAtIndex(currentEquippeds[index], oldIndex, newIndex, oldSlotType, newSlotType);
-                    break;
-                case EquipmentType.Bracelet:
-                    Equipped.Instance.AssignBraceletAtIndex(currentEquippeds[index], oldIndex, newIndex, oldSlotType, newSlotType);
-                    break;
-                case EquipmentType.Ring:
-                    Equipped.Instance.AssignRingAtIndex(currentEquippeds[index], oldIndex, newIndex, oldSlotType, newSlotType);
-                    break;
-            }
+            Equipped.Instance.AssignEquipAtIndex(currentEquippeds[index], oldIndex, newIndex, oldSlotType, newSlotType);
         }
 
         // 새 장비를 해당 위치에 설정
