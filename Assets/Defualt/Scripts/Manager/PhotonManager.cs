@@ -60,7 +60,13 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     // 로비에 성공적으로 참여하였을 때 호출
     public override void OnJoinedLobby()
     {
-        GameManager.Instance.sceneLoadManager.JoiningServer(30);
+        RoomOptions roomOptions = new RoomOptions();
+        roomOptions.IsVisible = true;
+        roomOptions.IsOpen = true;
+        roomOptions.MaxPlayers = 20; // 최대 플레이어 수 설정
+        PhotonNetwork.JoinOrCreateRoom(roomName,roomOptions,TypedLobby.Default);
+
+       /* GameManager.Instance.sceneLoadManager.JoiningServer(30);
         if (GameManager.Instance.GetIsManager())
         {
             RoomOptions roomOptions = new RoomOptions();
@@ -73,7 +79,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         else
         {
             PhotonNetwork.JoinRoom(roomName); // 일반 사용자인 경우 방 참여
-        }
+        }*/
     }
 
     // 방에 성공적으로 참여하였을 때 호출

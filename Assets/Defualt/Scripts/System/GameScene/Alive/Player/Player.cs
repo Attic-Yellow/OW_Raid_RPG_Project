@@ -6,6 +6,7 @@ using Photon.Realtime;
 using System;
 /*using Cinemachine;*/
 using TMPro;
+using Cinemachine;
 
 public class Player : Alive
 {
@@ -38,7 +39,13 @@ public class Player : Alive
       {
           base.Awake();
           monster = FindObjectOfType<Monster>();
-        if(monster == null)
+        CinemachineVirtualCamera cvc = FindObjectOfType<CinemachineVirtualCamera>();
+        if (cvc != null && GameManager.Instance.currentPlayerObj != null)
+        {
+            cvc.LookAt = GameManager.Instance.currentPlayerObj.transform;
+        }
+        
+        if (monster == null)
         {
             print("보스가 없음");
         }

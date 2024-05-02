@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.Analytics;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
+using Cinemachine;
 
 public class SceneLoadingUIController : MonoBehaviour
 {
@@ -89,18 +90,18 @@ public class SceneLoadingUIController : MonoBehaviour
         }
         if (targetProgress > 30 && currentProgress == targetProgress)
         {
-            StartCoroutine(LoadAsyncGameScene("GameScene"));
+            StartCoroutine(LoadAsyncGameScene("GameScene 1"));
         }
         else
         {
             yield return null;
         }
-        GameManager.Instance.currentPlayerObj = PhotonNetwork.Instantiate(CharacterData.Instance.characterData["Job"].ToString(), Vector3.zero, Quaternion.identity);
     }
 
     // 메인 > 게임 씬 전환 로딩 코루틴 (70% ~ 100%)
     IEnumerator LoadAsyncGameScene(string sceneName)
     {
+        print("게임씬 불러오기");
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
         asyncLoad.allowSceneActivation = false;
 
@@ -120,9 +121,13 @@ public class SceneLoadingUIController : MonoBehaviour
             else
             {
                 asyncLoad.allowSceneActivation = true;
+                print($"현재씬이름 {SceneManager.GetActiveScene().name} ");
+                print(CharacterData.Instance.characterData["job"].ToString());
+                GameManager.Instance.currentPlayerObj = PhotonNetwork.Instantiate(CharacterData.Instance.characterData["job"].ToString(), Vector3.zero, Quaternion.identity);
                 yield return null;
             }
-        }
 
+        }
+        
     }
 }
