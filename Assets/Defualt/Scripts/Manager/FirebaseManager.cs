@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.IO;
 using Unity.VisualScripting;
+using System.Linq;
 
 public class FirebaseManager : MonoBehaviour
 {
@@ -342,7 +343,14 @@ public class FirebaseManager : MonoBehaviour
         {
             foreach (var gear in gears)
             {
-                DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).Collection(serverName).Document(uniqueCharacterID).Collection("currentEquipped").Document(gear);
+                DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).
+                    Collection(serverName).Document(uniqueCharacterID).Collection("currentEquipped").Document(gear);
+
+                if (currentEquip[i].cor == 0)
+                {
+                    currentEquip[i].cor = -1;
+                }
+
                 Dictionary<string, int> newEquip = new Dictionary<string, int>
                             {
                                 { "itemId", currentEquip[i].itemId },
@@ -360,82 +368,57 @@ public class FirebaseManager : MonoBehaviour
         return false;
     }
 
+    private string DocumentName(EquipmentType equipmentType)
+    {
+        switch (equipmentType)
+        {
+            case EquipmentType.Weapon: return "weapon";
+            case EquipmentType.Head: return "head";
+            case EquipmentType.Body: return "body";
+            case EquipmentType.Hands: return "hand";
+            case EquipmentType.Legs: return "leg";
+            case EquipmentType.Feet: return "feet";
+            case EquipmentType.Auxiliary: return "auxiliary";
+            case EquipmentType.Earring: return "earring";
+            case EquipmentType.Necklace: return "necklace";
+            case EquipmentType.Bracelet: return "bracelet";
+            case EquipmentType.Ring: return "ring";
+            default: return null;
+        }
+    }
+
     // 캐릭터 장비함 데이터 업로드
     public async Task<bool> UpLoadEquipped(string userId, string email, string serverName, string uniqueCharacterID, EquipmentType equipmentType)
     {
-        //var hands = Equipped.Instance.hands;
-        //var legss = Equipped.Instance.legs;
-        //var feets = Equipped.Instance.feet;
-        //var auxiliarys = Equipped.Instance.auxiliary;
-        //var earrings = Equipped.Instance.earring;
-        //var necklaces = Equipped.Instance.necklace;
-        //var bracelets = Equipped.Instance.bracelet;
-        //var rings = Equipped.Instance.ring;
-
         try
         {
-            int i = 0;
-
-            switch (equipmentType)
+            if (equipmentType != EquipmentType.None)
             {
-                case EquipmentType.Weapon:
+                var list = Equipped.Instance.GetEquipmentList(equipmentType).ToList();
+                string documentName = DocumentName(equipmentType);
+                int i = 0;
 
-                    var weapons = Equipped.Instance.weapon;
+                foreach (var equip in list)
+                {
+                    DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).
+                        Collection(serverName).Document(uniqueCharacterID).Collection($"{documentName}").Document($"{documentName}s{i}");
 
-                    foreach (var weapon in weapons)
+                    if (equip.cor == 0)
                     {
-                        DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).Collection(serverName).Document(uniqueCharacterID).Collection("weapon").Document($"weapon{i}");
-
-                        Dictionary<string, int> newEquip = new Dictionary<string, int>()
-                        {
-                            { "itemId", weapon.itemId },
-                            { "correction", weapon.cor }
-                        };
-
-                        i++;
-                        await docRef.SetAsync(newEquip);
+                        equip.cor = -1;
                     }
 
-                    break;
-                case EquipmentType.Head:
-
-                    var heads = Equipped.Instance.head;
-
-                    foreach (var head in heads)
-                    {
-                        DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).Collection(serverName).Document(uniqueCharacterID).Collection("head").Document($"head{i}");
-
-                        Dictionary<string, int> newEquip = new Dictionary<string, int>()
+                    Dictionary<string, int> newEquip = new Dictionary<string, int>()
                         {
-                            { "itemId", head.itemId },
-                            { "correction", head.cor }
+                            { $"itemId", equip.itemId },
+                            { $"correction", equip.cor }
                         };
 
-                        i++;
-                        await docRef.SetAsync(newEquip);
-                    }
-
-                    break;
-                case EquipmentType.Body:
-
-                    var bodys = Equipped.Instance.body;
-
-                    foreach (var body in bodys)
-                    {
-                        DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).Collection(serverName).Document(uniqueCharacterID).Collection("body").Document($"body{i}");
-
-                        Dictionary<string, int> newEquip = new Dictionary<string, int>()
-                        {
-                            { "itemId", body.itemId },
-                            { "correction", body.cor }
-                        };
-
-                        i++;
-                        await docRef.SetAsync(newEquip);
-                    }
-
-                    break;
+                    i++;
+                    await docRef.SetAsync(newEquip);
+                }
             }
+            
             return true;
         }
         catch (Exception e)
@@ -500,7 +483,6 @@ public class FirebaseManager : MonoBehaviour
 
                 var currentEquipRef = serverCharactersRef.Document(document.Id).Collection("currentEquipped");
                 var equipQuery = await currentEquipRef.GetSnapshotAsync();
-                var currentEquip = new Dictionary<string, object>();
 
                 if (equipQuery == null)
                 {
@@ -514,6 +496,25 @@ public class FirebaseManager : MonoBehaviour
                         foreach (var temp in tempGear)
                         {
                             character[$"{gear.Id}{temp.Key}"] = temp.Value;
+                        }
+                    }
+                }
+
+                string[] gearTypes = { "weapon", "head", "body", "hand", "leg", "feet", "auxiliary", "earring", "necklace", "bracelet", "ring" };
+
+                foreach (string gearType in gearTypes)
+                {
+                    var gearCollectionRef = serverCharactersRef.Document(document.Id).Collection(gearType);
+                    var gearCollectionSnapshot = await gearCollectionRef.GetSnapshotAsync();
+                    if (gearCollectionSnapshot != null)
+                    {
+                        foreach (var gearDoc in gearCollectionSnapshot.Documents)
+                        {
+                            var gearData = gearDoc.ToDictionary();
+                            foreach (var entry in gearData)
+                            {
+                                character[$"{gearDoc.Id}{entry.Key}"] = entry.Value;
+                            }
                         }
                     }
                 }
@@ -537,6 +538,7 @@ public class FirebaseManager : MonoBehaviour
         }
     }
 
+    #region (구) 장비함 로드 비동기 메서드
     public async Task<bool> LoadEquipped(string userId, string email, string serverName, string uniqueCharacterID)
     {
         string[] gears = new string[] { "weapon", "head", "body", "hands", "legs", "feet", "auxiliary", "earring", "necklace", "bracelet", "ring" };
@@ -579,7 +581,6 @@ public class FirebaseManager : MonoBehaviour
                                 case "head":
                                     if (ItemData.Instance.equip.ContainsKey(itemId))
                                     {
-                                        print("넣음");
                                         head[i] = ItemData.Instance.equip[itemId];
                                     }
                                     head[i].cor = correction;
@@ -604,6 +605,8 @@ public class FirebaseManager : MonoBehaviour
         }
         return false;
     }
+    #endregion
+
     #endregion
 
     #region 데이터 초기화
@@ -730,3 +733,306 @@ public static class AsyncOperationExtensions
                 totalSTR += TribeStatus.GetValue<int>("str");
             }
 */
+
+#region (구) 장비함 업로드
+//switch (equipmentType)
+//{
+//    #region 무기 장비함 업로드
+//    case EquipmentType.Weapon:
+
+//        var weapons = Equipped.Instance.weapon.ToList();
+//        foreach (var weapon in weapons)
+//        {
+//            DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).
+//                Collection(serverName).Document(uniqueCharacterID).Collection("weapon").Document($"weapons{i}");
+
+//            if (weapon.cor == 0)
+//            {
+//                weapon.cor = -1;
+//            }
+
+//            Dictionary<string, int> newEquip = new Dictionary<string, int>()
+//                        {
+//                            { $"itemId", weapon.itemId },
+//                            { $"correction", weapon.cor }
+//                        };
+
+//            i++;
+//            await docRef.SetAsync(newEquip);
+//        }
+
+
+//        break;
+//    #endregion
+//    #region 머리 장비함 업로드
+//    case EquipmentType.Head:
+
+//        var heads = Equipped.Instance.head.ToList();
+
+//        foreach (var head in heads)
+//        {
+//            DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).
+//                Collection(serverName).Document(uniqueCharacterID).Collection("head").Document($"heads{i}");
+
+//            if (head.cor == 0)
+//            {
+//                head.cor = -1;
+//            }
+
+//            Dictionary<string, int> newEquip = new Dictionary<string, int>()
+//                        {
+//                            { $"itemId", head.itemId },
+//                            { $"correction", head.cor }
+//                        };
+
+//            i++;
+//            await docRef.SetAsync(newEquip);
+//        }
+
+//        break;
+//    #endregion
+//    #region 몸통 장비함 업로드
+//    case EquipmentType.Body:
+
+//        var bodys = Equipped.Instance.body.ToList();
+
+//        foreach (var body in bodys)
+//        {
+//            DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).
+//                Collection(serverName).Document(uniqueCharacterID).Collection("body").Document($"bodys{i}");
+
+//            if (body.cor == 0)
+//            {
+//                body.cor = -1;
+//            }
+
+//            Dictionary<string, int> newEquip = new Dictionary<string, int>()
+//                        {
+//                            { $"itemId", body.itemId },
+//                            { $"correction", body.cor }
+//                        };
+
+//            i++;
+//            await docRef.SetAsync(newEquip);
+//        }
+
+//        break;
+//    #endregion
+//    #region 손 장비함 업로드
+//    case EquipmentType.Hands:
+
+//        var hands = Equipped.Instance.hands.ToList();
+
+//        foreach (var hand in hands)
+//        {
+//            DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).
+//                Collection(serverName).Document(uniqueCharacterID).Collection("hands").Document($"hands{i}");
+
+//            if (hand.cor == 0)
+//            {
+//                hand.cor = -1;
+//            }
+
+//            Dictionary<string, int> newEquip = new Dictionary<string, int>()
+//                        {
+//                            { $"itemId", hand.itemId },
+//                            { $"correction", hand.cor }
+//                        };
+
+//            i++;
+//            await docRef.SetAsync(newEquip);
+//        }
+
+//        break;
+//    #endregion
+//    #region 다리 장비함 업로드
+//    case EquipmentType.Legs:
+
+//        var legs = Equipped.Instance.legs.ToList();
+
+//        foreach (var leg in legs)
+//        {
+//            DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).
+//                Collection(serverName).Document(uniqueCharacterID).Collection("legs").Document($"leg{i}");
+
+//            if (leg.cor == 0)
+//            {
+//                leg.cor = -1;
+//            }
+
+//            Dictionary<string, int> newEquip = new Dictionary<string, int>()
+//                        {
+//                            { $"itemId", leg.itemId },
+//                            { $"correction", leg.cor }
+//                        };
+
+//            i++;
+//            await docRef.SetAsync(newEquip);
+//        }
+
+//        break;
+//    #endregion
+//    #region 신발 장비함 업로드
+//    case EquipmentType.Feet:
+
+//        var feets = Equipped.Instance.feet.ToList();
+
+//        foreach (var feet in feets)
+//        {
+//            DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).
+//                Collection(serverName).Document(uniqueCharacterID).Collection("feet").Document($"feets{i}");
+
+//            if (feet.cor == 0)
+//            {
+//                feet.cor = -1;
+//            }
+
+//            Dictionary<string, int> newEquip = new Dictionary<string, int>()
+//                        {
+//                            { $"itemId", feet.itemId },
+//                            { $"correction", feet.cor }
+//                        };
+
+//            i++;
+//            await docRef.SetAsync(newEquip);
+//        }
+
+//        break;
+//    #endregion
+//    #region 보조 도구 장비함 업로드
+//    case EquipmentType.Auxiliary:
+
+//        var auxiliarys = Equipped.Instance.auxiliary.ToList();
+
+//        foreach (var auxiliary in auxiliarys)
+//        {
+//            DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).
+//                Collection(serverName).Document(uniqueCharacterID).Collection("auxiliary").Document($"auxiliarys{i}");
+
+//            if (auxiliary.cor == 0)
+//            {
+//                auxiliary.cor = -1;
+//            }
+
+//            Dictionary<string, int> newEquip = new Dictionary<string, int>()
+//                        {
+//                            { $"itemId", auxiliary.itemId },
+//                            { $"correction", auxiliary.cor }
+//                        };
+
+//            i++;
+//            await docRef.SetAsync(newEquip);
+//        }
+
+//        break;
+//    #endregion
+//    #region 귀걸이 장비함 업로드
+//    case EquipmentType.Earring:
+
+//        var earrings = Equipped.Instance.earring.ToList();
+
+//        foreach (var earring in earrings)
+//        {
+//            DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).
+//                Collection(serverName).Document(uniqueCharacterID).Collection("earring").Document($"earrings{i}");
+
+//            if (earring.cor == 0)
+//            {
+//                earring.cor = -1;
+//            }
+
+//            Dictionary<string, int> newEquip = new Dictionary<string, int>()
+//                        {
+//                            { $"itemId", earring.itemId },
+//                            { $"correction", earring.cor }
+//                        };
+
+//            i++;
+//            await docRef.SetAsync(newEquip);
+//        }
+
+//        break;
+//    #endregion
+//    #region 목걸이 장비함 업로드
+//    case EquipmentType.Necklace:
+
+//        var necklaces = Equipped.Instance.necklace.ToList();
+
+//        foreach (var necklace in necklaces)
+//        {
+//            DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).
+//                Collection(serverName).Document(uniqueCharacterID).Collection("necklasce").Document($"necklaces{i}");
+
+//            if (necklace.cor == 0)
+//            {
+//                necklace.cor = -1;
+//            }
+
+//            Dictionary<string, int> newEquip = new Dictionary<string, int>()
+//                        {
+//                            { $"itemId", necklace.itemId },
+//                            { $"correction", necklace.cor }
+//                        };
+
+//            i++;
+//            await docRef.SetAsync(newEquip);
+//        }
+
+//        break;
+//    #endregion
+//    #region 팔찌 장비함 업로드
+//    case EquipmentType.Bracelet:
+
+//        var bracelets = Equipped.Instance.bracelet.ToList();
+
+//        foreach (var bracelet in bracelets)
+//        {
+//            DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).
+//                Collection(serverName).Document(uniqueCharacterID).Collection("bracelet").Document($"bracelets{i}");
+
+//            if (bracelet.cor == 0)
+//            {
+//                bracelet.cor = -1;
+//            }
+
+//            Dictionary<string, int> newEquip = new Dictionary<string, int>()
+//                        {
+//                            { $"itemId", bracelet.itemId },
+//                            { $"correction", bracelet.cor }
+//                        };
+
+//            i++;
+//            await docRef.SetAsync(newEquip);
+//        }
+
+//        break;
+//    #endregion
+//    #region 반지 장비함 업로드
+//    case EquipmentType.Ring:
+
+//        var rings = Equipped.Instance.ring.ToList();
+
+//        foreach (var ring in rings)
+//        {
+//            DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).
+//                Collection(serverName).Document(uniqueCharacterID).Collection("ring").Document($"rings{i}");
+
+//            if (ring.cor == 0)
+//            {
+//                ring.cor = -1;
+//            }
+
+//            Dictionary<string, int> newEquip = new Dictionary<string, int>()
+//                        {
+//                            { $"itemId", ring.itemId },
+//                            { $"correction", ring.cor }
+//                        };
+
+//            i++;
+//            await docRef.SetAsync(newEquip);
+//        }
+
+//        break;
+//        #endregion
+//}
+#endregion
