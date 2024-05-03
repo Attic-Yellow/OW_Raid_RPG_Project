@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -30,6 +31,10 @@ public class SceneLoadManager : MonoBehaviour
     public void LoadScene(string sceneName)
     {
         var target = GameObject.Find("LoadingScene Target");
+        if(target == null)
+        {
+            print("LoadingScene Target을 찾지 못함");
+        }
         var loadingScene = Instantiate(loadingUIPrefab, target.transform);
         loadingUIController = loadingScene.GetComponent<SceneLoadingUIController>();
         loadingUIController.Loading(sceneName);
@@ -48,4 +53,6 @@ public class SceneLoadManager : MonoBehaviour
 
         loadingUIController.UpdataLoadingProgress(progress);
     }
+
+ 
 }

@@ -32,8 +32,6 @@ public class Skill
     public float duration;
     public float spellTime;
     public SkillType skillType;
-    public int skillId;
-    public int animationNum;
 
     public virtual void UseSkill(int id)
     {
