@@ -18,7 +18,6 @@ public class SceneLoadingUIController : MonoBehaviour
     private void Start()
     {
         SetImage();
-        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
   
@@ -132,20 +131,5 @@ public class SceneLoadingUIController : MonoBehaviour
 
     }
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        print("씬 전환 이벤트");
-
-        if (scene.name == "GameScene 1")
-        {
-            print("플레이어 생성");   
-            // 플레이어 생성
-            GameManager.Instance.currentPlayerObj = PhotonNetwork.Instantiate(CharacterData.Instance.characterData["job"].ToString(),
-                GameManager.Instance.playerRespawnPos, Quaternion.identity);
-
-            // 플레이어를 따라가는 카메라 설정
-            CinemachineVirtualCamera cam = FindObjectOfType<CinemachineVirtualCamera>();
-            cam.Follow = GameManager.Instance.currentPlayerObj.transform.Find("PlayerCameraRoot");
-        }
-    }
+  
 }

@@ -15,9 +15,8 @@ public class Player : Alive
       public List<GameObject> skillEffectList = new();
     
       private Queue<Skill> canLearnSkills = new();
-      private Monster monster;
       public List<Monster> aggroMonsters;
-   
+      public  List<Monster> monsters = new();
 
 
 
@@ -25,18 +24,11 @@ public class Player : Alive
       private new void Awake()
       {
           base.Awake();
-          monster = FindObjectOfType<Monster>();
         CinemachineVirtualCamera cvc = FindObjectOfType<CinemachineVirtualCamera>();
         if (cvc != null && GameManager.Instance.currentPlayerObj != null)
         {
             cvc.LookAt = GameManager.Instance.currentPlayerObj.transform;
         }
-        
-        if (monster == null)
-        {
-            print("보스가 없음");
-        }
-      
 
       }
       private void Start()
@@ -61,7 +53,10 @@ public class Player : Alive
           {
              if(Input.GetKeyDown(KeyCode.Escape))
               {
-                  monster.TakeDamage(gameObject,this.Power);
+                foreach (Monster mon in monsters)
+                {
+                    mon.TakeDamage(gameObject, this.Power);
+                }
               }
 
                   

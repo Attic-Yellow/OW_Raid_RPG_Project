@@ -1,3 +1,4 @@
+using Cinemachine;
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ public class SceneLoadManager : MonoBehaviour
         }
 
         GameManager.Instance.sceneLoadManager = this;
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     // 씬 로드 메서드
@@ -54,5 +56,18 @@ public class SceneLoadManager : MonoBehaviour
         loadingUIController.UpdataLoadingProgress(progress);
     }
 
- 
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "GameScene 1")
+        {
+            print("플레이어 생성");
+            // 플레이어 생성
+            GameManager.Instance.currentPlayerObj = PhotonNetwork.Instantiate(CharacterData.Instance.characterData["job"].ToString(),
+                GameManager.Instance.playerRespawnPos, Quaternion.identity);
+
+            // 플레이어를 따라가는 카메라 설정
+            CinemachineVirtualCamera cam = FindObjectOfType<CinemachineVirtualCamera>();
+            cam.Follow = GameManager.Instance.currentPlayerObj.transform.Find("PlayerCameraRoot");
+        }
+    }
 }

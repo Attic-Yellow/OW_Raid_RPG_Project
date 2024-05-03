@@ -552,6 +552,7 @@ MonoBehaviour:
   haveSkills: []
   skillEffectList: []
   aggroMonsters: []
+  monsters: []
 --- !u!1 &1236049848542760991
 GameObject:
   m_ObjectHideFlags: 0
