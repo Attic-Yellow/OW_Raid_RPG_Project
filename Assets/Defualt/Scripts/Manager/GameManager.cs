@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     private bool isDataLoaded;
     private bool isSignInSuccess;
     private bool isRebinding;
+    public Vector3 playerRespawnPos = new Vector3(50, 10, 150);
 
     [Serializable]
     private class UserData

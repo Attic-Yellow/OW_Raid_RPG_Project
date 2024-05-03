@@ -13,25 +13,12 @@ public class Player : Alive
 
       private float money;
       public List<GameObject> skillEffectList = new();
-      [SerializeField] public float Money { get => money; set => money = value; }
+    
       private Queue<Skill> canLearnSkills = new();
       private Monster monster;
       public List<Monster> aggroMonsters;
-      public enum State
-          {
-          Idle,
-          Walk,
-          MovementSKill, //이동기
-          Skill0,
-          Skill1,
-          Skill2,
-          Skill3,
-          Skill4,
-          ReceivedDamage, //데미지 입었을때
-          Dead
-      }
+   
 
-      private State currentState;
 
 
       #region UintyMethod
@@ -56,7 +43,6 @@ public class Player : Alive
       {
         if (photonView.IsMine)
         {
-            currentState = State.Idle;
             /*    List<Skill> list = SkillManager.instance.GetSkillList(playerJob);
                  foreach(Skill skill in list)
                  {
@@ -78,19 +64,7 @@ public class Player : Alive
                   monster.TakeDamage(gameObject,this.Power);
               }
 
-              switch(currentState)
-              {
-                  case State.Idle:
-                      case State.Walk:
-                      case State.MovementSKill:
-                      case State.Skill0:
-                      case State.Skill1:
-                      case State.Skill2:
-                      case State.Skill3:
-                      case State.Skill4:
-                      break;
-              }
-            
+                  
 
           }
 

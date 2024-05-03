@@ -53,4 +53,6 @@ public class SceneLoadManager : MonoBehaviour
 
         loadingUIController.UpdataLoadingProgress(progress);
     }
+
+ 
 }

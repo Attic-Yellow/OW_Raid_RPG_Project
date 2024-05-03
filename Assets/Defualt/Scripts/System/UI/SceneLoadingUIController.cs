@@ -18,8 +18,10 @@ public class SceneLoadingUIController : MonoBehaviour
     private void Start()
     {
         SetImage();
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
+  
     // 로딩 이미지 랜덤 부여
     private void SetImage()
     {
@@ -37,12 +39,14 @@ public class SceneLoadingUIController : MonoBehaviour
         StartCoroutine(LoadAsyncScene(sceneName));
     }
 
+
+
     // 로그인 > 메인 씬 전환 로딩 코루틴
     IEnumerator LoadAsyncScene(string sceneName)
     {
         int progressStep = 0;
 
-        while (progressStep > Random.Range(30, 70))
+        while (progressStep < Random.Range(30, 70))
         {
             progressStep++;
         }
@@ -90,7 +94,8 @@ public class SceneLoadingUIController : MonoBehaviour
         }
         if (targetProgress > 30 && currentProgress == targetProgress)
         {
-            StartCoroutine(LoadAsyncGameScene("GameScene 1"));
+          StartCoroutine(LoadAsyncGameScene("GameScene 1"));
+                // 씬이 로드될 때까지 대기
         }
         else
         {
@@ -120,14 +125,27 @@ public class SceneLoadingUIController : MonoBehaviour
             }
             else
             {
-                asyncLoad.allowSceneActivation = true;
-                print($"현재씬이름 {SceneManager.GetActiveScene().name} ");
-                print(CharacterData.Instance.characterData["job"].ToString());
-                GameManager.Instance.currentPlayerObj = PhotonNetwork.Instantiate(CharacterData.Instance.characterData["job"].ToString(), Vector3.zero, Quaternion.identity);
-                yield return null;
+                break;
             }
-
         }
-        
+        asyncLoad.allowSceneActivation = true;
+
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        print("씬 전환 이벤트");
+
+        if (scene.name == "GameScene 1")
+        {
+            print("플레이어 생성");   
+            // 플레이어 생성
+            GameManager.Instance.currentPlayerObj = PhotonNetwork.Instantiate(CharacterData.Instance.characterData["job"].ToString(),
+                GameManager.Instance.playerRespawnPos, Quaternion.identity);
+
+            // 플레이어를 따라가는 카메라 설정
+            CinemachineVirtualCamera cam = FindObjectOfType<CinemachineVirtualCamera>();
+            cam.Follow = GameManager.Instance.currentPlayerObj.transform.Find("PlayerCameraRoot");
+        }
     }
 }
