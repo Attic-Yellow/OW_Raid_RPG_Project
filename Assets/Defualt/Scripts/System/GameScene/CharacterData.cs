@@ -138,6 +138,28 @@ public class CharacterData : MonoBehaviour
     }
     #endregion
 
+    #region 소지품 딕셔너리 언패킹
+    public Dictionary<string, int> InventoryUnpack()
+    {
+        List<string> dicts = new List<string>
+        {
+            "itemId", "itemCount"
+        };
+
+        Dictionary<string, int> inven = new Dictionary<string, int>();
+
+        foreach (var dict in dicts)
+        {
+            for (int i = 0; i < 120; i++)
+            {
+                inven[$"inventory{dict}{i}"] = Convert.ToInt32(characterData.ContainsKey($"inventory{dict}{i}") ? characterData[$"inventory{dict}{i}"] : -1);
+            }
+        }
+
+        return inven;
+    }
+    #endregion
+
     #region 레벨에 따른 능력치 적용
     private void ApplyStatGrowth(string job, string race, int level, ref Dictionary<string, int> stats)
     {
@@ -684,6 +706,33 @@ public class CharacterData : MonoBehaviour
 
         // 장비 변경 알림
         Equipped.Instance.onChangeGear?.Invoke();
+    }
+    #endregion
+
+    #region 소지함 데이터 불러오기
+    public void UpdateInventory(Dictionary<string, int> inven)
+    {
+        var invenList = Inventory.Instance.items;
+        int i = 0;
+
+        foreach (var invenSlot in inven)
+        {
+            if (!Regex.IsMatch(invenSlot.Key, @"Count"))
+            {
+                if (invenSlot.Value != 0)
+                {
+                    if (ItemData.Instance.equip.ContainsKey(invenSlot.Value))
+                    {
+                        invenList[i] = ItemData.Instance.items[invenSlot.Value];
+                    }
+                }
+                else
+                {
+                    invenList[i].itemCount = invenSlot.Value;
+                    i++;
+                }
+            }
+        }
     }
     #endregion
 

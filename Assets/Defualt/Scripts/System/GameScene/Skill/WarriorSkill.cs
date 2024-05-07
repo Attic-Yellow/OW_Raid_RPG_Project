@@ -63,10 +63,10 @@ public class WarriorSkill : Skill
     {
         float addPowerValue = 200f;
         ThirdPersonController controller = GameManager.Instance.currentPlayerObj.GetComponent<ThirdPersonController>();
-        if(controller.Skill(1))
-        {
-            GameManager.Instance.AddPowerCoroutine(controller.ReturnCurrentAniTime(), addPowerValue);
-        }
+        //if(controller.Skill(1))
+        //{
+        //    GameManager.Instance.AddPowerCoroutine(controller.ReturnCurrentAniTime(), addPowerValue);
+        //}
     }
 
    

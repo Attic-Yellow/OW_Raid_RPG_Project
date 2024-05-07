@@ -427,6 +427,37 @@ public class FirebaseManager : MonoBehaviour
         }
         return false;
     }
+
+    //캐릭터 소지함 데이터 업로드
+    public async Task<bool> UpLoadInventory(string userId, string email, string serverName, string uniqueCharacterID)
+    {
+        try
+        {
+            var inventory = Inventory.Instance.items;
+            int i = 0;
+
+            foreach (var item in inventory)
+            {
+                DocumentReference docRef = db.Collection("users").Document("email").Collection(email).Document(userId).
+                    Collection(serverName).Document(uniqueCharacterID).Collection("inventory").Document($"inventory{i}");
+
+                Dictionary<string, int> newItem = new Dictionary<string, int>()
+                {
+                    { "itemId", item.itemId },
+                    { "itemCount", item.itemCount }
+                };
+
+                i++;
+                await docRef.SetAsync(newItem);
+            }
+            return true;
+        }
+        catch (Exception e)
+        {
+            print($"소지함 데이터 업로드 오류: {e.Message}");
+        }
+        return false;
+    }
     #endregion
 
     #region 로드
@@ -514,6 +545,24 @@ public class FirebaseManager : MonoBehaviour
                             foreach (var entry in gearData)
                             {
                                 character[$"{gearDoc.Id}{entry.Key}"] = entry.Value;
+                            }
+                        }
+                    }
+                }
+
+                var inventoryRef = serverCharactersRef.Document(document.Id).Collection("inventory");
+
+                if (inventoryRef != null)
+                {
+                    var inventorySnapshot = await inventoryRef.GetSnapshotAsync();
+                    if (inventorySnapshot != null)
+                    {
+                        foreach (var item in inventorySnapshot.Documents)
+                        {
+                            var itemData = item.ToDictionary();
+                            foreach (var entry in itemData)
+                            {
+                                character[$"{item.Id}{entry.Key}"] = entry.Value;
                             }
                         }
                     }
