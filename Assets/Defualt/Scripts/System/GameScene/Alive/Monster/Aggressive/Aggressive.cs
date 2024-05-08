@@ -214,7 +214,7 @@ public class Aggressive : Monster
     #region ON GROUND STATE
     void IdleState()
     {
-        agent.ResetPath();
+        if(agent.hasPath)  agent.ResetPath();
 
         if (tiredness >= sleepingValue && drangonState == DragonState.Grounded && isFighting == false)
         {

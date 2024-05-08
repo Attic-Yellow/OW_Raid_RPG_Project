@@ -4,6 +4,7 @@ using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using TMPro;
@@ -13,7 +14,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
-
+using Color = UnityEngine.Color;
 
 public class Boss : Monster
 {
@@ -73,6 +74,7 @@ public class Boss : Monster
         if(PhotonNetwork.IsMasterClient)
         {
             aggroLevels.Clear();
+            currentState = State.Idle;
         }
 
         firstDeadlyAmount = Random.Range(0.4f, 0.6f);
@@ -89,7 +91,6 @@ public class Boss : Monster
         deadlyQ.Enqueue(Deadly1);
         deadlyQ.Enqueue(Deadly2);
 
-        currentState = State.Idle;
    /*     agent.areaMask |= 1 << 1;*/
         lastTime = Time.time;
  
@@ -102,7 +103,7 @@ public class Boss : Monster
         var firstKvp = aggroLevels.FirstOrDefault();
         var secondKvp = aggroLevels.Skip(1).FirstOrDefault();
 
-        if (aggroLevels.Count > 1)
+    /*    if (aggroLevels.Count > 1)
         {
             testText.text = $"First Key: {firstKvp.Key}, First Value: {firstKvp.Value}\n" +
                             $"Second Key: {secondKvp.Key}, Second Value: {secondKvp.Value}";
@@ -111,7 +112,7 @@ public class Boss : Monster
         {
             // 딕셔너리가 비어있을 때 처리
             testText.text = "Dictionary is nujl.";
-        }
+        }*/
 
         if (isDie) return;
         base.Update();
@@ -144,6 +145,19 @@ public class Boss : Monster
         Gizmos.DrawWireSphere(transform.position, radius);
     }
     #region OTHER
+
+    int CheckAxeColor()
+    {
+        for(int i = 0; i < colorList.Count; i++) 
+        {
+           if(weaponMaterial.color == colorList[i])
+            {
+                return i;
+            }
+        }
+        print("같은 색을 못찾음");
+        return 0;
+    }
     void PerformMidAttack(Color newColor)
     {
         while (colorQueue.Contains(newColor))
@@ -341,7 +355,7 @@ public class Boss : Monster
 
     void IdleState()
     {
-        if (agent.hasPath) agent.ResetPath();
+        if (agent.hasPath) agent.isStopped = true;
 
         if (tiredness >= sleepingValue && attacking == false)
         {
@@ -475,6 +489,8 @@ public class Boss : Monster
     {
         //TODO 몬스터 스포너한테 데이터 넘겨주고 아이템떨굼
         Destroy(gameObject,1f);
+        MonsterSpawner monsterSpawner = FindObjectOfType<MonsterSpawner>();
+        monsterSpawner.SpawnMonsterCoroutine(Name);
     }
     #endregion
 
@@ -573,7 +589,14 @@ public class Boss : Monster
     }
     public void FireBall()
     {
-        PhotonNetwork.Instantiate(skillReciver.skillDic[SkillEffectEnum.Fireball].name, shotPoint.position, Quaternion.identity);
+        if (target != null)
+        {
+            Vector3 v3 = shotPoint.position - target.transform.position;
+            Quaternion rotation = Quaternion.LookRotation(v3);
+            PhotonNetwork.Instantiate(skillReciver.skillDic[SkillEffectEnum.Fireball].name,
+                shotPoint.position, rotation,
+                0, new object[] { target.transform.position, photonView.ViewID });
+        }
     }
   
 
@@ -682,21 +705,26 @@ public class Boss : Monster
 
     private void MagicBall()
     {
-        print("번개공격");
+        print("마법 구체 공격");
         SetApplyRootMotion(false);
         InitMagicBall();
     }
 
     public void InitMagicBall()
     {
-        float distance = 20f;
+        float radius = 40f; // 생성할 오브젝트의 반지름
         for (int i = 0; i < skillReciver.skillDic[SkillEffectEnum.MagicBall].GetComponent<Effect>().createCount; i++)
         {
-            Vector3 randomPosition = Random.insideUnitSphere * (i* distance);
-            randomPosition += transform.position;
-            GameObject magicBall = PhotonNetwork.Instantiate(skillReciver.skillDic[SkillEffectEnum.MagicBall].name, randomPosition, Quaternion.identity);
+            float angle = i * Mathf.PI * 2 / skillReciver.skillDic[SkillEffectEnum.MagicBall].GetComponent<Effect>().createCount; // 원형을 나누는 각도 계산
+            Vector3 offset = new Vector3(Mathf.Sin(angle), .5f, Mathf.Cos(angle)) * radius; // 각 오브젝트의 위치 계산
+
+            Vector3 spawnPosition = transform.position + offset; // 몬스터 주변에 오브젝트 생성
+
+            // 새로운 마법 구체 생성
+            GameObject magicBall = PhotonNetwork.Instantiate(skillReciver.skillDic[SkillEffectEnum.MagicBall].name, spawnPosition, Quaternion.identity, 0, new object[] { CheckAxeColor() });
             magicBall.transform.parent = transform;
         }
+
     }
 
     private void InOutAttack() //안밖 공격 (머리위에 큐브가 빨간색이면 바깥원형에 터지고 파란색이면 안쪽원형에 데미지)

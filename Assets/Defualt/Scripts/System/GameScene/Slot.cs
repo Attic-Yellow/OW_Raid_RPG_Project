@@ -82,4 +82,9 @@ public class Slot : MonoBehaviour
     {
         return 0;
     }
+
+    public virtual void Use()
+    {
+
+    }
 }

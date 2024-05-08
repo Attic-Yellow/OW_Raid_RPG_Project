@@ -209,6 +209,7 @@ GameObject:
   - component: {fileID: -4618555672795401674}
   - component: {fileID: 3312989439419384189}
   - component: {fileID: 8712263609289482869}
+  - component: {fileID: 1524817203754990354}
   m_Layer: 3
   m_Name: Warrior
   m_TagString: Player
@@ -538,7 +539,7 @@ MonoBehaviour:
   manaRegen: 0
   hpRegen: 0
   damageReduc: 0
-  maxHP: 0
+  maxHP: 100
   level: 0
   id: 0
   currentHP: 0
@@ -549,6 +550,24 @@ MonoBehaviour:
   haveSkills: []
   skillEffectList: []
   aggroMonsters: []
+  monsters: []
+--- !u!114 &1524817203754990354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1165135659208018636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f67f9efa8706e6745ad5440f52a7a59a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraSensitivity: 90
+  climbSpeed: 4
+  normalMoveSpeed: 10
+  slowMoveFactor: 0.25
+  fastMoveFactor: 3
 --- !u!1 &1236049848542760991
 GameObject:
   m_ObjectHideFlags: 0

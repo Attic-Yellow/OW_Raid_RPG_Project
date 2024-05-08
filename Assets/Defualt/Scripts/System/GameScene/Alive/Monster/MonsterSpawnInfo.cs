@@ -7,6 +7,7 @@ using UnityEngine;
 public class MonsterSpawnInfo
 {
     public GameObject monsterPrefab;
+    public string monsterName;
     public Transform spawnPoint;
-    public float respawnTime = 10f;
+    public float respawnTime;
 }

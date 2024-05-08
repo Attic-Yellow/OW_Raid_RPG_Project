@@ -14,10 +14,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Defualt/Scenes/GameScene.unity
     guid: afd29dcc50862f9489409ff8aff92a5b
-  - enabled: 0
+  - enabled: 1
     path: Assets/Defualt/Scenes/Photon.unity
     guid: e2eea46be66290a4295f0e39e634a49e
-  - enabled: 0
+  - enabled: 1
     path: Assets/Defualt/Scenes/Test.unity
     guid: 76f5a5ea062c57d49912c50b7cf99afb
   - enabled: 1

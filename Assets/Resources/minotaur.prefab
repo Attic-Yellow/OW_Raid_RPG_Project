@@ -687,7 +687,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2233707622992884640}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1117197676479707285
 MonoBehaviour:
@@ -706,10 +706,12 @@ MonoBehaviour:
   bloodFounainEffect: {fileID: 1986120661899576236, guid: fcc6dcfa81b87c342a1c23a203b73931,
     type: 3}
   laserEffect: {fileID: 0}
-  deadSphereEffect: {fileID: 3699077242561859055, guid: 9fb739d500ae593488f6b5335187a6b1,
+  deadSphereEffect: {fileID: 3699077242561859055, guid: 207e2ec9bc3223b4882ebe3fd3f1fc7d,
     type: 3}
-  thunderEffect: {fileID: 0}
-  magicBallEffect: {fileID: 0}
+  thunderEffect: {fileID: 5077316134975145218, guid: 64360a2a61d982042b6fda8aba03ada3,
+    type: 3}
+  magicBallEffect: {fileID: 7417550876031791579, guid: 3ac67ed133c47c443b86fdb155012488,
+    type: 3}
   FireBreathEffect: {fileID: 0}
 --- !u!1 &2868426581994911675
 GameObject:
@@ -962,6 +964,7 @@ GameObject:
   - component: {fileID: 2455546082790019679}
   - component: {fileID: 2291544047966531414}
   - component: {fileID: 1408504983890853176}
+  - component: {fileID: 1773584016207411539}
   m_Layer: 3
   m_Name: minotaur
   m_TagString: Boss
@@ -985,7 +988,6 @@ Transform:
   - {fileID: 8230777078562123254}
   - {fileID: 925066291069932651}
   - {fileID: 8616322261745579863}
-  - {fileID: 9206343896041498353}
   - {fileID: 1714169665907962020}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -1064,7 +1066,7 @@ MonoBehaviour:
   swordCollider: {fileID: 3299199779873319502}
   legCollider: {fileID: 4806710547528867923}
   attackRangeImg: {fileID: 5936942831440472427}
-  agent: {fileID: 5287368435015401533}
+  agent: {fileID: 1773584016207411539}
   shotPoint: {fileID: 925066291069932651}
   skillReciver: {fileID: 1117197676479707285}
   floorSkillAniTime: 3.8
@@ -1156,6 +1158,28 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2, y: 2, z: 2}
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!195 &1773584016207411539
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3425488967339340641}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 2
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &3442332449194999146
 GameObject:
   m_ObjectHideFlags: 0
@@ -2744,7 +2768,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7711518135914132567}
-  - component: {fileID: 5287368435015401533}
   m_Layer: 0
   m_Name: minotavr
   m_TagString: Untagged
@@ -2780,31 +2803,10 @@ Transform:
   - {fileID: 4985205603517406697}
   - {fileID: 1421081715675505901}
   - {fileID: 7030770031032917923}
+  - {fileID: 9206343896041498353}
   m_Father: {fileID: 2233707622992884640}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!195 &5287368435015401533
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6107322698683774330}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.65
-  m_Speed: 2
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!1 &6173301498189720985
 GameObject:
   m_ObjectHideFlags: 0
@@ -3944,7 +3946,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8897442547660844900
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4863,17 +4865,17 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 2233707622992884640}
+    m_TransformParent: {fileID: 7711518135914132567}
     m_Modifications:
     - target: {fileID: 1348221872080814531, guid: d23d133b0fc1e394da58e469a1f964bc,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 1348221872080814531, guid: d23d133b0fc1e394da58e469a1f964bc,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1348221872080814531, guid: d23d133b0fc1e394da58e469a1f964bc,
         type: 3}
@@ -4893,7 +4895,7 @@ PrefabInstance:
     - target: {fileID: 1348221872080814531, guid: d23d133b0fc1e394da58e469a1f964bc,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1348221872080814531, guid: d23d133b0fc1e394da58e469a1f964bc,
         type: 3}

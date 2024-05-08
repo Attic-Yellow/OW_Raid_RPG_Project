@@ -19310,6 +19310,7 @@ MonoBehaviour:
   damage: 1
   ps: {fileID: 5829885979666212172}
   createCount: 0
+  initObjID: 0
   speed: 5
 --- !u!114 &6528569678712074326
 MonoBehaviour:
