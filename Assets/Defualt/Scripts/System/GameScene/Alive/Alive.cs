@@ -55,10 +55,26 @@ public class Alive : DefalutState, IPunObservable
 {
     [SerializeField] protected float currentHP; //현재체력
     [SerializeField] protected float moveSpeed = 1; //이동속도
-    [SerializeField] protected float baseDamage; //기본공격력
-    [SerializeField] protected float baseDefence; //기본방어력
+    [SerializeField] protected float basePDamage; //기본공격력
+    [SerializeField] protected float baseMDamage; //기본주문력
     [SerializeField] protected Slider hpSlider;
 
+    public float CurrentHP
+    {
+        get { return currentHP; }
+        set { currentHP = value; }
+    }
+
+    public float BasePDamage
+    {
+        get { return basePDamage; }
+        set { basePDamage = value; }
+    }
+    public float BaseMDamage
+    {
+        get { return baseMDamage; }
+        set { baseMDamage = value; }
+    }
     public List<Skill> haveSkills = new();
     protected Animator animator;
 
@@ -75,19 +91,35 @@ public class Alive : DefalutState, IPunObservable
     {
         Destroy(gameObject);
     }
-  
-    public virtual void TakeDamage(GameObject obj, float damage)
+
+
+    #region 데미지 관련 메서드
+
+    public virtual void TakeDamage(GameObject obj, float pDamage, float physicalP /*물리관통력*/, float mDamage, float physicalM)
     {
-        // 받은 데미지만큼 체력 감소
-        if((currentHP -= damage) < 0)
+        float damage = 0;
+
+        if (IsCritical() == false)
         {
-            currentHP = 0;
+            damage = ReturnDamage(pDamage, physicalP, mDamage, physicalM);
         }
         else
         {
-            currentHP -= damage;
+            float randomNum = Random.Range(2f, 3f);
+            damage = ReturnDamage(pDamage,physicalP, mDamage, physicalM)*randomNum;   
         }
-        
+
+         
+        // 받은 데미지만큼 체력 감소
+        if ((CurrentHP -= damage) <= 0)
+        {
+            CurrentHP = 0;
+        }
+        else
+        {
+            CurrentHP -= damage;
+        }
+
 
         if (PhotonNetwork.IsConnected)
         {
@@ -103,9 +135,34 @@ public class Alive : DefalutState, IPunObservable
         }
 
         // 체력 감소를 동기화
-       
+
     }
 
+    protected bool IsCritical()  //크리티컬 체크 메서드
+    {
+        float randomNum = Random.Range(0, 100);
+        if(randomNum <= CriticalRate)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    protected float ReturnDamage(float pDamage,float physicalP /*물리관통력*/,float mDamage,float physicalM)
+    {
+        float pd = PDef - physicalP;
+        pd = Mathf.Max(pd, 0f); //음수가 되지않도록
+        float p = pDamage * pd;
+
+        float md = mDef - physicalM;
+        md = Mathf.Max(md, 0f);
+        float m = mDamage * md;
+
+        return pd + md;
+          
+    }
+
+    #endregion
     [PunRPC]
     protected void SyncHealth(float health)
     {
@@ -166,17 +223,5 @@ public class Alive : DefalutState, IPunObservable
     }
 
 
-    void TankerAggroUp(float skillAmout)  //탱커가 어그로 스킬쓰면 호출 TODO : 플레이어한테 넘겨주면될듯
-    {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, 30, 1<<3);
-        foreach (Collider collider in colliders)
-        {
-             Monster monster = collider.GetComponent<Monster>();
-            if (monster.aggroLevels.ContainsKey(photonView.ViewID))
-            {
-                monster.aggroLevels[photonView.ViewID].IncreaseAggroLevel(skillAmout);
-                monster.SetTarget(HighestAggroLevel(monster.aggroLevels));
-            }
-        }
-    }
+ 
 }

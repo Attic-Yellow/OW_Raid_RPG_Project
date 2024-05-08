@@ -8,6 +8,7 @@ public class Monster : Alive
 {
     public GameObject target;
     public Dictionary<int, AggroLevel> aggroLevels = new Dictionary<int, AggroLevel>(); // 때린놈들 어그로 관리해주는 딕셔너리 키값으로 포톤뷰 아이디
+    public bool isStun = false;
 
     [Header("피곤함 수치")]
 
@@ -53,6 +54,11 @@ public class Monster : Alive
     public void PlusAggroLevel(int ptId, float _value)
     {
         aggroLevels[ptId].IncreaseAggroLevel(_value);
+    }
+
+    public void RPCPluseAggroLevel(int ptId, float _value)
+    {
+        photonView.RPC("PlusAggroLevel", RpcTarget.All, ptId, _value);
     }
     public void SetTarget(GameObject obj)
     {
@@ -110,7 +116,7 @@ public class Monster : Alive
             // Player 스크립트가 존재한다면 IsDie 메서드를 호출
             if (playerScript != null)
             {
-                playerScript.TakeDamage(gameObject,playerScript.MaxHP);
+                playerScript.TakeDamage(gameObject, float.MaxValue,100f,float.MaxValue,100f);
             }
         }
         aggroLevels.Clear();

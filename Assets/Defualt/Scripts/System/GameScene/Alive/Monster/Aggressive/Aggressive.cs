@@ -349,7 +349,7 @@ public class Aggressive : Monster
         foreach (RaycastHit hit in hits)
         {
             print($"맞은놈{hit.collider.gameObject.name}");
-            hit.collider.gameObject.GetComponent<Alive>().TakeDamage(gameObject, this.Power);
+            hit.collider.gameObject.GetComponent<Alive>().TakeDamage(gameObject, Power+basePDamage,pPhy,Power+baseMDamage,mPhy);
         }
     }
 
@@ -459,7 +459,7 @@ public class Aggressive : Monster
         {
             if (hit.collider == null) return;
             print($"맞은놈{hit.collider.gameObject.name}");
-            hit.collider.gameObject.GetComponent<Player>().TakeDamage(gameObject, this.Power);
+            hit.collider.gameObject.GetComponent<Player>().TakeDamage(gameObject, 0f,0f,Power+baseMDamage,mPhy);
         }
     }
 
@@ -497,9 +497,21 @@ public class Aggressive : Monster
 
   
 
-    public override void TakeDamage(GameObject obj, float damage)
+    public override void TakeDamage(GameObject obj, float pDamage, float physicalP /*물리관통력*/, float mDamage, float physicalM)
     {
          isFighting = true; //커스텀 프로퍼티로
+        float damage = 0;
+
+        if (IsCritical() == false)
+        {
+            damage = ReturnDamage(pDamage, physicalP, mDamage, physicalM);
+        }
+        else
+        {
+            float randomNum = Random.Range(2f, 3f);
+            damage = ReturnDamage(pDamage, physicalP, mDamage, physicalM) * randomNum;
+        }
+
 
         currentHP -= damage;
         SetAggroLevel(obj.GetComponent<PhotonView>().ViewID, damage);

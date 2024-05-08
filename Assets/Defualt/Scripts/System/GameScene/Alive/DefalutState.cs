@@ -18,6 +18,8 @@ public class DefalutState : MonoBehaviourPunCallbacks
     [SerializeField] protected float hitRate; //명중률
     [SerializeField] protected float pDef; //물리 방어력
     [SerializeField] protected float mDef;// 마법 방어력
+    [SerializeField] protected float pPhy; //물리 관통력
+    [SerializeField] protected float mPhy; //마법 관통력
     [SerializeField] protected float castingSpeed; //기술 시전속도
     [SerializeField] protected float magicCastingSpeed;// 마법 시전속도
     [SerializeField] protected float manaRegen; //마나 회복력
@@ -103,6 +105,16 @@ public class DefalutState : MonoBehaviourPunCallbacks
         set { mDef = value; }
     }
 
+    public float PPhy
+    {
+        get { return pPhy; }
+        set { pPhy = value; }
+    }
+    public float MPhy
+    {
+        get { return mPhy; }
+        set { mPhy = value; }
+    }
     // castingSpeed 프로퍼티
     public float CastingSpeed
     {

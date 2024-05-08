@@ -10,14 +10,21 @@ using Cinemachine;
 
 public class Player : Alive
 {
-
-      private float money;
-      public List<GameObject> skillEffectList = new();
-    
-      private Queue<Skill> canLearnSkills = new();
       public List<Monster> aggroMonsters;
-      public  List<Monster> monsters = new();
+      public  List<Monster> monsters = new(); //테스트용 공격할 몬스터들
+      private float healingRate;
+    private bool isInvincibility = false; //무적
 
+    public bool IsInvincibility
+    {
+        get { return isInvincibility; }
+        set { isInvincibility = value; }
+    }
+      public float HealingRate
+    {
+        get { return healingRate; }
+        set { healingRate = value; }
+    }
 
 
       #region UintyMethod
@@ -55,26 +62,70 @@ public class Player : Alive
               {
                 foreach (Monster mon in monsters)
                 {
-                    mon.TakeDamage(gameObject, this.Power);
+                    mon.TakeDamage(gameObject, Power+basePDamage,pPhy,Power+baseMDamage,mPhy);
                 }
               }
-
-                  
-
           }
-
       }
 
 
-      #endregion
-      #region overridMethod
-  
+    #endregion
+    #region overridMethod
+    public override void TakeDamage(GameObject obj, float pDamage, float physicalP /*물리관통력*/, float mDamage, float physicalM)
+    {
+        float damage = 0;
 
-      #endregion
-      #region customMethod
+        if (IsCritical() == false)
+        {
+            damage = ReturnDamage(pDamage, physicalP, mDamage, physicalM);
+        }
+        else
+        {
+            float randomNum = UnityEngine.Random.Range(2f, 3f);
+            damage = ReturnDamage(pDamage, physicalP, mDamage, physicalM) * randomNum;
+        }
 
 
-      public void AddPlayerSkill(Skill skill)
+        if (isInvincibility)
+        {
+            CurrentHP -= damage;
+
+            if ((CurrentHP -= damage) <= 0)
+            {
+                CurrentHP = 1f;
+            }
+        }
+        else
+        {
+            if ((CurrentHP -= damage) < 0)
+            {
+                CurrentHP = 0;
+            }
+            else
+            {
+                CurrentHP -= damage;
+            }
+
+            // 현재 체력이 0 이하로 떨어졌을 때 처리
+            if (currentHP <= 0)
+            {
+                Die(); // 죽음 처리
+                return;
+            }
+        }
+
+        if (PhotonNetwork.IsConnected)
+        {
+            // 네트워크 연결된 경우에만 동기화
+            photonView.RPC("SyncHealth", RpcTarget.All, currentHP);
+        }
+    }
+
+    #endregion
+    #region customMethod
+
+
+    public void AddPlayerSkill(Skill skill)
       {
           foreach(var s in haveSkills)
           {
@@ -132,27 +183,7 @@ public class Player : Alive
       }*/
 
 
-      private void StatusUp()
-      {
-          float increaseRate = 0.1f; //증가량
-          float levelMultiplier = 1.0f + (level * increaseRate);
 
-          Power *= levelMultiplier;
-          Luck *= levelMultiplier;
-          Agility *= levelMultiplier;
-          Intellect *= levelMultiplier;
-          Mentality *= levelMultiplier;
-          CriticalRate *= levelMultiplier;
-          HitRate *= levelMultiplier;
-          PDef *= levelMultiplier;
-          MDef *= levelMultiplier;
-          CastingSpeed *= levelMultiplier;
-          MagicCastingSpeed *= levelMultiplier;
-          ManaRegen *= levelMultiplier;
-          HPRegen *= levelMultiplier;
-          DamageReduc *= levelMultiplier;
-          MaxHP *= levelMultiplier;
-      }
       public void SetStatus(float v0, float v1, float v2, float v3, float v4, float v5, float v6, float v7
           , float v8, float v9, float v10, float v11, float v12, float v13, float v14)
       {
@@ -172,30 +203,6 @@ public class Player : Alive
           DamageReduc = v13;
           MaxHP = v14;
       }
-    /*  public void SetJob(User.Job job)
-      {
-          // 선택한 직업에 따라 스탯을 적용
-          switch (job)
-          {
-              case User.Job.탱커:
-                  SetStatus(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
-                  break;
-              case User.Job.근접딜러:
-                  // 근접딜러 직업에 맞는 스탯 적용
-                  SetStatus(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2);
-                  break;
-              case User.Job.원거리딜러:
-                  // 원거리딜러 직업에 맞는 스탯 적용
-                  SetStatus(3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3);
-                  break;
-              case User.Job.힐러:
-                  // 힐러 직업에 맞는 스탯 적용
-                  SetStatus(4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4);
-                  break;
-          }
-      }
-*/
-
 
 
 

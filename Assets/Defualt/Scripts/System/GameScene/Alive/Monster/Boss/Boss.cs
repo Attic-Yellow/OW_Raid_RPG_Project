@@ -415,8 +415,20 @@ public class Boss : Monster
         
     }
 
-    public override void TakeDamage(GameObject obj, float damage)
+    public override void TakeDamage(GameObject obj, float pDamage, float physicalP /*물리관통력*/, float mDamage, float physicalM)
     {
+        float damage = 0;
+
+        if (IsCritical() == false)
+        {
+            damage = ReturnDamage(pDamage, physicalP, mDamage, physicalM);
+        }
+        else
+        {
+            float randomNum = Random.Range(2f, 3f);
+            damage = ReturnDamage(pDamage, physicalP, mDamage, physicalM) * randomNum;
+        }
+
         // 받은 데미지만큼 체력 감소
         currentHP -= damage;
 
@@ -556,7 +568,7 @@ public class Boss : Monster
             {
                 if (col.gameObject == gameObject) continue;
 
-                col.GetComponent<Alive>().TakeDamage(gameObject, power);
+                col.GetComponent<Alive>().TakeDamage(gameObject, power,PPhy,0,0);
             }
             yield return new WaitForEndOfFrame();
         }
@@ -571,7 +583,7 @@ public class Boss : Monster
             {
                 if (col.gameObject == gameObject) continue;
 
-                col.GetComponent<Alive>().TakeDamage(gameObject, power);
+                col.GetComponent<Alive>().TakeDamage(gameObject, power, PPhy, 0, 0);
             }
             yield return new WaitForEndOfFrame();
         }
@@ -662,7 +674,8 @@ public class Boss : Monster
                 if (!isXBool || !isZBool)
                 {
                     print("안전지역x");
-                    collider.GetComponent<Alive>().TakeDamage(gameObject, skillReciver.skillDic[SkillEffectEnum.BloodFountain].GetComponent<Effect>().damage);
+                    Effect effect = skillReciver.skillDic[SkillEffectEnum.BloodFountain].GetComponent<Effect>();
+                    collider.GetComponent<Alive>().TakeDamage(gameObject,effect.pDamage,effect.pPhy,effect.mDamage,effect.mPhy);
                 }
                 else
                 {
