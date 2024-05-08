@@ -31,6 +31,8 @@ public class InventoryUI : MonoBehaviour
         }
 
         InventorySlotsAreasController(0);
+
+        ReadrawSlotUI();
     }
     #endregion
 
