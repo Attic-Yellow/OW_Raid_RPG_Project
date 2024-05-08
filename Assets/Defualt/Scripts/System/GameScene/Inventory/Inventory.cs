@@ -11,6 +11,7 @@ public class Inventory : MonoBehaviour
     public OnItemChanged onChangeItem;
 
     public List<Consumable> items = new List<Consumable>();
+    public bool isStarted;
 
     private void Awake()
     {
@@ -20,11 +21,16 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        CharacterData.Instance.UpdateInventory(CharacterData.Instance.InventoryUnpack());
+    }
+
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            var item = ItemData.Instance.items[0];
+            var item = ItemData.Instance.itemsD[100];
             AddItem(item, Random.Range(item.minDropCount, item.maxDropCount));
         }
     }

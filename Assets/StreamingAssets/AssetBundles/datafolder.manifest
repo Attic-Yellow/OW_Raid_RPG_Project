@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 264546304
+CRC: 863464253
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 686ed8c900ca93eef512b060457d9423
+    Hash: e6762c5c2fedbc4001d7780abe397550
   TypeTreeHash:
     serializedVersion: 2
     Hash: 5ad585dd02dfb5016c0dad519eab8f49
@@ -14,4 +14,5 @@ ClassTypes:
 SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/DataFolder/EquipmentData.json
+- Assets/DataFolder/ConsumableData.json
 Dependencies: []
