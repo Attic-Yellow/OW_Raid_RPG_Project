@@ -1,11 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
+
 
 public class MagicBall : Effect
 {
-    public Ease thisEase;
     float distance = 30; //뻗어나가는 거리
     float speed = 10; //뻗어나가는 속도
     float backSpeed = 5; //돌아오는 속도
@@ -63,17 +62,6 @@ public class MagicBall : Effect
 
     void Straight() //distance만큼 뻗어나갔다가 원래의 위치로 돌아오게
     {
-
-        print("직진");
-        transform.DOMove(transform.position + transform.forward * distance, speed)
-           .SetEase(thisEase)
-           .OnComplete(() => // 이동 완료 후에 실행될 작업 설정
-           {
-               transform.DOMove(transform.position, backSpeed) // 원래 위치로 되돌아오는 애니메이션
-                   .SetEase(Ease.Linear)
-                   .OnComplete(() => Destroy(gameObject));
-           });
-
     }
 
     void Curved() 

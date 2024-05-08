@@ -1,3 +1,4 @@
+using Firebase.Auth;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,8 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private List<InventorySlot> inventorySlots;
     #endregion
 
+    [SerializeField] private bool isStarted;
+    [SerializeField] private LinkState linkState;
     [SerializeField] private Inventory inventory;
 
     private void Awake()
@@ -22,6 +25,7 @@ public class InventoryUI : MonoBehaviour
     #region 소지함UI 스타트 메서드
     private void Start()
     {
+        isStarted = true;
         inventory = Inventory.Instance;
         inventory.onChangeItem += ReadrawSlotUI;
 
@@ -33,6 +37,7 @@ public class InventoryUI : MonoBehaviour
         InventorySlotsAreasController(0);
 
         ReadrawSlotUI();
+        isStarted = false;
     }
     #endregion
 
@@ -99,6 +104,32 @@ public class InventoryUI : MonoBehaviour
             inventorySlots[i].consumable = inventory.items[i];
             inventorySlots[i].UpdateSlotUI();
         }
+
+        if (!isStarted)
+        {
+            StartCoroutine(UpLoad());
+        }
+    }
+    #endregion
+
+    #region 소지함 데이터 업로드
+    private IEnumerator UpLoad()
+    {
+        linkState = LinkState.UpLoad;
+
+        UpLoadAsync();
+
+        yield return new WaitUntil(() => (linkState == LinkState.Idle));
+    }
+
+    private async void UpLoadAsync()
+    {
+        var user = FirebaseAuth.DefaultInstance.CurrentUser;
+        var charInfo = GameManager.Instance.dataManager.characterData.characterData;
+
+        await FirebaseManager.Instance.UpLoadInventory(user.UserId, user.Email, charInfo["server"].ToString(), charInfo["charId"].ToString());
+
+        linkState = LinkState.Idle;
     }
     #endregion
 }

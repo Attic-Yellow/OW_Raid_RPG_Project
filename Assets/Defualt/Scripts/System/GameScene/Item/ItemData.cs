@@ -9,6 +9,7 @@ public class ItemData : MonoBehaviour
     public static ItemData Instance;
 
     public List<Consumable> items = new List<Consumable>();
+    public Dictionary<int, Consumable> itemsD = new Dictionary<int, Consumable>();
     public Dictionary<int, Equipment> equip = new Dictionary<int, Equipment>();
 
     private void Awake()
@@ -18,6 +19,7 @@ public class ItemData : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
             LoadEquipmentData();
+            LoadItemData();
         }
         else
         {
@@ -43,6 +45,34 @@ public class ItemData : MonoBehaviour
             foreach (var item in loadedData)
             {
                 equip[int.Parse(item.Key)] = item.Value;
+            }
+        }
+        else
+        {
+            Debug.LogError("Failed to load JSON file from AssetBundle!");
+        }
+
+        assetBundle.Unload(false);
+    }
+
+    private void LoadItemData()
+    {
+        string assetBundlePath = Path.Combine(Application.streamingAssetsPath, "AssetBundles");
+        AssetBundle assetBundle = AssetBundle.LoadFromFile(Path.Combine(assetBundlePath, "DataFolder"));
+
+        if (assetBundle == null)
+        {
+            Debug.LogError("Failed to load AssetBundle!");
+            return;
+        }
+
+        TextAsset jsonFile = assetBundle.LoadAsset<TextAsset>("ConsumableData.json");
+        if (jsonFile != null)
+        {
+            Dictionary<string, Consumable> loadedData = JsonConvert.DeserializeObject<Dictionary<string, Consumable>>(jsonFile.text);
+            foreach (var item in loadedData)
+            {
+                itemsD[int.Parse(item.Key)] = item.Value;
             }
         }
         else

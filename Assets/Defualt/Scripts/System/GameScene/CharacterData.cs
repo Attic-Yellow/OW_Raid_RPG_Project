@@ -48,6 +48,7 @@ public class CharacterData : MonoBehaviour
             if (CurrentEquipped.Instance.isStarted)
             {
                 UpdateEquipData(Equip());
+                
             }
         }
         else
@@ -152,10 +153,11 @@ public class CharacterData : MonoBehaviour
         {
             for (int i = 0; i < 120; i++)
             {
-                inven[$"inventory{dict}{i}"] = Convert.ToInt32(characterData.ContainsKey($"inventory{dict}{i}") ? characterData[$"inventory{dict}{i}"] : -1);
+                inven[$"inventory{i}{dict}"] = Convert.ToInt32(characterData.ContainsKey($"inventory{i}{dict}") ? characterData[$"inventory{i}{dict}"] : -1);
             }
         }
-
+        Debug.Log(inven[$"inventory0itemId"]);
+        Debug.Log(inven[$"inventory0itemCount"]);
         return inven;
     }
     #endregion
@@ -719,18 +721,16 @@ public class CharacterData : MonoBehaviour
         {
             if (!Regex.IsMatch(invenSlot.Key, @"Count"))
             {
-                if (invenSlot.Value != 0)
+                if (ItemData.Instance.itemsD.ContainsKey(invenSlot.Value))
                 {
-                    if (ItemData.Instance.equip.ContainsKey(invenSlot.Value))
-                    {
-                        invenList[i] = ItemData.Instance.items[invenSlot.Value];
-                    }
+                    invenList[i] = ItemData.Instance.itemsD[invenSlot.Value];
                 }
-                else
-                {
-                    invenList[i].itemCount = invenSlot.Value;
-                    i++;
-                }
+
+            }
+            else
+            {
+                invenList[i].itemCount = invenSlot.Value;
+                i++;
             }
         }
     }

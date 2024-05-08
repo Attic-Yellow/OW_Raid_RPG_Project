@@ -433,7 +433,7 @@ public class FirebaseManager : MonoBehaviour
     {
         try
         {
-            var inventory = Inventory.Instance.items;
+            var inventory = Inventory.Instance.items.ToList();
             int i = 0;
 
             foreach (var item in inventory)
