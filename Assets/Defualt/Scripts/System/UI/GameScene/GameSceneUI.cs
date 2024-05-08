@@ -13,6 +13,7 @@ public class GameSceneUI : MonoBehaviour
     public SkillUI skillUI;
     public HUDController hudController;
 
+    public List<GameObject> slots = new();
     public QuickSlotData quickSlotData = new QuickSlotData();
 
     private void Awake()

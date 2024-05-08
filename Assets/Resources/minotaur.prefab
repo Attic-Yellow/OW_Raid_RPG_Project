@@ -706,10 +706,12 @@ MonoBehaviour:
   bloodFounainEffect: {fileID: 1986120661899576236, guid: fcc6dcfa81b87c342a1c23a203b73931,
     type: 3}
   laserEffect: {fileID: 0}
-  deadSphereEffect: {fileID: 3699077242561859055, guid: 9fb739d500ae593488f6b5335187a6b1,
+  deadSphereEffect: {fileID: 3699077242561859055, guid: 207e2ec9bc3223b4882ebe3fd3f1fc7d,
     type: 3}
-  thunderEffect: {fileID: 0}
-  magicBallEffect: {fileID: 0}
+  thunderEffect: {fileID: 5077316134975145218, guid: 64360a2a61d982042b6fda8aba03ada3,
+    type: 3}
+  magicBallEffect: {fileID: 7417550876031791579, guid: 3ac67ed133c47c443b86fdb155012488,
+    type: 3}
   FireBreathEffect: {fileID: 0}
 --- !u!1 &2868426581994911675
 GameObject:

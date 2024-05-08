@@ -35,28 +35,29 @@ public class MagicBall : Effect
 
     void Start()
     {
-        switch(thisType)
-        {
-            case Type.Straight:
-                Invoke("Straight", 1f);
-                break;
-                case Type.Curved:
-                Invoke("Curved", 1f);
-                break;
-                case Type.Rotate:
-                Invoke("Rotate", 1f);
-                break;
-                case Type.Looping:
-                 Invoke("Looping", 1f);
-                break;
-                case Type.Cyclic:
-                Invoke("Cyclic", 1f);
-                break;
-                case Type.Random:
-                Invoke("Random", 1f);
-                break;
+        /*  switch(thisType)
+          {
+              case Type.Straight:
+                  Invoke("Straight", 1f);
+                  break;
+                  case Type.Curved:
+                  Invoke("Curved", 1f);
+                  break;
+                  case Type.Rotate:
+                  Invoke("Rotate", 1f);
+                  break;
+                  case Type.Looping:
+                   Invoke("Looping", 1f);
+                  break;
+                  case Type.Cyclic:
+                  Invoke("Cyclic", 1f);
+                  break;
+                  case Type.Random:
+                  Invoke("Random", 1f);
+                  break;
 
-        }
+          }*/
+        Straight();
         Destroy(gameObject, 10f);
     }
 
