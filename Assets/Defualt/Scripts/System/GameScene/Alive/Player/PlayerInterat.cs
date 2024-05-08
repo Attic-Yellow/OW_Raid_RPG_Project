@@ -21,7 +21,7 @@ public class PlayerInterat : MonoBehaviourPun,IPunObservable
             if (Input.GetKeyUp(KeyCode.Escape))
             {
                 Aggressive aggressive = FindObjectOfType<Aggressive>();
-                aggressive.TakeDamage(gameObject, player.Power);
+                aggressive.TakeDamage(gameObject, player.Power+ player.BasePDamage,player.PPhy,player.Power+player.BaseMDamage,player.MPhy);
             }
           /*  Interation();*/
             InputSkillKey();

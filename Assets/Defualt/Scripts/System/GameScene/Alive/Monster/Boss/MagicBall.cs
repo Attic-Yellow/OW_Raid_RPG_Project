@@ -92,7 +92,7 @@ public class MagicBall : Effect
     {
         if(other.gameObject.layer == 3)
         {
-            other.gameObject.GetComponent<Alive>().TakeDamage(gameObject, damage);
+            other.gameObject.GetComponent<Alive>().TakeDamage(gameObject, pDamage,pPhy,mDamage,mPhy);
         }
     }
 }

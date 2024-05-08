@@ -19,4 +19,6 @@ public class GameSceneUI : MonoBehaviour
     {
         GameManager.Instance.uiManager.gameSceneUI = this;
     }
+
+    
 }

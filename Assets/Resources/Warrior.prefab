@@ -537,6 +537,8 @@ MonoBehaviour:
   hitRate: 0
   pDef: 0
   mDef: 0
+  pPhy: 0
+  mPhy: 0
   castingSpeed: 0
   magicCastingSpeed: 0
   manaRegen: 0
@@ -547,11 +549,10 @@ MonoBehaviour:
   id: 0
   currentHP: 0
   moveSpeed: 1
-  baseDamage: 0
-  baseDefence: 0
+  basePDamage: 0
+  baseMDamage: 0
   hpSlider: {fileID: 0}
   haveSkills: []
-  skillEffectList: []
   aggroMonsters: []
   monsters: []
 --- !u!114 &1524817203754990354

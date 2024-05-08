@@ -204,20 +204,5 @@ public class GameManager : MonoBehaviour
         return isRebinding;
     }
 
-    public void AddPowerCoroutine(float _value, float addPowerValue)
-    {
-        StartCoroutine(AddPower(_value, addPowerValue));
-    }
-
-    IEnumerator AddPower(float _value, float addPowerValue)
-    {
-        if (currentPlayerObj != null)
-         currentPlayerObj.GetComponent<Player>().Power += addPowerValue;
-
-        yield return new WaitForSeconds(_value);
-
-        if (currentPlayerObj != null)
-           currentPlayerObj.GetComponent<Player>().Power -= addPowerValue;
-
-    }
+ 
 }

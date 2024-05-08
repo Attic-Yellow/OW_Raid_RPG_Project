@@ -41,7 +41,7 @@ public class Fireball : Effect
                 if (aliveComponent == alive) return;
             }
             damagedObjs.Add(aliveComponent);*/
-            aliveComponent.TakeDamage(gameObject, damage);
+            aliveComponent.TakeDamage(gameObject, pDamage,pPhy,mDamage,mPhy);
             print("¸Â¾Ò¾î");
         
         Destroy(gameObject);
