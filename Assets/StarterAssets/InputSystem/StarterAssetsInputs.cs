@@ -44,21 +44,10 @@ namespace StarterAssets
 			SprintInput(value.isPressed);
 		}
 
-		public void OnQuickSlot11(InputValue value)
-		{
 		
-		}
 #endif
 
-		public void Slot0()
-		{
 		
-		}
-
-		public void Slot1()
-		{
-
-		}
 
 		public void MoveInput(Vector2 newMoveDirection)
 		{

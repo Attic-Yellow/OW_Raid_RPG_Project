@@ -86,4 +86,9 @@ public class ExtendedFlycam : MonoBehaviour
     {
         GameManager.Instance.uiManager.gameSceneUI.skillUI.SkillUIController();
     }
+
+    public void OnQuickSlot11(InputValue value)
+    {
+
+    }
 }
