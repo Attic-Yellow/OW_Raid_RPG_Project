@@ -89,8 +89,10 @@ public class ExtendedFlycam : MonoBehaviour
 
     public void OnQuickSlot11(InputValue value)
     {
+        print("큇슬롯 1-1");
         if (GameManager.Instance.uiManager.gameSceneUI.quickSlotData.slotDataList.ContainsKey("Quick Slot 1 - 1"))
         {
+            print("여기도 들어와?");
             SlotDataList slotData = GameManager.Instance.uiManager.gameSceneUI.quickSlotData.slotDataList["Quick Slot 1 - 1"];
             GameObject.Find(slotData.slotName).GetComponent<Slot>().Use();
         }

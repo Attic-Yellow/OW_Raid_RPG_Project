@@ -90,6 +90,7 @@ public class Monster : Alive
         }
     }
 
+
     protected virtual void ManageTiredness() // 피곤함 메서드
     {
       
@@ -122,7 +123,18 @@ public class Monster : Alive
         aggroLevels.Clear();
     }
    
+    public void Stun()
+    {
+        isStun = true;
+        animator.SetTrigger("Stun");
 
+    }
+
+    public virtual void AniStunFinish()
+    {
+        isStun = false;
+        
+    }
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {

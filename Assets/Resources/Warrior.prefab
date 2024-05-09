@@ -567,6 +567,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f67f9efa8706e6745ad5440f52a7a59a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraSensitivity: 90
+  climbSpeed: 4
+  normalMoveSpeed: 10
+  slowMoveFactor: 0.25
+  fastMoveFactor: 3
 --- !u!1 &1236049848542760991
 GameObject:
   m_ObjectHideFlags: 0
