@@ -79,20 +79,37 @@ public class BindingSave : MonoBehaviour
 
             foreach (var actionMap in actionAsset.actionMaps)
             {
+                if (actionMap.name == "Chat" || actionMap.name == "Login")
+                {
+                    continue;
+                }
                 foreach (var action in actionMap)
                 {
+                    action.Disable();
+                    if (action.name == "Look" || action.name == "Sprint")
+                    {
+                        continue;
+                    }
                     if (bindingsDictionary.ContainsKey(action.id.ToString()))
                     {
                         var bindingList = bindingsDictionary[action.id.ToString()];
 
-                        foreach (var binding in bindingList)
+                        for (int i = 0; i < 2; i++)
                         {
-                            if (!string.IsNullOrEmpty(binding))
+                            if (i == 0)
                             {
-                                action.AddBinding(binding);
+                                action.ApplyBindingOverride(1, bindingList[1]);
+                                action.ApplyBindingOverride(2, bindingList[2]);
                             }
+                            else if (i == 1)
+                            {
+                                action.ApplyBindingOverride(4, bindingList[4]);
+                                action.ApplyBindingOverride(5, bindingList[5]);
+                            }
+
                         }
                     }
+                    action.Enable();
                 }
             }
             print("·ÎµåµÊ");
@@ -107,27 +124,40 @@ public class BindingSave : MonoBehaviour
 
                 foreach (var actionMap in actionAsset.actionMaps)
                 {
+                    if (actionMap.name == "Chat" || actionMap.name == "Login")
+                    {
+                        continue;
+                    }
                     foreach (var action in actionMap)
                     {
+                        action.Disable();
+                        if (action.name == "Look" || action.name == "Sprint" || action.name == "Jump")
+                        {
+                            continue;
+                        }
                         if (bindingsDictionary.ContainsKey(action.id.ToString()))
                         {
                             var bindingList = bindingsDictionary[action.id.ToString()];
 
-                            foreach (var binding in bindingList)
+                            for (int i = 0; i < 2; i++)
                             {
-                                if (!string.IsNullOrEmpty(binding))
+                                if (i == 0)
                                 {
-                                    action.AddBinding(binding);
+                                    action.ApplyBindingOverride(1, bindingList[1]);
+                                    action.ApplyBindingOverride(2, bindingList[2]);
                                 }
+                                else if (i == 1)
+                                {
+                                    action.ApplyBindingOverride(4, bindingList[4]);
+                                    action.ApplyBindingOverride(5, bindingList[5]);
+                                }
+
                             }
                         }
+                        action.Enable();
                     }
                 }
                 print("·ÎµåµÊ");
-            }
-            else
-            {
-                print("·Îµå ½ÇÆÐ");
             }
         }
     }
