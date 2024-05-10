@@ -61,7 +61,7 @@ public class Boss : Monster
         Idle,
         Walk,
         Sleep,
-        Attack
+        Attack,
     }
   
     [SerializeField] State currentState;
@@ -130,7 +130,6 @@ public class Boss : Monster
                 SleepingState();
                 break;
             case State.Attack:
-                if (attacking) return;
                 Attack();
                 break;
         }
@@ -294,6 +293,7 @@ public class Boss : Monster
     void Attack()
     {
         if (agent.hasPath) agent.ResetPath();
+        if (attacking || isStun) return;
 
         if (underHalfHp == false)
         {
@@ -468,6 +468,13 @@ public class Boss : Monster
         }
         
         
+    }
+
+    public override void AniStunFinish()
+    {
+        base.AniStunFinish();
+        attacking = false;
+        if(currentState != State.Attack) { currentState = State.Attack; }
     }
 
 

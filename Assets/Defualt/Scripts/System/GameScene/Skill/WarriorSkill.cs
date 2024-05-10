@@ -92,7 +92,7 @@ public class WarriorSkill : Skill
 
             GameManager.Instance.currentPlayerObj.GetComponent<PlayerSkillMethod>().SpinyArmor();
         
-        //TODO : TakeDamage메서드에서 물리피해 , 마법 피해 매개변수로 받아서 받는 값 계산하게
+   
     }
 
     void OneOnOne(int id) //1대1 결투
