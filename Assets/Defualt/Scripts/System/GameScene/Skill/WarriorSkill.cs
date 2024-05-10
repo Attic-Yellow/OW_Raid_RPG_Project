@@ -28,7 +28,7 @@ public class WarriorSkill : Skill
                 ThrillOfBattle(id);
                 break;
             case 3:
-                Revenge(id);
+                Revenge();
                 break;
             case 4:
                 OneOnOne(id);
@@ -84,7 +84,7 @@ public class WarriorSkill : Skill
     }
 
  
-    void Revenge(int id) //보복
+    void Revenge() //보복
     {
         /*   15초 동안 자신이 받는 피해량이 30% 감소하고,
 물리 공격을 받으면 상대에게 반격 피해를 줍니다.
