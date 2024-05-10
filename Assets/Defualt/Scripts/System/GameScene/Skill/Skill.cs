@@ -27,6 +27,7 @@ public class Skill
     public int comboDamage;
     public int heal;
     public int range;
+    public int skillID;
     public float globalCoolTime;
     public float coolTime;
     public float duration;
@@ -36,5 +37,10 @@ public class Skill
     public virtual void UseSkill(int id)
     {
         Debug.Log("Use Skill");
+    }
+
+    public int GetSkillID()
+    {
+        return skillID;
     }
 }

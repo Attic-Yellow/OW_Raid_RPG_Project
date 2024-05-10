@@ -203,13 +203,12 @@ GameObject:
   - component: {fileID: 5584631545885461004}
   - component: {fileID: 1165135659208018630}
   - component: {fileID: 1165135659208018631}
-  - component: {fileID: 3208035840847173296}
   - component: {fileID: 1165135659208018624}
   - component: {fileID: -3221224700146439118}
   - component: {fileID: -4618555672795401674}
   - component: {fileID: 3312989439419384189}
   - component: {fileID: 8712263609289482869}
-  - component: {fileID: 1524817203754990354}
+  - component: {fileID: 763405597407677728}
   m_Layer: 3
   m_Name: Warrior
   m_TagString: Player
@@ -318,25 +317,6 @@ MonoBehaviour:
   BottomClamp: -30
   CameraAngleOverride: 0
   LockCameraPosition: 0
---- !u!114 &3208035840847173296
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1165135659208018636}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e087ecce43ebbff45a1b360637807d93, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  move: {x: 0, y: 0}
-  look: {x: 0, y: 0}
-  jump: 0
-  sprint: 0
-  analogMovement: 0
-  cursorLocked: 1
-  cursorInputForLook: 1
 --- !u!114 &1165135659208018624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -344,7 +324,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1165135659208018636}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
@@ -555,7 +535,7 @@ MonoBehaviour:
   haveSkills: []
   aggroMonsters: []
   monsters: []
---- !u!114 &1524817203754990354
+--- !u!114 &763405597407677728
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -564,14 +544,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1165135659208018636}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f67f9efa8706e6745ad5440f52a7a59a, type: 3}
+  m_Script: {fileID: 11500000, guid: c265b11e9d12dc1409ac4f8a4ce8f6da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraSensitivity: 90
-  climbSpeed: 4
-  normalMoveSpeed: 10
-  slowMoveFactor: 0.25
-  fastMoveFactor: 3
+  addPowerValue: 200
+  addHealingRate: 1.2
+  boostedHRDuration: 10
+  spinyArmorDuration: 15
+  ReduceRate: 1.3
+  revangeDamage: 55
+  isRevenging: 0
+  invincibilityDuration: 10
 --- !u!1 &1236049848542760991
 GameObject:
   m_ObjectHideFlags: 0

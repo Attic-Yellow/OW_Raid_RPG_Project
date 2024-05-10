@@ -77,6 +77,7 @@ public class Slot : MonoBehaviour
         return null;
     }
 
+ 
     // 아이템 갯수 반환
     public virtual int GetItemCount()
     {

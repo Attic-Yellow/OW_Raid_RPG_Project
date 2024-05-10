@@ -73,6 +73,13 @@ public class Player : Alive
     #region overridMethod
     public override void TakeDamage(GameObject obj, float pDamage, float physicalP /*물리관통력*/, float mDamage, float physicalM)
     {
+        if (pDamage > 0 && GetComponent<PlayerSkillMethod>().isRevenging) //반격중이면 공격한 대상 물리고정뎀 주기
+        {
+            print("반격데미지!");
+            obj.GetComponent<Monster>().
+                TakeDamage(gameObject, GetComponent<PlayerSkillMethod>().GetRevengeDamage(),
+                 obj.GetComponent<Monster>().PDef, 0, 0);
+         }
         float damage = 0;
 
         if (IsCritical() == false)

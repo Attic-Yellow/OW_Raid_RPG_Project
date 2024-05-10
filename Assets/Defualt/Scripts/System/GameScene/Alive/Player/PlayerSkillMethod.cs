@@ -18,6 +18,8 @@ public class PlayerSkillMethod : MonoBehaviour
     [Header("∫∏∫π")]
     [SerializeField] float spinyArmorDuration = 15f;
     [SerializeField] float ReduceRate = 1.3f;
+    [SerializeField] float revangeDamage = 55f;
+    public bool isRevenging = false;
 
     [Header("1¥Î1 ∞·≈ı")]
     [SerializeField] float invincibilityDuration = 10f;
@@ -82,7 +84,7 @@ public class PlayerSkillMethod : MonoBehaviour
     public void SpinyArmor()//∞°Ω√ ∞©ø 
     {
         player.DamageReduc *= ReduceRate;
-
+        isRevenging = true;
         StartCoroutine(ReduceDamage(spinyArmorDuration, ReduceRate));
     }
 
@@ -90,8 +92,7 @@ public class PlayerSkillMethod : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         player.DamageReduc /= ReduceRate;
-
-
+        isRevenging = false;
     }
 
     #endregion
@@ -111,4 +112,9 @@ public class PlayerSkillMethod : MonoBehaviour
     }
     #endregion
     #endregion
+
+    public float GetRevengeDamage()
+    {
+        return revangeDamage;
+    }
 }
