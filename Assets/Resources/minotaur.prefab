@@ -1053,7 +1053,6 @@ MonoBehaviour:
   haveSkills: []
   target: {fileID: 0}
   isStun: 0
-  isMouseTrriger: 0
   tiredness: 0
   tirednessIncreaseRate: 0.2
   tirednessDecreaseRate: 0.2
