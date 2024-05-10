@@ -12,7 +12,8 @@ using UnityStandardAssets.Characters.ThirdPerson.PunDemos;
 public class WarriorSkill : Skill
 {
     public Job job;
-    
+   
+   
 
     public override void UseSkill(int id)
     {
@@ -31,7 +32,7 @@ public class WarriorSkill : Skill
                 Revenge();
                 break;
             case 4:
-                OneOnOne(id);
+                OneOnOne();
                 break;
             case 5:
                 break;
@@ -95,17 +96,23 @@ public class WarriorSkill : Skill
    
     }
 
-    void OneOnOne(int id) //1대1 결투
+    void OneOnOne() //1대1 결투
     {
-     /*   if(mon.isMouseTrriger) //적을 대상으로 실행한 경우에는 대상을 이동 불가 상태로 만듭니다
+        if(GameManager.Instance.GetAlives().Count != 0) //적을 대상으로 실행한 경우에는 대상을 이동 불가 상태로 만듭니다
         {
-            mon.Stun(true);
+            GameManager.Instance.GetAlives()[0].GetComponent<Monster>().Stun(true);
         }
         else //10초 동안 일부를 제외한 어떤 공격을 받아도 자신의 HP가 1 미만으로 떨어지지 않습니다.
         {
             GameManager.Instance.currentPlayerObj.GetComponent<PlayerSkillMethod>().invincibility();
-        }*/
+        }
         
+
+    }
+
+    void Onslaught(int id) //맹공격
+    {
+        SkillAni(id); //TODO : 애니메이션 이벤트로 콜라이더 감지 코루틴 넣어야함
 
     }
 

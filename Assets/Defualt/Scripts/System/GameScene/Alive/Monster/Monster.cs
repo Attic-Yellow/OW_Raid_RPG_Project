@@ -9,7 +9,7 @@ public class Monster : Alive
     public GameObject target;
     public Dictionary<int, AggroLevel> aggroLevels = new Dictionary<int, AggroLevel>(); // 때린놈들 어그로 관리해주는 딕셔너리 키값으로 포톤뷰 아이디
     public bool isStun = false;
-    public bool isMouseTrriger = false; 
+
     [Header("피곤함 수치")]
 
     [SerializeField] protected float tiredness; // 피곤함 수치
@@ -54,6 +54,7 @@ public class Monster : Alive
     public void PlusAggroLevel(int ptId, float _value)
     {
         aggroLevels[ptId].IncreaseAggroLevel(_value);
+        print("더해짐");
     }
 
     public void RPCPluseAggroLevel(int ptId, float _value)
@@ -145,12 +146,12 @@ public class Monster : Alive
 
     private void OnMouseEnter()
     {
-        isMouseTrriger = true;
+        GameManager.Instance.AddOnMousePointer(gameObject);
     }
 
     private void OnMouseExit()
     {
-        isMouseTrriger = false;
+        GameManager.Instance.RemoveOnMousePointer(gameObject);
     }
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)

@@ -28,22 +28,22 @@ namespace StarterAssets
         public void OnUp(InputValue value)
         {
 			print(move);
-            move.y = value.Get<float>(); 
+            MoveYInput(value.Get<float>()); 
         }
 
         public void OnDown(InputValue value)
         {
-            move.y = -value.Get<float>(); 
+            MoveYInput(-value.Get<float>());
         }
 
         public void OnRight(InputValue value)
         {
-            move.x = value.Get<float>(); 
+            MoveXInput(value.Get<float>()); 
         }
 
         public void OnLeft(InputValue value)
         {
-            move.x = -value.Get<float>(); 
+            MoveXInput(- value.Get<float>()); 
         }
         public void OnLook(InputValue value)
 		{
@@ -72,6 +72,16 @@ namespace StarterAssets
 		{
 			move = newMoveDirection;
 		} 
+
+		public void MoveXInput(float newX)
+		{
+			move.x = newX;
+		}
+
+		public void MoveYInput(float newY)
+		{
+			move.y = newY;
+		}
 
 		public void LookInput(Vector2 newLookDirection)
 		{

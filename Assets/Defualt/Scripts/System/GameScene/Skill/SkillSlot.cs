@@ -104,7 +104,15 @@ public class SkillSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
 
     public override void Use()
     {
-       if(skill != null) { skill.UseSkill(skill.GetSkillID()); }
+        if (skill != null)
+        {
+            print($"{skill.skillName}");
+             skill.UseSkill(skill.GetSkillID()); 
+        }
+        else
+        {
+            print("skill ¾øÀ½");
+        }
     }
     #endregion
 }

@@ -297,6 +297,7 @@ namespace StarterAssets
                 if (_hasAnimator)
                 {
                     _animator.SetInteger(_animIDSkill, num);
+                    _animator.SetLayerWeight(1, 1);
                     return true;
                 }
             }
