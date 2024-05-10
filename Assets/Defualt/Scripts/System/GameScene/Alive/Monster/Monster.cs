@@ -9,7 +9,7 @@ public class Monster : Alive
     public GameObject target;
     public Dictionary<int, AggroLevel> aggroLevels = new Dictionary<int, AggroLevel>(); // 때린놈들 어그로 관리해주는 딕셔너리 키값으로 포톤뷰 아이디
     public bool isStun = false;
-
+    public bool isMouseTrriger = false; 
     [Header("피곤함 수치")]
 
     [SerializeField] protected float tiredness; // 피곤함 수치
@@ -123,10 +123,17 @@ public class Monster : Alive
         aggroLevels.Clear();
     }
    
-    public void Stun()
+    public void Stun(bool isTrue)
     {
-        isStun = true;
-        animator.SetTrigger("Stun");
+        if (isTrue)
+        {
+            isStun = true;
+            animator.SetTrigger("Stun");
+        }
+        else
+        {
+            isStun = false;
+        }
 
     }
 
@@ -134,6 +141,16 @@ public class Monster : Alive
     {
         isStun = false;
         
+    }
+
+    private void OnMouseEnter()
+    {
+        isMouseTrriger = true;
+    }
+
+    private void OnMouseExit()
+    {
+        isMouseTrriger = false;
     }
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)

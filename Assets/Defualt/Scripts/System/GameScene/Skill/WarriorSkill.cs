@@ -19,7 +19,7 @@ public class WarriorSkill : Skill
        switch(id)
         {
             case 0:
-                Defiance(id);
+                Defiance();
                 break;
             case 1:
                 HeavySwing(id);
@@ -39,7 +39,7 @@ public class WarriorSkill : Skill
         }
     }
 
-    void Defiance(int id) //수비태세
+    void Defiance() //수비태세
     /* 전투 중 자신에 대한 적개심이 매우 높게 상승합니다.
  재사용 시 해제됩니다.
  지속시간: 해제 시까지*/
@@ -97,14 +97,15 @@ public class WarriorSkill : Skill
 
     void OneOnOne(int id) //1대1 결투
     {
-        /* 10초 동안 일부를 제외한 어떤 공격을 받아도
- 자신의 HP가 1 미만으로 떨어지지 않습니다.
- 적을 대상으로 실행한 경우에는
- 대상을 이동 불가 상태로 만듭니다.*/
-
+     /*   if(mon.isMouseTrriger) //적을 대상으로 실행한 경우에는 대상을 이동 불가 상태로 만듭니다
+        {
+            mon.Stun(true);
+        }
+        else //10초 동안 일부를 제외한 어떤 공격을 받아도 자신의 HP가 1 미만으로 떨어지지 않습니다.
+        {
             GameManager.Instance.currentPlayerObj.GetComponent<PlayerSkillMethod>().invincibility();
+        }*/
         
-        //TODO : 적을 대상으로 실행한 경우 대상을 이동 불가 상태로
 
     }
 
