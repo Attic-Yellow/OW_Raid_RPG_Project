@@ -255,6 +255,11 @@ public class HUDController : MonoBehaviour
         if (notSaveAlarmboard != null)
         {
             notSaveAlarmboard.SetActive(!notSaveAlarmboard.activeInHierarchy);
+
+            if (notSaveAlarmboard.activeSelf)
+            {
+                notSaveAlarmboard.transform.SetAsLastSibling();
+            }
         }
     }
 
