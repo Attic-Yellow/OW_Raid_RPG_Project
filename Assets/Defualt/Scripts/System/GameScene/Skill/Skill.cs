@@ -1,3 +1,4 @@
+using StarterAssets;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ public class Skill
     public Sprite skillIcon;
     public bool globalCoolDown;
     public bool isCombo;
-    public bool isOn;
+    public bool skillActive;
     public string skillName;
     public string description;
     public string addEffects;
@@ -43,4 +44,27 @@ public class Skill
     {
         return skillID;
     }
+
+    protected bool SkillAni(int skillNum) //애니메이션을 동반하는 스킬의 사용 가능 체크 메서드
+    {
+        ThirdPersonController controller = GameManager.Instance.currentPlayerObj.GetComponent<ThirdPersonController>();
+        return controller.Skill(skillNum);
+
+    }
+
+    public void ToggleSkill()
+    {
+        skillActive = !skillActive; // 스킬 활성화 상태를 반전시킴
+    }
+
+    public void ActivateSkill()
+    {
+        skillActive = true; // 스킬을 활성화함
+    }
+
+    public void DeactivateSkill()
+    {
+        skillActive = false; // 스킬을 비활성화함
+    }
+
 }

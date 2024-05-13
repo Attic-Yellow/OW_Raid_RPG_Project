@@ -446,9 +446,6 @@ MonoBehaviour:
   - Type: 1
     SynchronizeType: 0
     Name: MotionSpeed
-  - Type: 3
-    SynchronizeType: 0
-    Name: SkillNum
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -525,6 +522,7 @@ MonoBehaviour:
   manaRegen: 0
   hpRegen: 0
   damageReduc: 0
+  damageIncrease: 0
   maxHP: 100
   level: 0
   id: 0
@@ -556,6 +554,13 @@ MonoBehaviour:
   revangeDamage: 55
   isRevenging: 0
   invincibilityDuration: 10
+  posionArrowDamge: 100
+  posionDotduration: 12
+  dotDamage: 30
+  addCriticalValue: 2
+  philosophersDistance: 20
+  philosophersDuration: 10
+  AddDamageIncrease: 3
 --- !u!1 &1236049848542760991
 GameObject:
   m_ObjectHideFlags: 0

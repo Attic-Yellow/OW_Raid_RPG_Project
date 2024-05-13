@@ -47,9 +47,9 @@ public class BlackMageSkill : Skill
     public void ChangeProperties(int id) //속성 전환 (저승의 냉기 <-> 천상의 화염)
     {
         //TODO : 쿨타임 돌아가게
-        isOn = !isOn;
+        skillActive = !skillActive;
 
-        if (isOn)//저승의 냉기
+        if (skillActive)//저승의 냉기
         {
         }
         else//천상의 화염

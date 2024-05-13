@@ -138,6 +138,32 @@ public class Alive : DefalutState, IPunObservable
 
     }
 
+    public void TakeDamage(float damage) //고정 데미지
+    {
+        if ((CurrentHP -= damage) <= 0)
+        {
+            CurrentHP = 0;
+        }
+        else
+        {
+            CurrentHP -= damage;
+        }
+
+
+        if (PhotonNetwork.IsConnected)
+        {
+            // 네트워크 연결된 경우에만 동기화
+            photonView.RPC("SyncHealth", RpcTarget.All, currentHP);
+        }
+
+        // 현재 체력이 0 이하로 떨어졌을 때 처리
+        if (currentHP <= 0)
+        {
+            Die(); // 죽음 처리
+            return;
+        }
+    }
+
     protected bool IsCritical()  //크리티컬 체크 메서드
     {
         float randomNum = Random.Range(0, 100);

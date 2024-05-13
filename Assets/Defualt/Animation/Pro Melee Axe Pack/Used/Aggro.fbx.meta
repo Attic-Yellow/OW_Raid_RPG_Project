@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 221dc40619427134ca26624279f2034a
+guid: 759e88acc25734e449a2b38a80cdc2b2
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
@@ -33,11 +33,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Horizontal Attack
+      name: Aggro
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0
-      lastFrame: 72
+      lastFrame: 85
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

@@ -1042,6 +1042,7 @@ MonoBehaviour:
   manaRegen: 0
   hpRegen: 0
   damageReduc: 0
+  damageIncrease: 0
   maxHP: 100
   level: 0
   id: 0

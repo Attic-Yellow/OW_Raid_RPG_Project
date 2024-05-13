@@ -154,9 +154,31 @@ public class Monster : Alive
         GameManager.Instance.RemoveOnMousePointer(gameObject);
     }
 
+   public void DoDotCorouitne(float duration, float damage)
+    {
+        StartCoroutine(DoDotDamage(duration,damage));
+    }
+
+
+    private IEnumerator DoDotDamage(float duration, float damage)
+    {
+        float elapsedTime = 0.0f;
+
+        // 도트 데미지 지속 시간 동안 반복
+        while (elapsedTime < duration)
+        {
+            // 도트 데미지 간격만큼 대기
+            yield return new WaitForSeconds(1f);
+            // 도트 데미지 적용
+            TakeDamage(damage);
+            // 경과 시간 업데이트
+            elapsedTime += 1f;
+        }
+    }
+
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
-       if(PhotonNetwork.IsMasterClient)
+       if(!PhotonNetwork.IsMasterClient)
         {
             foreach (var kvp in aggroLevels)
             {
