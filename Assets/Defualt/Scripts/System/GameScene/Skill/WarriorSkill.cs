@@ -61,7 +61,7 @@ public class WarriorSkill : Skill
 
     }
 
-    void HeavySwing(int id)
+    void HeavySwing(int id) //육중한 일격
     /*대상에게 물리 공격을 가합니다.
     위력: 200*/
     {
