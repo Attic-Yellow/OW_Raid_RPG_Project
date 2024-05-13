@@ -45,10 +45,10 @@ public class WarriorSkill : Skill
  재사용 시 해제됩니다.
  지속시간: 해제 시까지*/
     {
-        isOn = !isOn; 
+        skillActive = !skillActive; 
         float addAggroValue = 200f;
 
-        if (!isOn)
+        if (!skillActive)
         {
             addAggroValue *= -1f; 
         }
@@ -115,13 +115,4 @@ public class WarriorSkill : Skill
         SkillAni(id); //TODO : 애니메이션 이벤트로 콜라이더 감지 코루틴 넣어야함
 
     }
-
-    bool SkillAni(int skillNum) //애니메이션을 동반하는 스킬의 사용 가능 체크 메서드
-    {
-        ThirdPersonController controller = GameManager.Instance.currentPlayerObj.GetComponent<ThirdPersonController>();
-        return controller.Skill(skillNum);
-
-    }
-
-
 }

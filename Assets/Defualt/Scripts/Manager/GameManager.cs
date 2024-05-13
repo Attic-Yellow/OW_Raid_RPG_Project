@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     private bool isDataLoaded;
     private bool isSignInSuccess;
     private bool isRebinding;
-    public Vector3 playerRespawnPos = new Vector3(1250 , -106.5f, 1020); //플레이어 리스폰 지역
+    public Vector3 playerRespawnPos = new Vector3(1250 , -110.5f, 1020); //플레이어 리스폰 지역
     private List<GameObject> onMouseCheck = new();
 
     [Serializable]

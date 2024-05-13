@@ -23,6 +23,21 @@ public class PlayerSkillMethod : MonoBehaviour
 
     [Header("1대1 결투")]
     [SerializeField] float invincibilityDuration = 10f;
+
+    [Header("독화살")]
+    [SerializeField] float posionArrowDamge = 100; //즉시 주는 데미지
+    [SerializeField] float posionDotduration = 12; //도트 뎀 지속시간
+    [SerializeField] float dotDamage = 30; //도트 데미지
+
+    [Header("현자의 담시곡")]
+    [SerializeField] float addCriticalValue = 2; //크리티컬 증가량
+    [SerializeField] float philosophersDistance = 20; //거리
+    [SerializeField] float philosophersDuration = 10; //증가시간
+
+    [Header("마인의 진혼곡")]
+    [SerializeField] float AddDamageIncrease = 3; //받는 데미지 증가량
+    Monster nearestMon = null;
+
     private void Awake()
     {
         player = GetComponent<Player>();
@@ -110,11 +125,89 @@ public class PlayerSkillMethod : MonoBehaviour
         yield return new WaitForSeconds(delay);
         player.IsInvincibility = false;
     }
-    #endregion
-    #endregion
 
     public float GetRevengeDamage()
     {
         return revangeDamage;
     }
+    #endregion
+    #endregion
+
+    #region 바드 스킬
+
+    #region 독화살
+
+    public void PosionArrow(Monster mon)
+    {
+        mon.TakeDamage(posionArrowDamge);
+        mon.DoDotCorouitne(posionDotduration,dotDamage);
+    }
+
+    #endregion
+
+    #region 현자의 담시곡
+
+    public void PhilosophersOde()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, philosophersDistance, 1 << 3);
+        foreach (Collider collider in colliders)
+        {
+            if(collider.CompareTag("Player"))
+            {
+              StartCoroutine(BoostCriticalCoroutine(collider.GetComponent<Player>(),addCriticalValue,philosophersDuration)); 
+            }
+        }
+    }
+
+    IEnumerator BoostCriticalCoroutine(Player player, float _value ,float duration)
+    {
+        player.CriticalRate += _value;
+        yield return new WaitForSeconds(duration);
+        if(player != null)  player.CriticalRate -= _value;
+    }
+
+    #endregion
+
+    #region 마인의 진혼곡
+
+    public void DemonticRequiem(Skill skill)
+    {
+        if(skill.skillActive)
+        {
+            if(FindNearestMon() != null)
+            FindNearestMon().DamageIncrease += AddDamageIncrease;
+        }
+        else if(nearestMon != null) 
+        {
+            nearestMon.DamageIncrease -= AddDamageIncrease;
+        }
+    }
+    private Monster FindNearestMon()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 20f, 1<<3);
+
+        float nearestDistance = Mathf.Infinity;
+
+        foreach (Collider collider in colliders)
+        {
+            // 적인지 확인하고, 자신이 아닌 경우에만 처리
+            if (!collider.CompareTag("Player"))
+            {
+                float distanceToEnemy = Vector3.Distance(transform.position, collider.transform.position);
+                if (distanceToEnemy < nearestDistance)
+                {
+                    nearestDistance = distanceToEnemy;
+                    nearestMon = collider.GetComponent<Monster>();
+                }
+            }
+        }
+
+        return nearestMon;
+    }
+
+
+    #endregion
+
+    #endregion
+
 }

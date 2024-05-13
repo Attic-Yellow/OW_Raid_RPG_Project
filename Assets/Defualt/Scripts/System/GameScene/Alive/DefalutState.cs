@@ -25,6 +25,7 @@ public class DefalutState : MonoBehaviourPunCallbacks
     [SerializeField] protected float manaRegen; //마나 회복력
     [SerializeField] protected float hpRegen; //체력 회복력
     [SerializeField] protected float damageReduc; //데미지 감소율
+    [SerializeField] protected float damageIncrease; //데미지 증가량
     [SerializeField] protected float maxHP;//최대 체력
     [SerializeField] protected float level;
     [SerializeField] protected int id;
@@ -147,7 +148,18 @@ public class DefalutState : MonoBehaviourPunCallbacks
     public float DamageReduc
     {
         get { return damageReduc; }
-        set { damageReduc = value; }
+        set { damageReduc = value;
+            if (damageReduc < 0)
+            {
+                damageReduc = 0;
+            }
+            }
+    }
+
+    public float DamageIncrease
+    {
+        get { return damageIncrease; }
+        set { damageIncrease = value; }
     }
 
     // maxHP 프로퍼티

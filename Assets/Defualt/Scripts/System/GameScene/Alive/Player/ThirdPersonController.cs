@@ -304,6 +304,11 @@ namespace StarterAssets
             return false;
         }
 
+        public void SkillAniFinish()
+        {
+            _animator.SetLayerWeight(1, 0);
+        }
+
         private void JumpAndGravity()
         {
             if (Grounded)
