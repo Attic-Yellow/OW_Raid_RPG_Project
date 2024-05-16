@@ -12,13 +12,11 @@ public class GameSceneUI : MonoBehaviour
     public KeyBindingUI keyBindingUI;
     public SkillUI skillUI;
     public HUDController hudController;
-
+    public Canvas canvas;
     public QuickSlotData quickSlotData = new QuickSlotData();
 
     private void Awake()
     {
         GameManager.Instance.uiManager.gameSceneUI = this;
     }
-
-    
 }

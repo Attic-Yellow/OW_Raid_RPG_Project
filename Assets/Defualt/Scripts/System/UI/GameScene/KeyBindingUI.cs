@@ -6,6 +6,7 @@ public class KeyBindingUI : MonoBehaviour
 {
     [SerializeField] private GameObject keyBindingUI;
     [SerializeField] private List<GameObject> bindingAreas;
+    [SerializeField] private GameObject alarmOverraly;
 
     private void Awake()
     {
@@ -20,6 +21,11 @@ public class KeyBindingUI : MonoBehaviour
         }
 
         bindingAreaController(0);
+
+        if (alarmOverraly != null)
+        {
+            alarmOverraly.SetActive(false);
+        }
     }
 
     public void keyBindingUIController()
@@ -27,7 +33,7 @@ public class KeyBindingUI : MonoBehaviour
         if (keyBindingUI != null)
         {
             keyBindingUI.SetActive(!keyBindingUI.activeInHierarchy);
-            
+
             if (keyBindingUI.activeSelf)
             {
                 keyBindingUI.transform.SetAsLastSibling();
@@ -42,6 +48,27 @@ public class KeyBindingUI : MonoBehaviour
             for (int i = 0; i < bindingAreas.Count; i++)
             {
                 bindingAreas[i].SetActive(i == index);
+            }
+        }
+    }
+
+    public void alarmOverralyController(int index)
+    {
+        if (index == 0)
+        {
+            if (alarmOverraly != null)
+            {
+                alarmOverraly.SetActive(!alarmOverraly.activeInHierarchy);
+            }
+        }
+        else if (index == 1)
+        {
+            if (BindingSave.Instance.keyBind == KeyBind.BindNotSave)
+            {
+                BindingSave.Instance.LoadBindings();
+                BindingSave.Instance.keyBind = KeyBind.Idle;
+                keyBindingUIController();
+                alarmOverraly.SetActive(!alarmOverraly.activeInHierarchy);
             }
         }
     }

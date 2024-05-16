@@ -5,13 +5,34 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+public enum KeyBind
+{
+    Idle,
+    BindNotSave
+}
+
 public class BindingSave : MonoBehaviour
 {
+    public static BindingSave Instance;
+
     public InputActionAsset actionAsset;
+    public KeyBind keyBind;
 
     private void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
         LoadBindingsAndUpdateUI();
+
+        BindingSave.Instance.keyBind = KeyBind.Idle;
     }
 
     public void SaveBindings()
@@ -98,11 +119,21 @@ public class BindingSave : MonoBehaviour
                         {
                             if (i == 0)
                             {
+                                if (action.bindings[1].hasOverrides)
+                                {
+                                    action.RemoveBindingOverride(1);
+                                    action.RemoveBindingOverride(2);
+                                }
                                 action.ApplyBindingOverride(1, bindingList[1]);
                                 action.ApplyBindingOverride(2, bindingList[2]);
                             }
                             else if (i == 1)
                             {
+                                if (action.bindings[4].hasOverrides)
+                                {
+                                    action.RemoveBindingOverride(4);
+                                    action.RemoveBindingOverride(5);
+                                }
                                 action.ApplyBindingOverride(4, bindingList[4]);
                                 action.ApplyBindingOverride(5, bindingList[5]);
                             }
@@ -143,15 +174,24 @@ public class BindingSave : MonoBehaviour
                             {
                                 if (i == 0)
                                 {
+                                    if (action.bindings[1].hasOverrides)
+                                    {
+                                        action.RemoveBindingOverride(1);
+                                        action.RemoveBindingOverride(2);
+                                    }
                                     action.ApplyBindingOverride(1, bindingList[1]);
                                     action.ApplyBindingOverride(2, bindingList[2]);
                                 }
                                 else if (i == 1)
                                 {
+                                    if (action.bindings[4].hasOverrides)
+                                    {
+                                        action.RemoveBindingOverride(4);
+                                        action.RemoveBindingOverride(5);
+                                    }
                                     action.ApplyBindingOverride(4, bindingList[4]);
                                     action.ApplyBindingOverride(5, bindingList[5]);
                                 }
-
                             }
                         }
                         action.Enable();

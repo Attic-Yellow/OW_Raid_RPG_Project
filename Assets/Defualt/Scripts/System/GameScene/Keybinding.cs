@@ -8,11 +8,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using static UnityEngine.InputSystem.InputActionRebindingExtensions;
 
-public enum KeyBind
-{
-    Idle,
-    BindNotSave
-}
+
 
 public class Keybinding : MonoBehaviour
 {
@@ -22,18 +18,17 @@ public class Keybinding : MonoBehaviour
     [SerializeField] private TMP_Text bindingButtonText;
     [SerializeField] private int bindingIndex;
     [SerializeField] private TextMeshProUGUI quickText;
-    [SerializeField] private KeyBind keyBind;
+    
 
     private void Start()
     {
         actionToRebind = actionAsset.FindAction(bindName, true);
-        keyBind = KeyBind.Idle;
     }
 
     // 키 재바인딩 호출
     public void StartRebindingProcess()
     {
-        keyBind = KeyBind.BindNotSave;
+        BindingSave.Instance.keyBind = KeyBind.BindNotSave;
 
         if (GameManager.Instance.GetIsRebinding())
         {
@@ -73,9 +68,17 @@ public class Keybinding : MonoBehaviour
         }
         else
         {
+            actionToRebind.Disable();
             // 단일 키의 경우, 첫 번째 바인딩을 두 번째 키에도 적용
+            if (actionToRebind.bindings[bindingIndex].hasOverrides)
+            {
+                actionToRebind.RemoveBindingOverride(bindingIndex);
+                actionToRebind.RemoveBindingOverride(bindingIndex + 1);
+            }
             actionToRebind.ApplyBindingOverride(bindingIndex, firstBinding);
             actionToRebind.ApplyBindingOverride(bindingIndex + 1, firstBinding);
+            print($"{actionToRebind.bindings[bindingIndex].path}, {actionToRebind.bindings[bindingIndex + 1].overridePath}");
+            actionToRebind.Enable();
         }
 
         GameManager.Instance.SetIsRebinding(false);
@@ -167,15 +170,5 @@ public class Keybinding : MonoBehaviour
         action.Enable(); // 재바인딩이 완료되면, 액션을 다시 활성화
         bindingButtonText.text = action.GetBindingDisplayString(bindingIndex); // 버튼 텍스트 업데이트
         GameManager.Instance.SetIsRebinding(false); // 게임 매니저 상태 업데이트
-    }
-
-    public KeyBind GetBindState()
-    {
-        return keyBind;
-    }
-
-    public void SetBindState(KeyBind keyBind)
-    {
-        this.keyBind = keyBind;
     }
 }
