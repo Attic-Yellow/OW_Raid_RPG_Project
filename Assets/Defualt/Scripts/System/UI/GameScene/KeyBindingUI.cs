@@ -56,20 +56,26 @@ public class KeyBindingUI : MonoBehaviour
     {
         if (index == 0)
         {
-            if (alarmOverraly != null)
+            if (BindingSave.Instance.keyBind == KeyBind.BindNotSave)
             {
                 alarmOverraly.SetActive(!alarmOverraly.activeInHierarchy);
+
+                if (alarmOverraly.activeSelf)
+                {
+                    alarmOverraly.transform.SetAsLastSibling();
+                }
+            }
+            else
+            {
+                keyBindingUIController();
             }
         }
         else if (index == 1)
         {
-            if (BindingSave.Instance.keyBind == KeyBind.BindNotSave)
-            {
-                BindingSave.Instance.LoadBindings();
-                BindingSave.Instance.keyBind = KeyBind.Idle;
-                keyBindingUIController();
-                alarmOverraly.SetActive(!alarmOverraly.activeInHierarchy);
-            }
+            BindingSave.Instance.LoadBindingsAndUpdateUI();
+            BindingSave.Instance.keyBind = KeyBind.Idle;
+            keyBindingUIController();
+            alarmOverraly.SetActive(!alarmOverraly.activeInHierarchy);
         }
     }
 }
