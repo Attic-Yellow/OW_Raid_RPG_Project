@@ -190,7 +190,7 @@ public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
             tempSlot = slot;
            
             dragVisual = new GameObject("Drag Visual");  // 시각적 표현 생성
-            dragVisual.transform.SetParent(FindObjectOfType<Canvas>().transform); // Canvas를 부모로 설정
+            dragVisual.transform.SetParent(GameManager.Instance.uiManager.gameSceneUI.canvas.transform); // Canvas를 부모로 설정
             Image visualImage = dragVisual.AddComponent<Image>();
             visualImage.sprite = itemIcon.sprite; // 현재 슬롯의 아이템 이미지 사용
             visualImage.rectTransform.sizeDelta = new Vector2(60, 60); // 크기 조절
