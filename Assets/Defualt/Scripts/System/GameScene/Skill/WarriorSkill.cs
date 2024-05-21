@@ -20,7 +20,7 @@ public class WarriorSkill : Skill
        switch(id)
         {
             case 0:
-                Defiance();
+                Defiance(id);
                 break;
             case 1:
                 HeavySwing(id);
@@ -40,23 +40,26 @@ public class WarriorSkill : Skill
         }
     }
 
-    void Defiance() //수비태세
+    void Defiance(int id) //수비태세
     /* 전투 중 자신에 대한 적개심이 매우 높게 상승합니다.
  재사용 시 해제됩니다.
  지속시간: 해제 시까지*/
     {
-        skillActive = !skillActive; 
-        float addAggroValue = 200f;
-
-        if (!skillActive)
+        if (MovingSkillAni(id))
         {
-            addAggroValue *= -1f; 
-        }
+            skillActive = !skillActive;
+            float addAggroValue = 200f;
 
-        Player player = GameManager.Instance.currentPlayerObj.GetComponent<Player>();
-        foreach (Monster mon in player.aggroMonsters)
-        {
-            mon.RPCPluseAggroLevel(player.photonView.ViewID, addAggroValue);
+            if (!skillActive)
+            {
+                addAggroValue *= -1f;
+            }
+
+            Player player = GameManager.Instance.currentPlayerObj.GetComponent<Player>();
+            foreach (Monster mon in player.aggroMonsters)
+            {
+                mon.RPCPluseAggroLevel(player.photonView.ViewID, addAggroValue);
+            }
         }
 
     }
@@ -65,7 +68,7 @@ public class WarriorSkill : Skill
     /*대상에게 물리 공격을 가합니다.
     위력: 200*/
     {
-        if (SkillAni(id))
+        if (IdleSkillAni(id))
         {
             GameManager.Instance.currentPlayerObj.GetComponent<PlayerSkillMethod>().
                 AddPower();
@@ -77,7 +80,7 @@ public class WarriorSkill : Skill
         /*10초 동안 자신의 최대 HP와
 받는 HP 회복 효과가 20 % 증가합니다.
 실행 시점의 최대 HP 대비 20 % 의 HP를 회복합니다.*/
-        if (SkillAni(id))
+        if (MovingSkillAni(id))
         {
             GameManager.Instance.currentPlayerObj.GetComponent<PlayerSkillMethod>().BoostedHPRegen();
         }
@@ -112,7 +115,7 @@ public class WarriorSkill : Skill
 
     void Onslaught(int id) //맹공격
     {
-        SkillAni(id); //TODO : 애니메이션 이벤트로 콜라이더 감지 코루틴 넣어야함
+        MovingSkillAni(id); //TODO : 애니메이션 이벤트로 콜라이더 감지 코루틴 넣어야함
 
     }
 }

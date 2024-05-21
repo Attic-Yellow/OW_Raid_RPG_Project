@@ -45,11 +45,17 @@ public class Skill
         return skillID;
     }
 
-    protected bool SkillAni(int skillNum) //애니메이션을 동반하는 스킬의 사용 가능 체크 메서드
+    protected bool MovingSkillAni(int skillNum) //애니메이션을 동반하는 스킬의 사용 가능 체크 메서드
     {
         ThirdPersonController controller = GameManager.Instance.currentPlayerObj.GetComponent<ThirdPersonController>();
-        return controller.Skill(skillNum);
+        return controller.MovingSkill(skillNum);
 
+    }
+
+    protected bool IdleSkillAni(int skillNum)
+    {
+        ThirdPersonController controller = GameManager.Instance.currentPlayerObj.GetComponent<ThirdPersonController>();
+        return controller.IdleSkill(skillNum);
     }
 
     public void ToggleSkill()

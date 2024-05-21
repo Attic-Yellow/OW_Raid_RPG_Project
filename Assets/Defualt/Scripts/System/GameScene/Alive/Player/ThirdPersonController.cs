@@ -114,6 +114,8 @@ namespace StarterAssets
 
         private bool _hasAnimator;
 
+        private bool skilling = false;
+
         private bool IsCurrentDeviceMouse
         {
             get
@@ -139,7 +141,7 @@ namespace StarterAssets
         private void Start()
         {
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
-            
+          
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GameObject.Find("PlayerInput").GetComponent<StarterAssetsInputs>();
@@ -154,17 +156,21 @@ namespace StarterAssets
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
+
         }
 
         private void Update()
         {
             if (photonView.IsMine)
             {
-                _hasAnimator = TryGetComponent(out _animator);
-
-                JumpAndGravity();
-                GroundedCheck();
-                Move();
+                if (_animator.applyRootMotion == false)
+                {
+                    _hasAnimator = TryGetComponent(out _animator);
+                    JumpAndGravity();
+                    GroundedCheck();
+                    Move();
+                }
+                
             }
         }
 
@@ -290,23 +296,47 @@ namespace StarterAssets
             }
         }
 
-        public bool Skill(int num)
+        public bool MovingSkill(int num) //움직이면서 사용 가능한 스킬
         {
-            if(Grounded)
-            {
+
                 if (_hasAnimator)
                 {
-                    _animator.SetInteger(_animIDSkill, num);
-                    _animator.SetLayerWeight(1, 1);
+                    print($"movingSkill {num + 1}");
+                    _animator.SetInteger(_animIDSkill, num+1);
+                    _animator.SetLayerWeight(1, 0.5f);
                     return true;
                 }
+           
+            return false;
+        }
+
+        public bool IdleSkill(int num)
+        {
+            if (_hasAnimator && Grounded)
+            {
+                skilling = true;
+                _animator.SetLayerWeight(1, 0);
+                _animator.applyRootMotion = true;
+                print($"IdleSkill {num + 1}");
+                _animator.SetInteger(_animIDSkill, num + 1);
+                return true;
             }
             return false;
         }
 
         public void SkillAniFinish()
         {
+            skilling = false;
+            _animator.applyRootMotion = false;
+            _animator.SetInteger(_animIDSkill, 0);
             _animator.SetLayerWeight(1, 0);
+        }
+
+
+        public bool GetSkilling()
+        {
+            print(skilling);
+            return skilling;
         }
 
         private void JumpAndGravity()

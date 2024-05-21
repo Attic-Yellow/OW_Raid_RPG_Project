@@ -45,7 +45,7 @@ public class BardSkill : Skill
         }
        if(isMonster)
         {
-            if (SkillAni(id))  GameManager.Instance.currentPlayerObj.GetComponent<PlayerSkillMethod>().PosionArrow(GameManager.Instance.GetAlives()[0].GetComponent<Monster>());
+            if (MovingSkillAni(id))  GameManager.Instance.currentPlayerObj.GetComponent<PlayerSkillMethod>().PosionArrow(GameManager.Instance.GetAlives()[0].GetComponent<Monster>());
         }      
         else
         {
