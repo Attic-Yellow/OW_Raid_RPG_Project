@@ -128,22 +128,26 @@ public class Monster : Alive
     {
         if (isTrue)
         {
-            isStun = true;
+            photonView.RPC("SetStun", RpcTarget.All, true);
             animator.SetTrigger("Stun");
         }
         else
         {
-            isStun = false;
+            photonView.RPC("SetStun", RpcTarget.All, false);
         }
 
     }
 
     public virtual void AniStunFinish()
     {
-        isStun = false;
+        photonView.RPC("SetStun", RpcTarget.All, false);
         
     }
-
+    [PunRPC]
+    private void SetStun(bool isTrue)
+    {
+        isStun = isTrue;
+    }
     private void OnMouseEnter()
     {
         GameManager.Instance.AddOnMousePointer(gameObject);

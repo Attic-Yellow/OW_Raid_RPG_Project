@@ -726,10 +726,14 @@ namespace StarterAssets
         {
             if (GameManager.Instance.uiManager.gameSceneUI.quickSlotData.slotDataList.ContainsKey(str))
             {
-                print("여기도 들어와?");
                 SlotDataList slotData = GameManager.Instance.uiManager.gameSceneUI.quickSlotData.slotDataList[str];
                 print($"슬롯 이름{slotData.slotName}");
-                GameObject.Find(str).GetComponent<QuickSlot>().slot.GetComponent<Slot>().Use();
+
+                QuickSlot qs = GameObject.Find(str).GetComponent<QuickSlot>();
+                if(qs != null && qs.CoolTime())
+                {
+                    qs.slot.GetComponent<Slot>().Use();
+                }
             }
         }
         #endregion

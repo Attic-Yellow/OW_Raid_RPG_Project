@@ -106,7 +106,7 @@ public class SkillSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
     {
         if (skill != null)
         {
-            print($"{skill.skillName}");
+            print($"{skill.skillName} id : {skill.skillID}");
              skill.UseSkill(skill.GetSkillID()); 
         }
         else

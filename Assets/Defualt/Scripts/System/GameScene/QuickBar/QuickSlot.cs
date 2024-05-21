@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 using TMPro;
 using Newtonsoft.Json;
 using System.IO;
+using StarterAssets;
 
 public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
 {
@@ -221,6 +222,42 @@ public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
     }
     #endregion
 
+    #region 쿨타임
+    public bool CoolTime()
+    {
+        if(coolDownImage.activeSelf || GameManager.Instance.currentPlayerObj.GetComponent<ThirdPersonController>().GetSkilling())
+        {
+            return false;
+        }
+        coolDownImage.SetActive(true);
+
+        SkillSlot skillSlot = slot.GetComponent<SkillSlot>();
+        if (skillSlot != null)
+        {
+            StartCoroutine(CoolTimeCoroutine(skillSlot.GetSkill().coolTime));
+        }
+        return true;
+    }
+
+    IEnumerator CoolTimeCoroutine(float cooltime)
+    {
+        float currentTime = cooltime;
+        Image fillImage = coolDownImage.GetComponent<Image>();
+
+        while (currentTime > 0)
+        {
+            currentTime -= Time.deltaTime;
+            coolDownText.text = Mathf.Ceil(currentTime).ToString(); //반올림
+            fillImage.fillAmount = currentTime / cooltime;
+            yield return null;
+        }
+
+        coolDownText.text = "";
+        fillImage.fillAmount = 0;
+        coolDownImage.SetActive(false);
+    }
+
+    #endregion
     #region 슬롯 정보 추가
     public void AddSlotData(GameObject slot)
     {
