@@ -119,7 +119,7 @@ public class Inventory : MonoBehaviour
     #region 아이템 드랍 갯수 랜덤 반환
     public int GetItemCount()
     {
-        return Random.Range(ItemData.Instance.items[0].minDropCount, ItemData.Instance.items[0].maxDropCount);
+        return Random.Range(ItemData.Instance.itemsD[100].minDropCount, ItemData.Instance.itemsD[100].maxDropCount);
     }
     #endregion
 }

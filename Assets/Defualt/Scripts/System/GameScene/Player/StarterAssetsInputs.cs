@@ -20,23 +20,24 @@ namespace StarterAssets
 
         public void OnUp(InputValue value)
         {
-			MoveYInput(value.isPressed ? 1 : 0); 
+            MoveYInput(value.isPressed ? 1 : 0);
         }
 
         public void OnDown(InputValue value)
         {
-            MoveYInput(-value.Get<float>());
+            MoveYInput(value.isPressed ? -1 : 0);
         }
 
         public void OnRight(InputValue value)
         {
-            MoveXInput(value.Get<float>()); 
+            MoveXInput(value.isPressed ? 1 : 0);
         }
 
         public void OnLeft(InputValue value)
         {
-            MoveXInput(- value.Get<float>()); 
+            MoveXInput(value.isPressed ? -1 : 0);
         }
+
         public void OnLook(InputValue value)
 		{
 			if(cursorInputForLook)

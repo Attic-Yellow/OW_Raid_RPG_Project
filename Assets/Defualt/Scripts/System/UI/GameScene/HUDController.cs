@@ -208,12 +208,14 @@ public class HUDController : MonoBehaviour
         if (timeSinceLastClick <= doubleClickThreshold) // 더블 클릭 간주
         {
             DragAreaActive(index);
+            print("더블 클릭");
         }
         else // 단일 클릭 간주
         {
             if (index >= 0 && index < dragAreas.Length)
             {
                 selectedDropdown.value = index;
+                print("단일 클릭");
             }
         }
     }

@@ -6,29 +6,29 @@ using UnityEngine.EventSystems;
 using Unity.VisualScripting;
 using System;
 
-public class DraggableUI : MonoBehaviour, IDragHandler, IPointerDownHandler, IEndDragHandler
+public class DraggableUI : MonoBehaviour, IPointerClickHandler, IDragHandler, IPointerDownHandler, IEndDragHandler
 {
     [SerializeField] private RectTransform windowRectTransform;
     [SerializeField] private RectTransform dragAreaRectTransform;
     private Vector2 offset;
     private bool isDragging = false;
 
-    //#region 창 클릭 이벤트
-    //// 해당 창 클릭 시 호출
-    //public void OnPointerClick(PointerEventData eventData)
-    //{
-    //    GameObject clickedObject = eventData.pointerPress;
-    //    GameObject dragArea = clickedObject.transform.childCount > 0 ? clickedObject.transform.GetChild(1).gameObject : null;
-    //    GameManager.Instance.uiManager.gameSceneUI.hudController.PointerClick(dragArea);
+    #region 창 클릭 이벤트
+    // 해당 창 클릭 시 호출
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        GameObject clickedObject = eventData.pointerPress;
+        GameObject dragArea = clickedObject.transform.childCount > 0 ? clickedObject.transform.GetChild(1).gameObject : null;
+        GameManager.Instance.uiManager.gameSceneUI.hudController.PointerClick(dragArea);
 
-    //    QuickBar quickBar = clickedObject.GetComponent<QuickBar>();
+        QuickBar quickBar = clickedObject.GetComponent<QuickBar>();
 
-    //    if (quickBar != null)
-    //    {
-    //        quickBar.UpdateHUDData(-2);
-    //    }
-    //}
-    //#endregion
+        if (quickBar != null)
+        {
+            quickBar.UpdateHUDData(-2);
+        }
+    }
+    #endregion
 
     #region 창 버튼 다운 이벤트
     // 해당 창 클릭 시 호출

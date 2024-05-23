@@ -317,6 +317,8 @@ MonoBehaviour:
   BottomClamp: -30
   CameraAngleOverride: 0
   LockCameraPosition: 0
+  ZoomSensitivity: 2
+  cameraSensitivity: 90
   _playerInput: {fileID: 0}
   _input: {fileID: 0}
 --- !u!114 &1165135659208018624
