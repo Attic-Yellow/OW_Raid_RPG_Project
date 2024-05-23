@@ -1,11 +1,6 @@
 using Photon.Pun;
 using StarterAssets;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Profiling.Editor;
-using UnityEngine;
-using UnityStandardAssets.Characters.ThirdPerson.PunDemos;
 
 
 [Serializable]

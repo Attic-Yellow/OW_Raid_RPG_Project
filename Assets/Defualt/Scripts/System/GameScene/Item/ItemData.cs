@@ -8,7 +8,6 @@ public class ItemData : MonoBehaviour
 {
     public static ItemData Instance;
 
-    public List<Consumable> items = new List<Consumable>();
     public Dictionary<int, Consumable> itemsD = new Dictionary<int, Consumable>();
     public Dictionary<int, Equipment> equip = new Dictionary<int, Equipment>();
 
