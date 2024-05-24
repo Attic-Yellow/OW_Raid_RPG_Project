@@ -9788,7 +9788,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ad401be05b01d34280088a2a7fcf5e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
+  pDamage: 0
+  pPhy: 0
+  mDamage: 0
+  mPhy: 0
   ps: {fileID: 0}
   createCount: 10
   particles:

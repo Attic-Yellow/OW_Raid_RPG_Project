@@ -10,6 +10,12 @@ public enum ItemType
     Etc
 }
 
+public enum WeaponType
+{
+    Short,
+    Long
+}
+
 [Serializable]
 public class Item
 {

@@ -7,6 +7,7 @@ using System;
 /*using Cinemachine;*/
 using TMPro;
 using Cinemachine;
+using UnityEngine.UI;
 
 public class Player : Alive
 {
@@ -14,6 +15,8 @@ public class Player : Alive
       public  List<Monster> monsters = new(); //테스트용 공격할 몬스터들
       private float healingRate;
     private bool isInvincibility = false; //무적
+    [SerializeField] GameObject currentWeapon;
+    TextMeshProUGUI hpText;
 
     public bool IsInvincibility
     {
@@ -30,7 +33,9 @@ public class Player : Alive
       #region UintyMethod
       private new void Awake()
       {
-          base.Awake();
+        hpSlider = GameObject.Find("Current HP Bar Slider").GetComponent<Slider>();   
+        currentWeapon.GetComponent<Collider>().enabled = false;
+        base.Awake();
         CinemachineVirtualCamera cvc = FindObjectOfType<CinemachineVirtualCamera>();
         if (cvc != null && GameManager.Instance.currentPlayerObj != null)
         {
@@ -40,22 +45,14 @@ public class Player : Alive
       }
       private void Start()
       {
-        if (photonView.IsMine)
-        {
-            /*    List<Skill> list = SkillManager.instance.GetSkillList(playerJob);
-                 foreach(Skill skill in list)
-                 {
-                    canLearnSkills.Enqueue(skill);
-                 }
-                 cam.Follow = transform;
-                 cam.LookAt = transform;
-             }*/
-        }
-      }
+        hpText = GameObject.Find("Current HP Text").GetComponent<TextMeshProUGUI>();
+        if (hpText != null) hpText.text = CurrentHP.ToString();
+        else { print("찾지못함"); }
+    }
 
         void Update()
       {
-
+      
           if (photonView.IsMine) //내 캐릭터 일 경우
           {
              if(Input.GetKeyDown(KeyCode.Escape))
@@ -100,6 +97,7 @@ public class Player : Alive
             if ((CurrentHP -= damage) <= 0)
             {
                 CurrentHP = 1f;
+                hpText.text = CurrentHP.ToString();
             }
         }
         else
@@ -107,10 +105,12 @@ public class Player : Alive
             if ((CurrentHP -= damage) < 0)
             {
                 CurrentHP = 0;
+                hpText.text = CurrentHP.ToString();
             }
             else
             {
                 CurrentHP -= damage;
+                hpText.text = CurrentHP.ToString();
             }
 
             // 현재 체력이 0 이하로 떨어졌을 때 처리
@@ -131,7 +131,20 @@ public class Player : Alive
     #endregion
     #region customMethod
 
+    public void ChangeWeapon(GameObject nextWeapon)
+    {
+        currentWeapon = nextWeapon;
+    }
 
+    public void SetWeaponCollider(int isTrue)
+    { 
+
+        if (currentWeapon.GetComponent<Collider>() != null)
+        {
+            print($"무기 콜라이더 {isTrue == 0}");
+            currentWeapon.GetComponent<Collider>().enabled = isTrue == 0 ;
+        }
+    }
     public void AddPlayerSkill(Skill skill)
       {
           foreach(var s in haveSkills)

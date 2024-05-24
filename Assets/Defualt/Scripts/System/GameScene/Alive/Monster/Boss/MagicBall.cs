@@ -5,23 +5,20 @@ using UnityEngine;
 
 public class MagicBall : Effect
 {
-    float distance = 30; //뻗어나가는 거리
-    float speed = 10; //뻗어나가는 속도
-    float backSpeed = 5; //돌아오는 속도
-    float rotationSpeed = 50f; // 회전 속도
+
     private enum Type
     {
         Straight,//직진
-        Curved, //곡선
         Rotate, //회전
-        Looping,
-        Cyclic, //순환
         Random
-
-
     }
 
+    private Vector3 oriPos;
+    private float speed = 5f; // 이동 속도
+    private float rotateSpeed = 180f; // 회전 속도
+
     private Type thisType;
+    private float lifeTime = 12f;
 
     private void Awake()
     {
@@ -30,69 +27,75 @@ public class MagicBall : Effect
         {
             thisType = (Type)param[0];
         }
+
+        if(thisType == Type.Rotate) oriPos = transform.position;
     }
 
     void Start()
     {
-        /*  switch(thisType)
+          switch(thisType)
           {
               case Type.Straight:
                   Invoke("Straight", 1f);
                   break;
-                  case Type.Curved:
-                  Invoke("Curved", 1f);
-                  break;
+   
+          
                   case Type.Rotate:
                   Invoke("Rotate", 1f);
                   break;
-                  case Type.Looping:
-                   Invoke("Looping", 1f);
-                  break;
-                  case Type.Cyclic:
-                  Invoke("Cyclic", 1f);
-                  break;
+            
                   case Type.Random:
-                  Invoke("Random", 1f);
+                  Invoke("RandomMove", 1f);
                   break;
 
-          }*/
-        Straight();
-        Destroy(gameObject, 10f);
+          }
+        Destroy(gameObject, lifeTime);
     }
 
-    void Straight() //distance만큼 뻗어나갔다가 원래의 위치로 돌아오게
+    void Straight()
     {
+        // 5초 동안 앞으로 이동 후, 5초 동안 뒤로 이동
+        StartCoroutine(StraightRoutine());
     }
 
-    void Curved() 
+    IEnumerator StraightRoutine()
     {
+        Vector3 forward = transform.forward * speed * Time.deltaTime;
 
+        for (float t = 0; t < lifeTime/2; t += Time.deltaTime)
+        {
+            transform.Translate(forward);
+            yield return null;
+        }
+
+        Vector3 backward = -transform.forward * speed * Time.deltaTime;
+
+        for (float t = 0; t < lifeTime/2; t += Time.deltaTime)
+        {
+            transform.Translate(backward);
+            yield return null;
+        }
     }
 
     void Rotate()
     {
-
+        // oriPos를 중심으로 회전
+        transform.RotateAround(oriPos, Vector3.up, rotateSpeed * Time.deltaTime);
     }
 
-    void Looping()
+    void RandomMove()
     {
-
+        // 주변을 랜덤으로 이동
+        float moveX = Random.Range(-1f, 1f) * speed * Time.deltaTime;
+        float moveZ = Random.Range(-1f, 1f) * speed * Time.deltaTime;
+        transform.Translate(new Vector3(moveX, 0, moveZ));
     }
 
-    void Cyclic()
-    {
-
-    }
-
-     void Random()
-    {
-
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.gameObject.layer == 3)
-        {
-            other.gameObject.GetComponent<Alive>().TakeDamage(gameObject, pDamage,pPhy,mDamage,mPhy);
-        }
-    }
+    /* private void OnTriggerEnter(Collider other)
+     {
+         if(other.gameObject.layer == 3)
+         {
+             other.gameObject.GetComponent<Alive>().TakeDamage(gameObject, pDamage,pPhy,mDamage,mPhy);
+         }
+     }*/
 }

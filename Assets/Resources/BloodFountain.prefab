@@ -46,7 +46,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 625aa4b5511c80a42ae323c155619426, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
+  pDamage: 0
+  pPhy: 0
+  mDamage: 0
+  mPhy: 0
   ps: {fileID: 5068193346648886863}
   createCount: 0
 --- !u!114 &-5950319995498015414

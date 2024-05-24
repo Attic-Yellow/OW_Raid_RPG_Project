@@ -294,7 +294,9 @@ namespace StarterAssets
                 _animator.SetInteger(_animIDSkill, num + 1);
                 return true;
             }
+            print("왜 false지?");
             return false;
+            
         }
 
         public void SkillAniFinish()

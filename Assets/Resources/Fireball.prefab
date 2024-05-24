@@ -19307,7 +19307,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3df3266ef7409ed40ac42905f1070d59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
+  pDamage: 0
+  pPhy: 0
+  mDamage: 0
+  mPhy: 0
   ps: {fileID: 5829885979666212172}
   createCount: 0
   initObjID: 0

@@ -21,7 +21,7 @@ public class WarriorSkill : Skill
                 HeavySwing(id);
                 break;
             case 2:
-                ThrillOfBattle(id);
+                ThrillOfBattle();
                 break;
             case 3:
                 Revenge();
@@ -30,6 +30,7 @@ public class WarriorSkill : Skill
                 OneOnOne();
                 break;
             case 5:
+                Onslaught(id);
                 break;
 
         }
@@ -70,15 +71,14 @@ public class WarriorSkill : Skill
         }
     }
 
-    void ThrillOfBattle(int id) //전투의 짜릿함
+    void ThrillOfBattle() //전투의 짜릿함
     {
         /*10초 동안 자신의 최대 HP와
 받는 HP 회복 효과가 20 % 증가합니다.
 실행 시점의 최대 HP 대비 20 % 의 HP를 회복합니다.*/
-        if (MovingSkillAni(id))
-        {
+    
             GameManager.Instance.currentPlayerObj.GetComponent<PlayerSkillMethod>().BoostedHPRegen();
-        }
+        
 
     }
 
@@ -110,7 +110,9 @@ public class WarriorSkill : Skill
 
     void Onslaught(int id) //맹공격
     {
-        MovingSkillAni(id); //TODO : 애니메이션 이벤트로 콜라이더 감지 코루틴 넣어야함
+       if(IdleSkillAni(id)) //TODO : 애니메이션 이벤트로 콜라이더 감지 코루틴 넣어야함
+        {
 
+        }
     }
 }
