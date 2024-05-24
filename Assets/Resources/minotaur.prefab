@@ -981,7 +981,7 @@ Transform:
   m_GameObject: {fileID: 3425488967339340641}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7711518135914132567}
@@ -1105,6 +1105,9 @@ MonoBehaviour:
   - Type: 4
     SynchronizeType: 0
     Name: IsFighting
+  - Type: 9
+    SynchronizeType: 0
+    Name: Stun
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -1157,7 +1160,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3425488967339340641}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 2, y: 2, z: 2}

@@ -81,12 +81,23 @@ public class Monster : Alive
         foreach (int key in keysToRemove)
         {
            photonView.RPC("RemoveAggroLevels",RpcTarget.All, key);
-            GameObject thisObj = PhotonView.Find(key).gameObject;
-            if (thisObj != null)
-                thisObj.GetComponent<Player>().RemoveAggroMonster(this);
+            PhotonView photonViewObj = PhotonView.Find(key);
+            if (photonViewObj != null)
+            {
+                GameObject thisObj = photonViewObj.gameObject;
+                Player player = thisObj.GetComponent<Player>();
+                if (player != null)
+                {
+                    player.RemoveAggroMonster(this);
+                }
+                else
+                {
+                    Debug.LogError($"Player component not found on object with key {key}");
+                }
+            }
             else
             {
-                print("여기서 오류");
+                Debug.LogError($"PhotonView with key {key} not found");
             }
         }
     }
@@ -190,5 +201,4 @@ public class Monster : Alive
             }
         }
     }
-
 }

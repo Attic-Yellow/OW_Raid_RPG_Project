@@ -178,13 +178,13 @@ public class Alive : DefalutState, IPunObservable
     {
         float pd = PDef - physicalP;
         pd = Mathf.Max(pd, 0f); //음수가 되지않도록
-        float p = pDamage * pd;
+        float p = pDamage - pd;
 
         float md = mDef - physicalM;
         md = Mathf.Max(md, 0f);
-        float m = mDamage * md;
+        float m = mDamage - md;
 
-        return pd + md;
+        return p + m;
           
     }
 
@@ -222,7 +222,6 @@ public class Alive : DefalutState, IPunObservable
     }
     protected GameObject HighestAggroLevel(Dictionary<int, AggroLevel> aggroDic) //날 때린놈들 중에 제일 어그로수치가 높은
     {
-        print($"{aggroDic.Count}명");
         if (aggroDic.Count == 0)
         {
             return null;

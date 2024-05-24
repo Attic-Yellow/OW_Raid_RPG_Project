@@ -245,7 +245,6 @@ public class Boss : Monster
 
     void AddMidList()
     {
-        midAttackList.Add(LaserAttack);
         midAttackList.Add(FloorAttack);
          midAttackList.Add(Thunder);
           midAttackList.Add(MagicBall);
@@ -682,7 +681,8 @@ public class Boss : Monster
                 {
                     print("안전지역x");
                     Effect effect = skillReciver.skillDic[SkillEffectEnum.BloodFountain].GetComponent<Effect>();
-                    collider.GetComponent<Alive>().TakeDamage(gameObject,effect.pDamage,effect.pPhy,effect.mDamage,effect.mPhy);
+                    if (effect == null) print("여기가 문제");
+                    if (collider.GetComponent<Alive>() != null)  collider.gameObject.GetComponent<Alive>().TakeDamage(gameObject,effect.pDamage,effect.pPhy,effect.mDamage,effect.mPhy);
                 }
                 else
                 {
@@ -695,17 +695,7 @@ public class Boss : Monster
     }
 
 
-    private void LaserAttack()//레이저공격 (몬스터 앞으로 레이저쏘고 회전방향 랜덤 , 45도 or 90도 랜덤으로) #뒤에있어야 아예 안맞게
-    {
-        SetApplyRootMotion(false);
-
-
-    }
-    public void InitLaser()
-    {
-        PhotonNetwork.Instantiate(skillReciver.skillDic[SkillEffectEnum.Laser].name, shotPoint.position, Quaternion.identity);
-    }
-
+  
     private void Thunder()//뺴빼로 공격(자기가 바라보고있는 방향으로 뭐가 떨어진 뒤 떨어진곳 양 옆에 뭐가 떨어짐)
     {
         print("번개공격");
@@ -741,16 +731,12 @@ public class Boss : Monster
             Vector3 spawnPosition = transform.position + offset; // 몬스터 주변에 오브젝트 생성
 
             // 새로운 마법 구체 생성
-            GameObject magicBall = PhotonNetwork.Instantiate(skillReciver.skillDic[SkillEffectEnum.MagicBall].name, spawnPosition, Quaternion.identity, 0, new object[] { CheckAxeColor() });
+            GameObject magicBall = PhotonNetwork.Instantiate(skillReciver.skillDic[SkillEffectEnum.MagicBall].name, spawnPosition, Quaternion.identity, 0, new object[] { CheckAxeColor()});
             magicBall.transform.parent = transform;
         }
 
     }
 
-    private void InOutAttack() //안밖 공격 (머리위에 큐브가 빨간색이면 바깥원형에 터지고 파란색이면 안쪽원형에 데미지)
-    {
-     
-    }
     #endregion
 
     #region Deadly

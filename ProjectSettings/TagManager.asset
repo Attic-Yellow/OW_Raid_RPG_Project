@@ -9,6 +9,8 @@ TagManager:
   - Slot
   - NPC
   - Boss
+  - CinemachineTarget
+  - Weapon
   layers:
   - Default
   - TransparentFX

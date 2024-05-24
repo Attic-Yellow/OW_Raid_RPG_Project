@@ -56,7 +56,47 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.20205478
+        functionName: SetWeaponCollider
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 0b38ebd76c2c1254b9804bd5d8be0f93,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.28767124
+        functionName: SetWeaponCollider
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 0b38ebd76c2c1254b9804bd5d8be0f93,
+          type: 3}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
+      - time: 0.31164384
+        functionName: SetWeaponCollider
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 0b38ebd76c2c1254b9804bd5d8be0f93,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.5
+        functionName: SetWeaponCollider
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 0b38ebd76c2c1254b9804bd5d8be0f93,
+          type: 3}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
+      - time: 0.58561647
+        functionName: SetWeaponCollider
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 0b38ebd76c2c1254b9804bd5d8be0f93,
+          type: 3}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
