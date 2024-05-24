@@ -480,7 +480,7 @@ public class Boss : Monster
     public override void Die()
     {
         isDie = true;
-        if(agent.hasPath) agent.path = null;
+        agent.isStopped = true;
         animator.SetTrigger("Die");
     }
     public void AttackFInish() //공격애니메이션끝나고 이벤트

@@ -17,6 +17,7 @@ public class Player : Alive
     private bool isInvincibility = false; //무적
     [SerializeField] GameObject currentWeapon;
     TextMeshProUGUI hpText;
+    private int money = 0;
 
     public bool IsInvincibility
     {
@@ -28,6 +29,13 @@ public class Player : Alive
         get { return healingRate; }
         set { healingRate = value; }
     }
+    public int Money
+    {
+        get { return money; }
+        set { money = value; }
+        
+     }
+       
 
 
       #region UintyMethod
@@ -126,6 +134,13 @@ public class Player : Alive
             // 네트워크 연결된 경우에만 동기화
             photonView.RPC("SyncHealth", RpcTarget.All, currentHP);
         }
+    }
+
+    public override void Die()
+    {
+        GameManager.Instance.SetLastPos(transform.position);
+        GameManager.Instance.uiManager.gameSceneUI.SetDieUI(true);
+        base.Die();
     }
 
     #endregion

@@ -14,9 +14,15 @@ public class GameSceneUI : MonoBehaviour
     public HUDController hudController;
     public Canvas canvas;
     public QuickSlotData quickSlotData = new QuickSlotData();
+    public GameObject DieUI;
 
     private void Awake()
     {
         GameManager.Instance.uiManager.gameSceneUI = this;
+    }
+
+    public void SetDieUI(bool isTrue)
+    {
+        DieUI.SetActive(isTrue);
     }
 }

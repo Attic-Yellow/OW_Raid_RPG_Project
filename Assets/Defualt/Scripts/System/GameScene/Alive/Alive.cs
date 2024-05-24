@@ -184,6 +184,7 @@ public class Alive : DefalutState, IPunObservable
         md = Mathf.Max(md, 0f);
         float m = mDamage - md;
 
+        print($"{p + m}만큼 데미지 입음");
         return p + m;
           
     }

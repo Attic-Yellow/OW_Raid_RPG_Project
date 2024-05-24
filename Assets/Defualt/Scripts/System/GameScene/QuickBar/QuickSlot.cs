@@ -225,17 +225,25 @@ public class QuickSlot : Slot, IDragHandler, IEndDragHandler, IBeginDragHandler
     #region ÄðÅ¸ÀÓ
     public bool CoolTime()
     {
-        if(coolDownImage.activeSelf || GameManager.Instance.currentPlayerObj.GetComponent<ThirdPersonController>().GetSkilling())
+        if(coolDownImage.activeSelf )
         {
+            return false;
+        }
+        SkillSlot skillSlot = slot.GetComponent<SkillSlot>();
+        Skill skill = skillSlot.GetSkill();
+        if(skill.skillType == SkillType.Active)
+        {
+            if (GameManager.Instance.currentPlayerObj.GetComponent<ThirdPersonController>().GetSkilling())
             return false;
         }
         coolDownImage.SetActive(true);
 
-        SkillSlot skillSlot = slot.GetComponent<SkillSlot>();
+      
         if (skillSlot != null)
         {
             StartCoroutine(CoolTimeCoroutine(skillSlot.GetSkill().coolTime));
         }
+       
         return true;
     }
 

@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     private bool isSignInSuccess;
     private bool isRebinding;
     public Vector3 playerRespawnPos = new Vector3(1250 , -110.5f, 1020); //플레이어 리스폰 지역
+    private Vector3 lastPlayerPos;
     private List<GameObject> onMouseCheck = new();
 
     [Serializable]
@@ -220,4 +221,13 @@ public class GameManager : MonoBehaviour
         onMouseCheck.Remove(obj);
     }
  
+    public void SetLastPos(Vector3 pos)
+    {
+        lastPlayerPos = pos;
+    }
+
+    public Vector3 GetLastPos()
+    {
+        return lastPlayerPos;
+    }
 }

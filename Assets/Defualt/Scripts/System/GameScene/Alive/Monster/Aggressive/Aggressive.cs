@@ -49,6 +49,7 @@ public class Aggressive : Monster
 
    
     [SerializeField] private float runSpeed;
+    [SerializeField] private Transform rayPos;
 
     [SerializeField] private float attack0Range;
     [SerializeField] private float attack1Range;
@@ -262,7 +263,7 @@ public class Aggressive : Monster
         }
 
         RaycastHit rayHit;
-        if (Physics.Raycast(transform.position, transform.forward, out rayHit, defaultsensingRange, 1 << 5)) //앞이 벽이 있을경우 멈추게
+        if (Physics.Raycast(rayPos.position, rayPos.forward, out rayHit, defaultsensingRange, 1 << 5)) //앞이 벽이 있을경우 멈추게
         {
             print("벽이있어");
             ChangeGroundState(OnGroundState.Idle);
@@ -344,8 +345,8 @@ public class Aggressive : Monster
 
         //TODO : 연속적으로 데미지 입히게 할건지
         RaycastHit[] hits;
-        Debug.DrawRay(transform.position, transform.forward * range, Color.blue);
-        hits = Physics.RaycastAll(transform.position, transform.forward, range, 1 << 3);
+        Debug.DrawRay(rayPos.position, rayPos.forward * range, Color.blue);
+        hits = Physics.RaycastAll(rayPos.position, rayPos.forward, range, 1 << 3);
         foreach (RaycastHit hit in hits)
         {
             print($"맞은놈{hit.collider.gameObject.name}");
@@ -371,8 +372,8 @@ public class Aggressive : Monster
     }
     public void FinishTakeoff()
     {
-        ChangeGroundState(OnGroundState.Idle);
         ChangeDragonState();
+        ChangeAniLayer();
     }
 
     void GetHitState()
@@ -459,7 +460,7 @@ public class Aggressive : Monster
         {
             if (hit.collider == null) return;
             print($"맞은놈{hit.collider.gameObject.name}");
-            hit.collider.gameObject.GetComponent<Player>().TakeDamage(gameObject, 0f,0f,Power+baseMDamage,mPhy);
+            hit.collider.gameObject.GetComponent<Alive>().TakeDamage(gameObject, 0f,0f,Power+baseMDamage,mPhy);
         }
     }
 

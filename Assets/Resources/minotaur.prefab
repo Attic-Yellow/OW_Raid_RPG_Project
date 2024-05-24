@@ -1025,7 +1025,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 523eaf10b8c91bb44b6562fb6de020a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thisName: 
+  thisName: minotaur
   power: 0
   luck: 0
   agility: 0
